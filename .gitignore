@@ -1,0 +1,16 @@
+node_modules/
+dist/
+dist-ssr/
+*.tsbuildinfo
+
+.env
+.env.local
+.env.*.local
+
+.claude/
+
+.DS_Store
+Thumbs.db
+
+*.log
+npm-debug.log*
