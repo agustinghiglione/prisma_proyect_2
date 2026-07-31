@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prisma Consultora — Diagnósticos</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, Segoe UI, Inter, sans-serif;
+      background: #f5f7fa;
+      color: #2d3748;
+    }
+    header {
+      background: #123c73;
+      color: #fff;
+      padding: 24px 32px;
+    }
+    header h1 { margin: 0; font-size: 20px; }
+    header p { margin: 4px 0 0; font-size: 13px; color: #cdd8e5; }
+    main { padding: 32px; max-width: 1100px; margin: 0 auto; }
+
+    #login {
+      max-width: 360px;
+      margin: 80px auto;
+      background: #fff;
+      border: 1px solid #e4e9f0;
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+    }
+    #login input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #e4e9f0;
+      border-radius: 10px;
+      margin-top: 16px;
+      font-size: 14px;
+    }
+    #login button, .refresh-btn {
+      margin-top: 16px;
+      width: 100%;
+      background: #123c73;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .refresh-btn { width: auto; }
+    #login .error { color: #c0392b; font-size: 13px; margin-top: 10px; min-height: 16px; }
+
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; }
+    th, td { text-align: left; padding: 10px 14px; font-size: 13px; border-bottom: 1px solid #e4e9f0; vertical-align: top; }
+    th { background: #eef2f7; font-weight: 600; color: #123c73; }
+    tr.detail-row td { background: #fafbfc; }
+    tr.detail-row pre { white-space: pre-wrap; font-size: 12px; margin: 0; }
+    tr.clickable { cursor: pointer; }
+    tr.clickable:hover td { background: #f5f7fa; }
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+    .pill-high { background: #dff5e1; color: #1e7a34; }
+    .pill-mid { background: #fef3d7; color: #9a6b00; }
+    .pill-low { background: #fbe1df; color: #b3362b; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .count { color: #5a6478; font-size: 14px; }
+    .empty { text-align: center; padding: 60px 0; color: #5a6478; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Prisma Consultora — Diagnósticos</h1>
+    <p>Panel interno. No indexado, solo para uso propio.</p>
+  </header>
+
+  <main>
+    <div id="login">
+      <p>Ingresá la contraseña para ver los diagnósticos.</p>
+      <input id="password" type="password" placeholder="Contraseña" />
+      <button id="loginBtn">Entrar</button>
+      <p class="error" id="loginError"></p>
+    </div>
+
+    <div id="content" class="hidden">
+      <div class="topbar">
+        <span class="count" id="count"></span>
+        <button class="refresh-btn" id="refreshBtn">Actualizar</button>
+      </div>
+      <div id="tableWrap"></div>
+    </div>
+  </main>
+
+  <script>
+    const loginView = document.getElementById('login');
+    const contentView = document.getElementById('content');
+    const passwordInput = document.getElementById('password');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginError = document.getElementById('loginError');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const tableWrap = document.getElementById('tableWrap');
+    const countEl = document.getElementById('count');
+
+    function tierClass(percent) {
+      if (percent >= 75) return 'pill-high';
+      if (percent >= 50) return 'pill-mid';
+      return 'pill-low';
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str ?? '';
+      return div.innerHTML;
+    }
+
+    function renderTable(rows) {
+      if (!rows.length) {
+        tableWrap.innerHTML = '<p class="empty">Todavía no se completó ningún diagnóstico.</p>';
+        return;
+      }
+
+      const body = rows
+        .map((row, i) => {
+          const fecha = new Date(row.created_at).toLocaleString('es-AR');
+          const report = row.report || {};
+          const strengths = (report.strengths || []).map((s) => s.label).join(', ');
+          const opportunities = (report.opportunities || []).map((o) => o.label).join(', ');
+          return `
+            <tr class="clickable" data-index="${i}">
+              <td>${fecha}</td>
+              <td>${escapeHtml(row.name)}</td>
+              <td>${escapeHtml(row.company)}</td>
+              <td>${escapeHtml(row.email)}</td>
+              <td><span class="pill ${tierClass(report.overallPercent ?? 0)}">${report.overallPercent ?? '—'}%</span></td>
+              <td>${escapeHtml(strengths)}</td>
+              <td>${escapeHtml(opportunities)}</td>
+            </tr>
+            <tr class="detail-row hidden" id="detail-${i}">
+              <td colspan="7"><pre>${escapeHtml(JSON.stringify({ priority: row.priority, answers: row.answers, report: row.report }, null, 2))}</pre></td>
+            </tr>
+          `;
+        })
+        .join('');
+
+      tableWrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th><th>Nombre</th><th>Empresa</th><th>Email</th>
+              <th>Score</th><th>Fortalezas</th><th>Oportunidades</th>
+            </tr>
+          </thead>
+          <tbody>${body}</tbody>
+        </table>
+      `;
+
+      tableWrap.querySelectorAll('tr.clickable').forEach((tr) => {
+        tr.addEventListener('click', () => {
+          document.getElementById(`detail-${tr.dataset.index}`).classList.toggle('hidden');
+        });
+      });
+    }
+
+    async function loadDiagnostics(password) {
+      const res = await fetch('/api/diagnostics', {
+        headers: { 'x-admin-password': password },
+      });
+      if (res.status === 401) {
+        throw new Error('Contraseña incorrecta.');
+      }
+      if (!res.ok) {
+        throw new Error('No se pudo cargar la información.');
+      }
+      return res.json();
+    }
+
+    async function showDashboard(password) {
+      const rows = await loadDiagnostics(password);
+      loginView.classList.add('hidden');
+      contentView.classList.remove('hidden');
+      countEl.textContent = `${rows.length} diagnóstico${rows.length === 1 ? '' : 's'} completado${rows.length === 1 ? '' : 's'}`;
+      renderTable(rows);
+    }
+
+    loginBtn.addEventListener('click', async () => {
+      const password = passwordInput.value;
+      loginError.textContent = '';
+      try {
+        await showDashboard(password);
+        sessionStorage.setItem('prisma_admin_pw', password);
+      } catch (err) {
+        loginError.textContent = err.message;
+      }
+    });
+
+    passwordInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') loginBtn.click();
+    });
+
+    refreshBtn.addEventListener('click', async () => {
+      const password = sessionStorage.getItem('prisma_admin_pw');
+      if (password) showDashboard(password).catch((err) => alert(err.message));
+    });
+
+    const savedPassword = sessionStorage.getItem('prisma_admin_pw');
+    if (savedPassword) {
+      showDashboard(savedPassword).catch(() => sessionStorage.removeItem('prisma_admin_pw'));
+    }
+  </script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { QUESTIONS, TOTAL_STEPS, type DimensionId, type DiagnosticQuestion } from '../data/diagnostic';
 import { computeReport, type DiagnosticReport } from '../lib/scoring';
+import { submitDiagnostic } from '../lib/api';
 
 export type DiagnosticPhase = 'question' | 'lead' | 'processing' | 'report';
 
@@ -63,12 +64,16 @@ export function useDiagnostic() {
     (info: LeadInfo) => {
       setLead(info);
       setPhase('processing');
+      const computedReport = computeReport(scoredAnswers as Record<DimensionId, number>);
+
+      submitDiagnostic({ lead: info, priority, answers: scoredAnswers, report: computedReport });
+
       window.setTimeout(() => {
-        setReport(computeReport(scoredAnswers as Record<DimensionId, number>));
+        setReport(computedReport);
         setPhase('report');
       }, 2400);
     },
-    [scoredAnswers],
+    [scoredAnswers, priority],
   );
 
   return {
