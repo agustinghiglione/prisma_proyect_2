@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import express from 'express';
 import cors from 'cors';
 import { pool } from './db.js';
+import { runMigrations } from './migrate.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -92,6 +93,14 @@ app.get('/api/diagnostics', requireAdmin, async (_req, res) => {
 });
 
 const port = process.env.PORT || 3001;
-app.listen(port, () => {
-  console.log(`Prisma Consultora API escuchando en el puerto ${port}`);
-});
+
+runMigrations()
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`Prisma Consultora API escuchando en el puerto ${port}`);
+    });
+  })
+  .catch((err) => {
+    console.error('Error al aplicar migraciones al iniciar:', err);
+    process.exit(1);
+  });

@@ -21,9 +21,12 @@ Ver `.env.example`. Copiarlo como `.env` para desarrollo local:
 
 ```bash
 npm install
-npm run migrate   # crea la tabla diagnostics
 npm start
 ```
+
+Las migraciones se aplican automáticamente al arrancar el servidor (son
+idempotentes, seguras de correr en cada boot). También se pueden correr
+manualmente con `npm run migrate` si hace falta.
 
 ## Endpoints
 
