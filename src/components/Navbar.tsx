@@ -56,7 +56,7 @@ export default function Navbar() {
           }}
           className="font-heading text-lg font-extrabold tracking-tight text-primary"
         >
-          PRISMA <span className="font-medium text-secondary">CONSULTORA</span>
+          PRISMA <span className="font-medium text-primary">CONSULTORA</span>
         </a>
 
         <div className="hidden items-center gap-8 lg:flex">
@@ -77,7 +77,7 @@ export default function Navbar() {
           ))}
           <button
             onClick={() => handleNavClick(NAV_CTA.href)}
-            className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-primary-dark hover:shadow-md"
+            className="rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-primary-dark shadow-soft transition-all hover:brightness-95"
           >
             {NAV_CTA.label}
           </button>
@@ -110,7 +110,7 @@ export default function Navbar() {
             ))}
             <button
               onClick={() => handleNavClick(NAV_CTA.href)}
-              className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white"
+              className="rounded-full bg-gold px-5 py-3 text-sm font-semibold text-primary-dark"
             >
               {NAV_CTA.label}
             </button>

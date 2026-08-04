@@ -4,14 +4,14 @@ import FacetPatternVisual from './visuals/FacetPatternVisual';
 
 export default function PorQueSection() {
   return (
-    <section id="por-que-prisma" className="relative overflow-hidden px-6 py-28 lg:px-10">
+    <section id="por-que-prisma" className="relative overflow-hidden bg-surface px-6 py-28 lg:px-10">
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-2xl text-center">
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-sm font-semibold uppercase tracking-[0.2em] text-secondary"
+            className="text-sm font-semibold uppercase tracking-[0.2em] text-primary"
           >
             ¿Por qué Prisma?
           </motion.p>
@@ -34,9 +34,9 @@ export default function PorQueSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.6, delay: i * 0.08 }}
-              className="rounded-2xl border border-border bg-white p-7"
+              className="rounded-2xl border border-border bg-background p-7"
             >
-              <Icon size={24} className="text-secondary" strokeWidth={1.75} />
+              <Icon size={24} className="text-primary" strokeWidth={1.75} />
               <p className="mt-4 font-heading text-lg font-semibold text-ink">{title}</p>
               <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{detail}</p>
             </motion.div>
@@ -48,7 +48,7 @@ export default function PorQueSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="relative mt-20 overflow-hidden rounded-3xl bg-primary px-8 py-14 text-center sm:px-14"
+          className="relative mt-20 overflow-hidden rounded-3xl bg-gradient-prisma px-8 py-14 text-center sm:px-14"
         >
           <FacetPatternVisual />
           <p className="relative font-heading text-xl font-semibold text-white sm:text-2xl">

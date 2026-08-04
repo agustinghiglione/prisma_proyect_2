@@ -117,6 +117,12 @@ export const QUESTIONS: DiagnosticQuestion[] = [
 
 export const TOTAL_STEPS = QUESTIONS.length + 1; // + lead capture step
 
+export function getScoredOptionLabel(dimension: DimensionId, value: number): string {
+  const question = QUESTIONS.find((q): q is ScoredQuestion => q.kind === 'scored' && q.dimension === dimension);
+  const option = question?.options.find((o) => o.value === value);
+  return option?.label ?? '';
+}
+
 interface RecommendationTier {
   low: string;
   mid: string;

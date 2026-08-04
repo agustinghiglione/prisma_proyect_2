@@ -52,7 +52,7 @@ export default function LeadFormScreen({ onSubmit, onBack }: LeadFormScreenProps
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Tu nombre"
-            className="w-full rounded-xl border border-border bg-white px-4 py-3 text-ink outline-none transition-colors focus:border-primary"
+            className="w-full rounded-xl border border-border bg-background px-4 py-3 text-ink outline-none transition-colors focus:border-primary"
           />
           {touched && name.trim().length <= 1 && (
             <p className="mt-1 text-xs text-red-500">Ingresá tu nombre.</p>
@@ -65,7 +65,7 @@ export default function LeadFormScreen({ onSubmit, onBack }: LeadFormScreenProps
             value={company}
             onChange={(e) => setCompany(e.target.value)}
             placeholder="Nombre de tu empresa"
-            className="w-full rounded-xl border border-border bg-white px-4 py-3 text-ink outline-none transition-colors focus:border-primary"
+            className="w-full rounded-xl border border-border bg-background px-4 py-3 text-ink outline-none transition-colors focus:border-primary"
           />
           {touched && company.trim().length <= 1 && (
             <p className="mt-1 text-xs text-red-500">Ingresá el nombre de tu empresa.</p>
@@ -79,7 +79,7 @@ export default function LeadFormScreen({ onSubmit, onBack }: LeadFormScreenProps
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="nombre@empresa.com"
-            className="w-full rounded-xl border border-border bg-white px-4 py-3 text-ink outline-none transition-colors focus:border-primary"
+            className="w-full rounded-xl border border-border bg-background px-4 py-3 text-ink outline-none transition-colors focus:border-primary"
           />
           {touched && !EMAIL_RE.test(email) && (
             <p className="mt-1 text-xs text-red-500">Ingresá un email válido.</p>
@@ -88,7 +88,7 @@ export default function LeadFormScreen({ onSubmit, onBack }: LeadFormScreenProps
 
         <button
           type="submit"
-          className="mt-4 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-sm transition-transform hover:-translate-y-0.5"
+          className="mt-4 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5"
         >
           Ver mi Informe Ejecutivo
         </button>

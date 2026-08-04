@@ -14,7 +14,7 @@ export default function SolucionesSection() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-sm font-semibold uppercase tracking-[0.2em] text-secondary"
+            className="text-sm font-semibold uppercase tracking-[0.2em] text-primary"
           >
             Soluciones
           </motion.p>
@@ -40,7 +40,7 @@ export default function SolucionesSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.4 }}
                 transition={{ duration: 0.5, delay: i * 0.06 }}
-                className="overflow-hidden rounded-2xl border border-border bg-white"
+                className="overflow-hidden rounded-2xl border border-border bg-surface"
               >
                 <button
                   onClick={() => setOpenIndex(open ? null : i)}

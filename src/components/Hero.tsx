@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
-import SunriseVisual from './visuals/SunriseVisual';
 
 interface HeroProps {
   onStartDiagnostic: () => void;
@@ -15,8 +14,15 @@ export default function Hero({ onStartDiagnostic }: HeroProps) {
 
   return (
     <section id="inicio" className="relative flex min-h-screen items-center overflow-hidden">
-      <SunriseVisual />
-      <div className="absolute inset-0 bg-gradient-to-r from-primary-dark/80 via-primary-dark/40 to-transparent" />
+      <motion.img
+        initial={{ opacity: 0, scale: 1.04 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+        src="/img/foto_main.png"
+        alt="Amanecer sobre el mar"
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-primary-dark/75 via-primary-dark/35 to-transparent" />
 
       <div className="relative mx-auto grid w-full max-w-7xl gap-10 px-6 pt-28 pb-16 lg:px-10">
         <motion.div
@@ -37,7 +43,7 @@ export default function Hero({ onStartDiagnostic }: HeroProps) {
           <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
             <button
               onClick={onStartDiagnostic}
-              className="rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-primary shadow-lg shadow-black/10 transition-transform hover:-translate-y-0.5 hover:shadow-xl"
+              className="rounded-full bg-background px-7 py-3.5 text-sm font-semibold text-primary shadow-soft transition-transform hover:-translate-y-0.5"
             >
               Realizar Diagnóstico Gratuito
             </button>
@@ -52,7 +58,7 @@ export default function Hero({ onStartDiagnostic }: HeroProps) {
           <div className="mt-7 flex flex-wrap gap-x-6 gap-y-2">
             {CHECKS.map((label) => (
               <span key={label} className="flex items-center gap-2 text-sm text-white/80">
-                <Check size={16} className="text-secondary" strokeWidth={3} />
+                <Check size={16} className="text-green" strokeWidth={3} />
                 {label}
               </span>
             ))}

@@ -24,9 +24,9 @@ export default function ReportScreen({ report, lead, onClose }: ReportScreenProp
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       className="w-full max-w-3xl pb-6"
     >
-      <div className="overflow-hidden rounded-3xl border border-border bg-white shadow-xl shadow-primary/5">
+      <div className="overflow-hidden rounded-3xl border border-border bg-background shadow-soft">
         <div className="bg-primary px-8 py-9 text-white sm:px-12">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-secondary">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">
             Informe Ejecutivo Prisma®
           </p>
           <h2 className="mt-3 font-heading text-2xl font-bold sm:text-3xl">
@@ -66,7 +66,7 @@ export default function ReportScreen({ report, lead, onClose }: ReportScreenProp
                       initial={{ width: 0 }}
                       animate={{ width: `${dim.percent}%` }}
                       transition={{ duration: 0.8, delay: 0.15 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                      className="h-full rounded-full bg-secondary"
+                      className="h-full rounded-full bg-green"
                     />
                   </div>
                 </div>
@@ -106,7 +106,7 @@ export default function ReportScreen({ report, lead, onClose }: ReportScreenProp
             <ul className="mt-3 flex flex-col gap-3">
               {report.recommendations.map((rec) => (
                 <li key={rec.dimension.id} className="flex gap-3 text-ink-soft">
-                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-secondary" />
+                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-green" />
                   <span>{rec.text}</span>
                 </li>
               ))}
@@ -125,7 +125,7 @@ export default function ReportScreen({ report, lead, onClose }: ReportScreenProp
           <div className="mt-9 flex flex-col items-center gap-4 text-center">
             <button
               onClick={handleSchedule}
-              className="flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-sm font-semibold text-white shadow-md transition-transform hover:-translate-y-0.5"
+              className="flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5"
             >
               Agendar una primera conversación <ArrowRight size={16} />
             </button>

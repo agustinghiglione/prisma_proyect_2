@@ -1,4 +1,4 @@
-import type { DimensionId } from '../data/diagnostic';
+import { DIMENSIONS, getScoredOptionLabel, type DimensionId } from '../data/diagnostic';
 import type { DiagnosticReport } from './scoring';
 import type { LeadInfo } from '../hooks/useDiagnostic';
 
@@ -14,6 +14,16 @@ interface SubmitDiagnosticPayload {
 export async function submitDiagnostic({ lead, priority, answers, report }: SubmitDiagnosticPayload) {
   if (!API_URL) return;
 
+  const dimensionAnswers = DIMENSIONS.map((dim) => {
+    const value = answers[dim.id];
+    return typeof value === 'number' ? getScoredOptionLabel(dim.id, value) : '';
+  });
+
+  const prioridades = [...report.dimensionScores]
+    .sort((a, b) => a.score - b.score)
+    .slice(0, 3)
+    .map((dim) => dim.label);
+
   try {
     await fetch(`${API_URL}/api/diagnostics`, {
       method: 'POST',
@@ -22,9 +32,9 @@ export async function submitDiagnostic({ lead, priority, answers, report }: Subm
         name: lead.name,
         company: lead.company,
         email: lead.email,
-        priority,
-        answers,
-        report,
+        answers: [...dimensionAnswers, priority ?? ''],
+        resultado: `${report.overallPercent}%`,
+        prioridades,
       }),
     });
   } catch (err) {

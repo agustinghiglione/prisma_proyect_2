@@ -7,7 +7,7 @@ export default function MetodoSection() {
   };
 
   return (
-    <section id="metodo" className="relative bg-surface pb-28">
+    <section id="metodo" className="relative bg-background pb-28">
       <div className="relative h-[46vh] min-h-[320px] w-full overflow-hidden sm:h-[52vh]">
         <motion.img
           initial={{ opacity: 0, scale: 1.05 }}
@@ -18,7 +18,7 @@ export default function MetodoSection() {
           alt="Prisma de cristal atravesado por un haz de luz"
           className="h-full w-full object-cover"
         />
-        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-b from-transparent to-surface" />
+        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-b from-transparent to-background" />
       </div>
 
       <div className="relative -mt-16 px-6 text-center sm:-mt-20 lg:px-10">
@@ -27,7 +27,7 @@ export default function MetodoSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-sm font-semibold uppercase tracking-[0.2em] text-secondary"
+          className="text-sm font-semibold uppercase tracking-[0.2em] text-primary"
         >
           Método Prisma®
         </motion.p>
@@ -63,12 +63,12 @@ export default function MetodoSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.5 }}
                 transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="relative rounded-2xl border border-border bg-white p-7"
+                className="relative rounded-2xl border border-border bg-surface p-7"
               >
                 <span className="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
                   {i + 1}
                 </span>
-                <Icon size={22} className="mt-5 text-secondary" strokeWidth={1.75} />
+                <Icon size={22} className="mt-5 text-primary" strokeWidth={1.75} />
                 <p className="mt-3 font-heading text-lg font-semibold text-ink">{step.title}</p>
                 <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{step.detail}</p>
               </motion.div>
@@ -79,7 +79,7 @@ export default function MetodoSection() {
         <div className="mt-16 text-center">
           <button
             onClick={scrollToContacto}
-            className="rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-white shadow-sm transition-transform hover:-translate-y-0.5 hover:shadow-md"
+            className="rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5"
           >
             Conversemos sobre tu negocio
           </button>

@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, Calendar, Link2, MessageCircle } from 'lucide-react';
 import FaqAccordion from './FaqAccordion';
-import IlluminatedPathVisual from './visuals/IlluminatedPathVisual';
 import { GOOGLE_FORM_URL } from '../data/nav';
 
 const PASOS = [
@@ -16,14 +15,14 @@ export default function ContactoSection() {
   };
 
   return (
-    <section id="contacto" className="relative overflow-hidden px-6 py-28 lg:px-10">
+    <section id="contacto" className="relative overflow-hidden bg-surface px-6 py-28 lg:px-10">
       <div className="mx-auto grid max-w-6xl gap-16 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-sm font-semibold uppercase tracking-[0.2em] text-secondary"
+            className="text-sm font-semibold uppercase tracking-[0.2em] text-primary"
           >
             Un primer paso
           </motion.p>
@@ -70,7 +69,7 @@ export default function ContactoSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
-            className="mt-10 rounded-2xl border border-border bg-surface p-7"
+            className="mt-10 rounded-2xl border border-border bg-background p-7"
           >
             <p className="text-sm text-ink-soft">
               Al hacer clic vas a completar un breve formulario con tu nombre, empresa y datos de
@@ -78,7 +77,7 @@ export default function ContactoSection() {
             </p>
             <button
               onClick={handleSchedule}
-              className="mt-5 flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-sm transition-transform hover:-translate-y-0.5 hover:shadow-md"
+              className="mt-5 flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5"
             >
               Agendar una primera conversación <ArrowRight size={16} />
             </button>
@@ -92,7 +91,11 @@ export default function ContactoSection() {
           transition={{ duration: 0.9 }}
           className="hidden overflow-hidden rounded-3xl lg:block"
         >
-          <IlluminatedPathVisual />
+          <img
+            src="/img/foto_primer_contacto.png"
+            alt="Camino iluminado hacia el amanecer"
+            className="h-full w-full object-cover"
+          />
         </motion.div>
       </div>
 

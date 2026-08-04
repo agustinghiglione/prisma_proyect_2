@@ -34,6 +34,7 @@ function App() {
         <TransitionQuote
           text="Toda gran decisión empieza con una conversación clara."
           eyebrow="Un primer paso"
+          tone="background"
         />
         <ContactoSection />
       </main>

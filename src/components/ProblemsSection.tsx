@@ -40,7 +40,7 @@ export default function ProblemsSection({ onStartDiagnostic }: ProblemsSectionPr
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.4 }}
               transition={{ duration: 0.6, delay: i * 0.08 }}
-              className="rounded-2xl border border-border bg-white p-7 shadow-sm transition-shadow hover:shadow-md"
+              className="rounded-2xl border border-border bg-background p-7 shadow-soft transition-shadow"
             >
               <p className="font-heading text-lg font-semibold text-ink">{problem.title}</p>
               <p className="mt-1.5 text-ink-soft">{problem.detail}</p>
@@ -60,7 +60,7 @@ export default function ProblemsSection({ onStartDiagnostic }: ProblemsSectionPr
           </p>
           <button
             onClick={onStartDiagnostic}
-            className="mt-8 rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-white shadow-sm transition-transform hover:-translate-y-0.5 hover:shadow-md"
+            className="mt-8 rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5"
           >
             Comenzar Diagnóstico
           </button>

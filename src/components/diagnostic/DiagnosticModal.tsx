@@ -45,13 +45,13 @@ export default function DiagnosticModal({ open, onClose }: DiagnosticModalProps)
         <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface">
           {(diag.phase === 'question' || diag.phase === 'lead') && (
             <motion.div
-              className="h-full rounded-full bg-secondary"
+              className="h-full rounded-full bg-green"
               animate={{ width: `${diag.progressPercent}%` }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             />
           )}
-          {diag.phase === 'processing' && <div className="h-full w-full bg-secondary" />}
-          {diag.phase === 'report' && <div className="h-full w-full bg-secondary" />}
+          {diag.phase === 'processing' && <div className="h-full w-full bg-green" />}
+          {diag.phase === 'report' && <div className="h-full w-full bg-green" />}
         </div>
         {(diag.phase === 'question' || diag.phase === 'lead') && (
           <span className="whitespace-nowrap text-xs font-medium text-ink-soft">

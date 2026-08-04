@@ -17,8 +17,8 @@ const FEATURES = [
 
 export default function DiagnosticIntro({ onStartDiagnostic }: DiagnosticIntroProps) {
   return (
-    <section id="diagnostico" className="relative overflow-hidden bg-primary px-6 py-28 lg:px-10">
-      <div className="pointer-events-none absolute -top-32 -right-24 h-96 w-96 rounded-full bg-secondary/30 blur-3xl" />
+    <section id="diagnostico" className="relative overflow-hidden bg-gradient-prisma px-6 py-28 lg:px-10">
+      <div className="pointer-events-none absolute -top-32 -right-24 h-96 w-96 rounded-full bg-gold/25 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
 
       <div className="relative mx-auto max-w-4xl text-center">
@@ -27,7 +27,7 @@ export default function DiagnosticIntro({ onStartDiagnostic }: DiagnosticIntroPr
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-sm font-semibold uppercase tracking-[0.2em] text-secondary"
+          className="text-sm font-semibold uppercase tracking-[0.2em] text-gold"
         >
           Diagnóstico Prisma®
         </motion.p>
@@ -61,7 +61,7 @@ export default function DiagnosticIntro({ onStartDiagnostic }: DiagnosticIntroPr
               transition={{ duration: 0.6, delay: i * 0.1 }}
               className="rounded-2xl border border-white/15 bg-white/5 p-7 text-left backdrop-blur-sm"
             >
-              <Icon size={26} className="text-secondary" strokeWidth={1.75} />
+              <Icon size={26} className="text-gold" strokeWidth={1.75} />
               <p className="mt-4 font-heading text-lg font-semibold text-white">{title}</p>
               <p className="mt-1.5 text-sm text-white/70">{text}</p>
             </motion.div>
@@ -74,7 +74,7 @@ export default function DiagnosticIntro({ onStartDiagnostic }: DiagnosticIntroPr
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
           onClick={onStartDiagnostic}
-          className="mt-14 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-primary shadow-lg transition-transform hover:-translate-y-0.5"
+          className="mt-14 rounded-full bg-background px-8 py-3.5 text-sm font-semibold text-primary shadow-soft transition-transform hover:-translate-y-0.5"
         >
           Comenzar Diagnóstico
         </motion.button>

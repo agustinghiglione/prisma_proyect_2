@@ -38,7 +38,7 @@ export default function QuestionScreen({ question, onAnswer, onBack }: QuestionS
             onClick={() =>
               onAnswer(question, option.label, 'value' in option ? option.value : undefined)
             }
-            className="group flex items-center justify-between rounded-2xl border border-border bg-white px-6 py-4 text-left transition-all hover:border-primary hover:bg-primary/5"
+            className="group flex items-center justify-between rounded-2xl border border-border bg-background px-6 py-4 text-left transition-all hover:border-primary hover:bg-primary/5"
           >
             <span className="text-ink">{option.label}</span>
             <span className="ml-4 h-5 w-5 shrink-0 rounded-full border-2 border-border transition-colors group-hover:border-primary" />

@@ -11,7 +11,7 @@ export default function FaqAccordion() {
       {FAQ.map((item, i) => {
         const open = openIndex === i;
         return (
-          <div key={item.question} className="overflow-hidden rounded-2xl border border-border bg-white">
+          <div key={item.question} className="overflow-hidden rounded-2xl border border-border bg-background">
             <button
               onClick={() => setOpenIndex(open ? null : i)}
               className="flex w-full items-center justify-between gap-4 px-6 py-4 text-left"

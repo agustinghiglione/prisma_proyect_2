@@ -5,14 +5,19 @@
   --font-sans: 'Inter', sans-serif;
   --font-heading: 'Manrope', sans-serif;
 
-  --color-primary: #123c73;
-  --color-primary-dark: #0c2a52;
-  --color-secondary: #1e5a7a;
-  --color-background: #ffffff;
-  --color-surface: #f5f7fa;
-  --color-ink: #2d3748;
-  --color-ink-soft: #5a6478;
-  --color-border: #e4e9f0;
+  /* Paleta Oficial Prisma Consultora V1.0 */
+  --color-primary: #345b78; /* Azul Horizonte */
+  --color-primary-dark: #223c54; /* Azul Océano */
+  --color-gold: #e4b15e; /* Dorado Amanecer — uso escaso, solo detalles y el CTA destacado */
+  --color-green: #7e9b78; /* Verde Crecimiento — checks, indicadores positivos */
+  --color-surface: #f2e6d6; /* Arena Cálida — fondos alternados, tarjetas */
+  --color-background: #faf8f5; /* Blanco Marfil — nunca blanco puro */
+  --color-ink: #223c54; /* Títulos */
+  --color-ink-soft: #5b6672; /* Párrafos */
+  --color-border: #e7ddc9;
+
+  --gradient-prisma: linear-gradient(135deg, #223c54 0%, #345b78 45%, #e4b15e 100%);
+  --shadow-soft: 0 12px 32px rgba(34, 60, 84, 0.08);
 
   --animate-fade-up: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-fade-in: fade-in 1.1s ease both;
@@ -39,7 +44,7 @@
 
 :root {
   background-color: var(--color-background);
-  color: var(--color-ink);
+  color: var(--color-ink-soft);
   font-family: var(--font-sans);
   scroll-behavior: smooth;
 }
@@ -51,11 +56,16 @@
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   letter-spacing: -0.01em;
+  color: var(--color-ink);
 }
 
 ::selection {
-  background-color: var(--color-secondary);
+  background-color: var(--color-primary);
   color: #ffffff;
+}
+
+.bg-gradient-prisma {
+  background: var(--gradient-prisma);
 }
 
 @media (prefers-reduced-motion: reduce) {
