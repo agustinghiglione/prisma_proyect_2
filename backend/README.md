@@ -18,6 +18,9 @@ datos ni panel propio: la planilla es el panel.
    escribir filas aunque las credenciales sean correctas.
 2. Copiar el `.json` de credenciales a `backend/` (nunca se commitea, está en
    `.gitignore`).
+3. Revisar `GOOGLE_SHEET_TAB`: es el nombre de la **pestaña** (la solapita
+   abajo en Google Sheets), no el nombre del archivo. Si nunca se renombró,
+   suele ser `Sheet1` aunque el archivo se llame "Diagnósticos Prisma".
 
 ## Variables de entorno
 

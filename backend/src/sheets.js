@@ -5,8 +5,12 @@ import { google } from 'googleapis';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const SHEET_NAME = process.env.GOOGLE_SHEET_TAB || 'Diagnósticos Prisma';
+const SHEET_NAME = process.env.GOOGLE_SHEET_TAB || 'Sheet1';
 const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
+
+// Los nombres de pestaña con espacios o acentos deben ir entre comillas
+// simples en la notación A1 (ej: 'Diagnósticos Prisma'!A2:A).
+const QUOTED_SHEET_NAME = `'${SHEET_NAME.replace(/'/g, "''")}'`;
 
 function loadCredentials() {
   if (process.env.GOOGLE_SERVICE_ACCOUNT_B64) {
@@ -47,7 +51,7 @@ export async function appendDiagnosticRow(row) {
   const sheets = await getSheetsClient();
   await sheets.spreadsheets.values.append({
     spreadsheetId: SPREADSHEET_ID,
-    range: `${SHEET_NAME}!A:A`,
+    range: `${QUOTED_SHEET_NAME}!A:A`,
     valueInputOption: 'USER_ENTERED',
     insertDataOption: 'INSERT_ROWS',
     requestBody: { values: [row] },
@@ -62,7 +66,7 @@ export async function countExistingRows() {
   const sheets = await getSheetsClient();
   const { data } = await sheets.spreadsheets.values.get({
     spreadsheetId: SPREADSHEET_ID,
-    range: `${SHEET_NAME}!A2:A`,
+    range: `${QUOTED_SHEET_NAME}!A2:A`,
   });
   return data.values ? data.values.length : 0;
 }
