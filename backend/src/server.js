@@ -1,13 +1,8 @@
 import 'dotenv/config';
-import crypto from 'node:crypto';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import express from 'express';
 import cors from 'cors';
-import { pool } from './db.js';
-import { runMigrations } from './migrate.js';
+import { appendDiagnosticRow, countExistingRows } from './sheets.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
 app.use(express.json({ limit: '100kb' }));
@@ -16,7 +11,6 @@ app.use(
     origin: process.env.FRONTEND_URL ?? '*',
   }),
 );
-app.use('/admin', express.static(path.join(__dirname, '..', 'public', 'admin')));
 
 app.get('/', (_req, res) => {
   res.json({ status: 'ok' });
@@ -25,7 +19,11 @@ app.get('/', (_req, res) => {
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 app.post('/api/diagnostics', async (req, res) => {
-  const { name, company, email, priority, answers, report } = req.body ?? {};
+  const { name, company, email, answers, resultado, prioridades } = req.body ?? {};
+
+  const answersValid = Array.isArray(answers) && answers.length === 6 && answers.every((a) => typeof a === 'string');
+  const prioridadesValid =
+    Array.isArray(prioridades) && prioridades.length === 3 && prioridades.every((p) => typeof p === 'string');
 
   if (
     typeof name !== 'string' ||
@@ -34,73 +32,40 @@ app.post('/api/diagnostics', async (req, res) => {
     !name.trim() ||
     !company.trim() ||
     !EMAIL_RE.test(email) ||
-    typeof answers !== 'object' ||
-    answers === null ||
-    typeof report !== 'object' ||
-    report === null
+    !answersValid ||
+    typeof resultado !== 'string' ||
+    !prioridadesValid
   ) {
     return res.status(400).json({ error: 'Datos de diagnóstico inválidos.' });
   }
 
   try {
-    await pool.query(
-      `INSERT INTO diagnostics (name, company, email, priority, answers, report)
-       VALUES ($1, $2, $3, $4, $5, $6)`,
-      [
-        name.trim(),
-        company.trim(),
-        email.trim(),
-        typeof priority === 'string' ? priority : null,
-        JSON.stringify(answers),
-        JSON.stringify(report),
-      ],
-    );
+    const nextId = (await countExistingRows()) + 1;
+    const fecha = new Date().toLocaleString('es-AR', { dateStyle: 'short', timeStyle: 'short' });
+
+    await appendDiagnosticRow([
+      nextId,
+      fecha,
+      name.trim(),
+      company.trim(),
+      email.trim(),
+      ...answers,
+      resultado,
+      ...prioridades,
+      '', // Informe enviado
+      '', // Primera conversación
+      '', // Cliente
+      '', // Observaciones
+    ]);
+
     res.status(201).json({ ok: true });
   } catch (err) {
-    console.error('Error al guardar diagnóstico:', err);
+    console.error('Error al guardar diagnóstico en Google Sheets:', err);
     res.status(500).json({ error: 'No se pudo guardar el diagnóstico.' });
   }
 });
 
-function safeCompare(a, b) {
-  const hashA = crypto.createHash('sha256').update(String(a)).digest();
-  const hashB = crypto.createHash('sha256').update(String(b)).digest();
-  return crypto.timingSafeEqual(hashA, hashB);
-}
-
-function requireAdmin(req, res, next) {
-  const provided = req.header('x-admin-password') ?? '';
-  const expected = process.env.ADMIN_PASSWORD ?? '';
-
-  if (!expected || !safeCompare(provided, expected)) {
-    return res.status(401).json({ error: 'No autorizado.' });
-  }
-  next();
-}
-
-app.get('/api/diagnostics', requireAdmin, async (_req, res) => {
-  try {
-    const { rows } = await pool.query(
-      `SELECT id, name, company, email, priority, answers, report, created_at
-       FROM diagnostics
-       ORDER BY created_at DESC`,
-    );
-    res.json(rows);
-  } catch (err) {
-    console.error('Error al leer diagnósticos:', err);
-    res.status(500).json({ error: 'No se pudieron leer los diagnósticos.' });
-  }
-});
-
 const port = process.env.PORT || 3001;
-
-runMigrations()
-  .then(() => {
-    app.listen(port, () => {
-      console.log(`Prisma Consultora API escuchando en el puerto ${port}`);
-    });
-  })
-  .catch((err) => {
-    console.error('Error al aplicar migraciones al iniciar:', err);
-    process.exit(1);
-  });
+app.listen(port, () => {
+  console.log(`Prisma Consultora API escuchando en el puerto ${port}`);
+});

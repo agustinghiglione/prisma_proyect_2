@@ -1,21 +1,27 @@
 # Backend — Prisma Consultora
 
-API mínima que persiste cada Diagnóstico Prisma® completado y expone un panel interno simple para revisarlos.
+API mínima que guarda cada Diagnóstico Prisma® completado como una fila nueva
+en la planilla de Google Sheets **"Diagnósticos Prisma"**. No hay base de
+datos ni panel propio: la planilla es el panel.
 
 ## Stack
 
 - Node.js + Express
-- PostgreSQL (vía `pg`, sin ORM)
+- Google Sheets API v4 (`googleapis`), autenticado con una service account
+
+## Antes de arrancar
+
+1. La planilla "Diagnósticos Prisma" tiene que estar **compartida como
+   Editor** con el email de la service account (`client_email` dentro del
+   `.json` de credenciales — algo como
+   `nombre@proyecto.iam.gserviceaccount.com`). Sin este paso, la API no puede
+   escribir filas aunque las credenciales sean correctas.
+2. Copiar el `.json` de credenciales a `backend/` (nunca se commitea, está en
+   `.gitignore`).
 
 ## Variables de entorno
 
-Ver `.env.example`. Copiarlo como `.env` para desarrollo local:
-
-- `DATABASE_URL` — cadena de conexión a Postgres.
-- `PGSSL=false` — solo para Postgres local sin SSL. En producción (DigitalOcean) no definir esta variable.
-- `ADMIN_PASSWORD` — contraseña del panel interno en `/admin`.
-- `FRONTEND_URL` — origen permitido para CORS (la URL del sitio deployado).
-- `PORT` — puerto de escucha (DigitalOcean lo inyecta automáticamente).
+Ver `.env.example`.
 
 ## Desarrollo local
 
@@ -24,13 +30,22 @@ npm install
 npm start
 ```
 
-Las migraciones se aplican automáticamente al arrancar el servidor (son
-idempotentes, seguras de correr en cada boot). También se pueden correr
-manualmente con `npm run migrate` si hace falta.
-
-## Endpoints
+## Endpoint
 
 - `GET /` — health check.
-- `POST /api/diagnostics` — público. Recibe `{ name, company, email, priority, answers, report }` y lo guarda.
-- `GET /api/diagnostics` — protegido. Requiere el header `x-admin-password`. Devuelve todos los registros.
-- `GET /admin` — panel HTML simple (pide la misma contraseña) para ver los diagnósticos guardados.
+- `POST /api/diagnostics` — público. Recibe:
+  ```json
+  {
+    "name": "...",
+    "company": "...",
+    "email": "...",
+    "answers": ["...", "...", "...", "...", "...", "..."],
+    "resultado": "68%",
+    "prioridades": ["...", "...", "..."]
+  }
+  ```
+  y agrega una fila a la planilla con: ID (autoincremental, calculado por
+  cantidad de filas existentes), fecha, los datos de contacto, las 6
+  respuestas, el resultado, las 3 prioridades, y cuatro columnas vacías
+  (Informe enviado / Primera conversación / Cliente / Observaciones) para que
+  el equipo las complete a mano al hacer seguimiento.
