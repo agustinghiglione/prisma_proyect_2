@@ -26,6 +26,6 @@ export const PROBLEMS: Problem[] = [
   },
   {
     title: 'Sentís que podrías hacer más…',
-    detail: 'si tuvieras una visión completa de la empresa.',
+    detail: 'si tuvieras una visión completa de tu negocio.',
   },
 ];

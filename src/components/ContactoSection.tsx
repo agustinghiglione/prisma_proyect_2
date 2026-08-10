@@ -42,7 +42,7 @@ export default function ContactoSection() {
             transition={{ delay: 0.2 }}
             className="mt-5 max-w-lg leading-relaxed text-ink-soft"
           >
-            Contanos brevemente quién sos y en qué momento está tu empresa. Es el primer paso para
+            Contanos brevemente quién sos y en qué momento está tu negocio. Es el primer paso para
             que empecemos a mirar juntos con más claridad.
           </motion.p>
 
@@ -72,8 +72,8 @@ export default function ContactoSection() {
             className="mt-10 rounded-2xl border border-border bg-background p-7"
           >
             <p className="text-sm text-ink-soft">
-              Al hacer clic vas a completar un breve formulario con tu nombre, empresa y datos de
-              contacto para que podamos coordinar la primera conversación.
+              Al hacer clic vas a completar un breve formulario con tu nombre, tu negocio y tus
+              datos de contacto para que podamos coordinar la primera conversación.
             </p>
             <button
               onClick={handleSchedule}

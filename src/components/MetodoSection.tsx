@@ -47,7 +47,7 @@ export default function MetodoSection() {
           transition={{ duration: 0.7, delay: 0.2 }}
           className="mx-auto mt-5 max-w-md leading-relaxed text-ink-soft"
         >
-          Cada empresa es distinta. Por eso empezamos escuchando y avanzamos con un proceso
+          Cada negocio es distinto. Por eso empezamos escuchando y avanzamos con un proceso
           ordenado, pensado para sostenerse en el tiempo.
         </motion.p>
       </div>

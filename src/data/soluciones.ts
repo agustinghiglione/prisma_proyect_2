@@ -28,7 +28,7 @@ export const SOLUCIONES: Solucion[] = [
   },
   {
     icon: Rocket,
-    title: 'Quiero hacer crecer mi empresa',
+    title: 'Quiero hacer crecer mi negocio',
     detail: 'Definimos objetivos y un plan concreto para que el crecimiento sea sostenible, no accidental.',
   },
   {

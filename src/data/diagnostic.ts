@@ -10,7 +10,7 @@ export const DIMENSIONS: Dimension[] = [
   { id: 'organizacion', label: 'Organización', solutionLabel: 'Quiero ordenar mi negocio' },
   { id: 'decisiones', label: 'Información y decisiones', solutionLabel: 'Quiero tomar mejores decisiones' },
   { id: 'cumplimiento', label: 'Cumplimiento', solutionLabel: 'Quiero cumplir con tranquilidad' },
-  { id: 'crecimiento', label: 'Crecimiento', solutionLabel: 'Quiero hacer crecer mi empresa' },
+  { id: 'crecimiento', label: 'Crecimiento', solutionLabel: 'Quiero hacer crecer mi negocio' },
   { id: 'digital', label: 'Presencia digital', solutionLabel: 'Quiero potenciar mi presencia digital' },
 ];
 

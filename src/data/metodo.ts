@@ -21,7 +21,7 @@ export const METODO_STEPS: MetodoStep[] = [
   {
     icon: PenTool,
     title: 'Diseñar',
-    detail: 'Creamos una estrategia hecha a medida de tus objetivos y de la realidad de tu empresa.',
+    detail: 'Creamos una estrategia hecha a medida de tus objetivos y de la realidad de tu negocio.',
   },
   {
     icon: Users,

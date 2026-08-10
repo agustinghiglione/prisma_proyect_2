@@ -30,7 +30,7 @@ export default function ReportScreen({ report, lead, onClose }: ReportScreenProp
             Informe Ejecutivo Prisma®
           </p>
           <h2 className="mt-3 font-heading text-2xl font-bold sm:text-3xl">
-            {lead.company || 'Tu empresa'}
+            {lead.company || 'Tu negocio'}
           </h2>
           <p className="mt-1 text-sm text-white/70">
             Preparado para {lead.name || 'vos'} · {today}
@@ -44,7 +44,7 @@ export default function ReportScreen({ report, lead, onClose }: ReportScreenProp
             </h3>
             <p className="mt-3 leading-relaxed text-ink-soft">
               Con un nivel general de claridad del <strong className="text-ink">{report.overallPercent}%</strong>,{' '}
-              {lead.company || 'tu empresa'} ya tiene bases sobre las cuales construir. Encontramos
+              {lead.company || 'tu negocio'} ya tiene bases sobre las cuales construir. Encontramos
               dimensiones sólidas y otras con espacio claro de mejora: esa combinación es exactamente
               el punto de partida del Método Prisma®.
             </p>
@@ -118,7 +118,7 @@ export default function ReportScreen({ report, lead, onClose }: ReportScreenProp
             <p className="mt-2 text-ink-soft">
               Este informe es una primera mirada. En una conversación breve podemos profundizar en
               tus prioridades y, si detectamos una oportunidad concreta, elaborar una propuesta
-              hecha a medida de {lead.company || 'tu empresa'}.
+              hecha a medida de {lead.company || 'tu negocio'}.
             </p>
           </section>
 

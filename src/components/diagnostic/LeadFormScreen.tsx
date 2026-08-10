@@ -60,15 +60,15 @@ export default function LeadFormScreen({ onSubmit, onBack }: LeadFormScreenProps
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-ink">Empresa</label>
+          <label className="mb-1.5 block text-sm font-medium text-ink">Negocio</label>
           <input
             value={company}
             onChange={(e) => setCompany(e.target.value)}
-            placeholder="Nombre de tu empresa"
+            placeholder="Nombre de tu negocio"
             className="w-full rounded-xl border border-border bg-background px-4 py-3 text-ink outline-none transition-colors focus:border-primary"
           />
           {touched && company.trim().length <= 1 && (
-            <p className="mt-1 text-xs text-red-500">Ingresá el nombre de tu empresa.</p>
+            <p className="mt-1 text-xs text-red-500">Ingresá el nombre de tu negocio.</p>
           )}
         </div>
 
@@ -78,7 +78,7 @@ export default function LeadFormScreen({ onSubmit, onBack }: LeadFormScreenProps
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="nombre@empresa.com"
+            placeholder="nombre@tunegocio.com"
             className="w-full rounded-xl border border-border bg-background px-4 py-3 text-ink outline-none transition-colors focus:border-primary"
           />
           {touched && !EMAIL_RE.test(email) && (

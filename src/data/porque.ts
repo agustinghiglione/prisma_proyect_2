@@ -30,11 +30,41 @@ export const PILARES: Pilar[] = [
   },
 ];
 
-export const EQUIPO = [
-  { initials: 'ES', area: 'Estrategia' },
-  { initials: 'FZ', area: 'Finanzas' },
-  { initials: 'AD', area: 'Administración' },
-  { initials: 'PS', area: 'Personas' },
-  { initials: 'CI', area: 'Contabilidad e Impuestos' },
-  { initials: 'TC', area: 'Tecnología' },
+export interface EquipoArea {
+  initials: string;
+  area: string;
+  detail: string;
+}
+
+export const EQUIPO: EquipoArea[] = [
+  {
+    initials: 'ES',
+    area: 'Estrategia',
+    detail: 'Definimos el rumbo de tu negocio con objetivos claros y decisiones fundamentadas.',
+  },
+  {
+    initials: 'FZ',
+    area: 'Finanzas',
+    detail: 'Convertimos tus números en información útil para decidir con confianza.',
+  },
+  {
+    initials: 'AD',
+    area: 'Administración',
+    detail: 'Ordenamos los procesos para que la gestión diaria sea más simple.',
+  },
+  {
+    initials: 'PS',
+    area: 'Personas',
+    detail: 'Potenciamos a tu equipo como motor real del crecimiento.',
+  },
+  {
+    initials: 'CI',
+    area: 'Contabilidad e Impuestos',
+    detail: 'Cumplimos con tus obligaciones mientras acompañamos el crecimiento de tu negocio.',
+  },
+  {
+    initials: 'TC',
+    area: 'Tecnología',
+    detail: 'Incorporamos herramientas digitales que simplifican la gestión y mejoran la información.',
+  },
 ];

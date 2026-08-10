@@ -18,6 +18,6 @@ export const FAQ: FaqItem[] = [
   },
   {
     question: '¿Qué pasa después de la primera conversación?',
-    answer: 'Si detectamos una oportunidad concreta, elaboramos una propuesta personalizada para tu empresa. Sin presiones ni letra chica.',
+    answer: 'Si detectamos una oportunidad concreta, elaboramos una propuesta personalizada para tu negocio. Sin presiones ni letra chica.',
   },
 ];

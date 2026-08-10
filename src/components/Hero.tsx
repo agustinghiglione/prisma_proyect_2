@@ -36,7 +36,7 @@ export default function Hero({ onStartDiagnostic }: HeroProps) {
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-white/85">
             Antes de proponer soluciones, te escuchamos. El Diagnóstico Prisma® te muestra, en
-            minutos, una primera mirada clara sobre dónde está tu empresa hoy y hacia dónde puede
+            minutos, una primera mirada clara sobre dónde está tu negocio hoy y hacia dónde puede
             crecer.
           </p>
 
