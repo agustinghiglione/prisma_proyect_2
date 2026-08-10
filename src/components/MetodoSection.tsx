@@ -22,21 +22,12 @@ export default function MetodoSection() {
       </div>
 
       <div className="relative -mt-16 px-6 text-center sm:-mt-20 lg:px-10">
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-sm font-semibold uppercase tracking-[0.2em] text-primary"
-        >
-          Método Prisma®
-        </motion.p>
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="mx-auto mt-4 max-w-2xl font-heading text-3xl font-bold text-primary sm:text-4xl"
+          transition={{ duration: 0.7 }}
+          className="mx-auto max-w-2xl font-heading text-3xl font-bold text-primary sm:text-4xl"
         >
           Un mismo haz de luz, revelado en cuatro etapas.
         </motion.h2>

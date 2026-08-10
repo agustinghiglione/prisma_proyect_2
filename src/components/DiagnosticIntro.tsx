@@ -22,21 +22,12 @@ export default function DiagnosticIntro({ onStartDiagnostic }: DiagnosticIntroPr
       <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
 
       <div className="relative mx-auto max-w-4xl text-center">
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-sm font-semibold uppercase tracking-[0.2em] text-gold"
-        >
-          Diagnóstico Prisma®
-        </motion.p>
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="mt-4 font-heading text-3xl font-bold text-white sm:text-4xl"
+          transition={{ duration: 0.7 }}
+          className="font-heading text-3xl font-bold text-white sm:text-4xl"
         >
           Antes de hablar de soluciones, queremos entender tu negocio.
         </motion.h2>

@@ -25,17 +25,10 @@ function App() {
         <ProblemsSection onStartDiagnostic={openDiagnostic} />
         <DiagnosticIntro onStartDiagnostic={openDiagnostic} />
         <SolucionesSection />
-        <TransitionQuote
-          text="Antes de proponer soluciones, entendemos tu negocio."
-          eyebrow="Filosofía Prisma®"
-        />
+        <TransitionQuote text="Antes de proponer soluciones, entendemos tu negocio." />
         <MetodoSection />
         <PorQueSection />
-        <TransitionQuote
-          text="Toda gran decisión empieza con una conversación clara."
-          eyebrow="Un primer paso"
-          tone="background"
-        />
+        <TransitionQuote text="Toda gran decisión empieza con una conversación clara." />
         <ContactoSection />
       </main>
       <Footer />

@@ -18,20 +18,11 @@ export default function ContactoSection() {
     <section id="contacto" className="relative overflow-hidden bg-surface px-6 py-28 lg:px-10">
       <div className="mx-auto grid max-w-6xl gap-16 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-sm font-semibold uppercase tracking-[0.2em] text-primary"
-          >
-            Un primer paso
-          </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="mt-4 font-heading text-3xl font-bold text-primary sm:text-4xl"
+            className="font-heading text-3xl font-bold text-primary sm:text-4xl"
           >
             Conversemos sobre tu negocio.
           </motion.h2>

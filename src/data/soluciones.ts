@@ -34,6 +34,6 @@ export const SOLUCIONES: Solucion[] = [
   {
     icon: Globe,
     title: 'Quiero potenciar mi presencia digital',
-    detail: 'Incorporamos herramientas digitales que simplifican la gestión y mejoran cómo te encuentran.',
+    detail: 'Incorporamos las herramientas digitales adecuadas para que tu negocio se gestione mejor y se muestre de forma más profesional.',
   },
 ];
