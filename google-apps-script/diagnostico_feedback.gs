@@ -5,20 +5,27 @@
  * pregunta — no permite asignarle un puntaje distinto a cada opción como
  * hacemos en el sitio (1 a 4 según qué tan resuelto está cada aspecto). Por
  * eso el puntaje se calcula acá, en este script, replicando la misma lógica
- * que usa el diagnóstico interactivo que tenía la web.
+ * que usaba el diagnóstico interactivo que tenía la web.
  *
  * CÓMO INSTALARLO:
  * 1. En el mismo proyecto de Apps Script donde corriste
  *    "crearAmbosFormularios", pegá este archivo (o reemplazá el anterior).
- * 2. Reemplazá FORM_ID de abajo por el ID del formulario de Diagnóstico.
+ * 2. Reemplazá FORM_ID de abajo por el ID del formulario de Diagnóstico
+ *    (ya viene cargado con el tuyo).
  * 3. Elegí la función "instalarTrigger" en el menú de funciones y ejecutala
  *    una vez.
  *
  * CÓMO PROBARLO SIN LLENAR EL FORMULARIO DE NUEVO:
  * Elegí la función "probarConUltimaRespuesta" y ejecutala. Toma la última
- * respuesta que ya está guardada en el formulario y corre la misma lógica
- * que el trigger, mostrando en el Registro de ejecución (Ver → Registros)
- * exactamente qué detecta en cada paso. Mucho más rápido para debuguear.
+ * respuesta ya guardada y muestra en Ver → Registros de ejecución, línea
+ * por línea, cada pregunta recibida con su respuesta — así se ve
+ * inmediatamente si falta algo o si el texto no coincide con lo esperado.
+ *
+ * IMPORTANTE: si en el log aparece "Negocio: (sin responder)" o falta
+ * alguna otra pregunta, andá al formulario y confirmá que esa pregunta
+ * tenga tildado el asterisco rojo de obligatoria (Configuración de la
+ * pregunta → interruptor "Obligatorio"). Una pregunta no obligatoria que
+ * queda en blanco directamente no aparece en la respuesta.
  */
 
 const FORM_ID = '1axGOn7juupJ1xBOYsrTjlC20T669_X_5GFad5zZLhPw';
@@ -26,6 +33,8 @@ const FORM_ID = '1axGOn7juupJ1xBOYsrTjlC20T669_X_5GFad5zZLhPw';
 // Link del formulario de Agendar — se incluye en el email de feedback.
 const AGENDAR_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLSeV-_ghT6kB363USK_9cypfasaxauq93H1gTrmtHL0CYxOOgQ/viewform';
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Mismo texto que usaba el diagnóstico interactivo de la web.
 const RECOMENDACIONES = {
@@ -56,16 +65,15 @@ const RECOMENDACIONES = {
   },
 };
 
-// Las preguntas puntuadas están en las posiciones 3 a 7 del formulario
-// (0=Nombre, 1=Negocio, 2=Email, 3..7=las 5 preguntas, 8=prioridad), en
-// este orden exacto — así el script no depende de que el texto de la
-// pregunta no haya cambiado un poco al personalizar el formulario.
-const DIMENSIONES_POR_POSICION = [
-  'Organización',
-  'Información y decisiones',
-  'Cumplimiento',
-  'Crecimiento',
-  'Presencia digital',
+// Se identifica cada pregunta puntuada por una palabra clave distintiva de
+// su texto, no por el título exacto completo — así sobrevive a pequeños
+// cambios de redacción al personalizar el formulario.
+const PALABRA_CLAVE_POR_DIMENSION = [
+  { dimension: 'Organización', clave: 'organización interna' },
+  { dimension: 'Información y decisiones', clave: 'tomar decisiones' },
+  { dimension: 'Cumplimiento', clave: 'contables e impositivas' },
+  { dimension: 'Crecimiento', clave: 'estrategia clara para crecer' },
+  { dimension: 'Presencia digital', clave: 'tecnología y lo digital' },
 ];
 
 function instalarTrigger() {
@@ -96,49 +104,68 @@ function probarConUltimaRespuesta() {
 
 function onDiagnosticoSubmit(e) {
   const itemResponses = e.response.getItemResponses();
-  Logger.log('Respuestas recibidas: %s ítems.', itemResponses.length);
 
-  if (itemResponses.length < 8) {
-    Logger.log(
-      'ATENCIÓN: se esperaban al menos 8 preguntas (Nombre, Negocio, Email + 5 puntuadas) y llegaron %s. ' +
-        '¿Se agregó o sacó alguna pregunta del formulario después de crearlo? Revisá el orden.',
-      itemResponses.length,
-    );
-  }
+  Logger.log('--- Todo lo recibido en esta respuesta (%s ítems) ---', itemResponses.length);
+  itemResponses.forEach((item) => {
+    Logger.log('· "%s" → "%s"', item.getItem().getTitle(), item.getResponse());
+  });
+  Logger.log('---------------------------------------------------');
 
-  const nombre = itemResponses[0] ? itemResponses[0].getResponse() : '';
-  const email = itemResponses[2] ? itemResponses[2].getResponse() : '';
-  Logger.log('Nombre detectado: "%s" — Email detectado: "%s"', nombre, email);
-
+  let nombre = '';
+  let email = '';
   const scores = [];
-  for (let i = 0; i < DIMENSIONES_POR_POSICION.length; i++) {
-    const item = itemResponses[3 + i];
-    if (!item) continue;
 
-    const respuestaTexto = item.getResponse();
-    const opciones = item.getItem().asMultipleChoiceItem().getChoices().map((c) => c.getValue());
-    const valor = opciones.indexOf(respuestaTexto) + 1; // 1 a 4
+  itemResponses.forEach((item) => {
+    const tituloOriginal = item.getItem().getTitle();
+    const titulo = tituloOriginal.trim().toLowerCase();
+    const respuesta = item.getResponse();
 
-    Logger.log(
-      'Pregunta %s (%s): respondió "%s" → valor %s',
-      i + 4,
-      DIMENSIONES_POR_POSICION[i],
-      respuestaTexto,
-      valor,
-    );
-
-    if (valor > 0) {
-      scores.push({ dimension: DIMENSIONES_POR_POSICION[i], valor: valor });
+    if (titulo === 'nombre') {
+      nombre = respuesta;
+      return;
     }
-  }
+    if (titulo === 'email') {
+      email = respuesta;
+      return;
+    }
+    if (titulo === 'negocio') {
+      return; // no se usa en el cálculo, ya se logueó arriba
+    }
+
+    const match = PALABRA_CLAVE_POR_DIMENSION.find((d) => titulo.indexOf(d.clave) !== -1);
+    if (!match) return;
+
+    const opciones = item.getItem().asMultipleChoiceItem().getChoices().map((c) => c.getValue());
+    const valor = opciones.indexOf(respuesta) + 1; // 1 a 4
+    if (valor > 0) {
+      scores.push({ dimension: match.dimension, valor: valor });
+    } else {
+      Logger.log(
+        'ATENCIÓN: la respuesta "%s" no coincide con ninguna de las opciones esperadas para "%s". ¿Se editaron las opciones de esa pregunta?',
+        respuesta,
+        tituloOriginal,
+      );
+    }
+  });
+
+  if (!nombre) Logger.log('Nombre: (sin responder o no se encontró la pregunta "Nombre")');
+  if (!email) Logger.log('Email: (sin responder o no se encontró la pregunta "Email")');
+  Logger.log('Puntajes calculados: %s de 5 dimensiones.', scores.length);
 
   if (!email) {
-    Logger.log('ABORTADO: no se detectó ningún email. Revisá que la pregunta 3 del formulario sea "Email".');
+    Logger.log('ABORTADO: no hay email al que mandar el feedback.');
+    return;
+  }
+  if (!EMAIL_RE.test(email)) {
+    Logger.log('ABORTADO: "%s" no tiene formato de email válido. ¿La pregunta 3 es realmente "Email"?', email);
     return;
   }
   if (scores.length === 0) {
-    Logger.log('ABORTADO: no se pudo calcular ningún puntaje. Revisá que las opciones de las preguntas 4 a 8 no se hayan modificado.');
+    Logger.log('ABORTADO: no se pudo calcular ningún puntaje. Revisá el log de arriba.');
     return;
+  }
+  if (scores.length < 5) {
+    Logger.log('Se calcularon solo %s de 5 dimensiones — igual se manda el email con lo disponible.', scores.length);
   }
 
   const ordenado = scores.slice().sort((a, b) => a.valor - b.valor);
