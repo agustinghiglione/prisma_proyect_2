@@ -43,3 +43,8 @@ mano campo por campo. Se corren una sola vez desde [script.google.com](https://s
    en el mismo proyecto, reemplazar `FORM_ID` por el ID copiado en el paso
    anterior, elegir `instalarTrigger` → **Ejecutar**. Desde ahí, cada
    respuesta nueva dispara un email automático.
+6. Para probar el email sin llenar el formulario de nuevo cada vez: elegir
+   `probarConUltimaRespuesta` → **Ejecutar**. Toma la última respuesta ya
+   guardada y muestra en **Ver → Registros de ejecución** exactamente qué
+   detectó en cada paso (nombre, email, puntaje de cada pregunta) — muy
+   útil si el email no llega y no se sabe por qué.

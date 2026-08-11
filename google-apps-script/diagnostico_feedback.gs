@@ -5,22 +5,29 @@
  * pregunta — no permite asignarle un puntaje distinto a cada opción como
  * hacemos en el sitio (1 a 4 según qué tan resuelto está cada aspecto). Por
  * eso el puntaje se calcula acá, en este script, replicando la misma lógica
- * que usa el diagnóstico interactivo de la web.
+ * que usa el diagnóstico interactivo que tenía la web.
  *
  * CÓMO INSTALARLO:
  * 1. En el mismo proyecto de Apps Script donde corriste
- *    "crearFormularioDiagnostico" (o en uno nuevo), pegá este archivo.
- * 2. Reemplazá FORM_ID de abajo por el ID que te imprimió ese script
- *    (Logger.log "ID del formulario").
+ *    "crearAmbosFormularios", pegá este archivo (o reemplazá el anterior).
+ * 2. Reemplazá FORM_ID de abajo por el ID del formulario de Diagnóstico.
  * 3. Elegí la función "instalarTrigger" en el menú de funciones y ejecutala
- *    una vez. Eso deja el envío de emails funcionando solo, para siempre,
- *    cada vez que alguien complete el formulario.
+ *    una vez.
+ *
+ * CÓMO PROBARLO SIN LLENAR EL FORMULARIO DE NUEVO:
+ * Elegí la función "probarConUltimaRespuesta" y ejecutala. Toma la última
+ * respuesta que ya está guardada en el formulario y corre la misma lógica
+ * que el trigger, mostrando en el Registro de ejecución (Ver → Registros)
+ * exactamente qué detecta en cada paso. Mucho más rápido para debuguear.
  */
 
-const FORM_ID = 'PEGAR_AQUI_EL_ID_DEL_FORMULARIO';
+const FORM_ID = '1axGOn7juupJ1xBOYsrTjlC20T669_X_5GFad5zZLhPw';
 
-// Mismo texto que RECOMMENDATIONS en src/data/diagnostic.ts — si cambiás
-// las preguntas del sitio, conviene mantener esto alineado a mano.
+// Link del formulario de Agendar — se incluye en el email de feedback.
+const AGENDAR_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSeV-_ghT6kB363USK_9cypfasaxauq93H1gTrmtHL0CYxOOgQ/viewform';
+
+// Mismo texto que usaba el diagnóstico interactivo de la web.
 const RECOMENDACIONES = {
   'Organización': {
     bajo: 'Ordenar procesos básicos de gestión te va a devolver horas cada semana.',
@@ -49,7 +56,17 @@ const RECOMENDACIONES = {
   },
 };
 
-const DIMENSIONES_EN_ORDEN = ['Organización', 'Información y decisiones', 'Cumplimiento', 'Crecimiento', 'Presencia digital'];
+// Las preguntas puntuadas están en las posiciones 3 a 7 del formulario
+// (0=Nombre, 1=Negocio, 2=Email, 3..7=las 5 preguntas, 8=prioridad), en
+// este orden exacto — así el script no depende de que el texto de la
+// pregunta no haya cambiado un poco al personalizar el formulario.
+const DIMENSIONES_POR_POSICION = [
+  'Organización',
+  'Información y decisiones',
+  'Cumplimiento',
+  'Crecimiento',
+  'Presencia digital',
+];
 
 function instalarTrigger() {
   ScriptApp.getProjectTriggers()
@@ -58,40 +75,77 @@ function instalarTrigger() {
 
   const form = FormApp.openById(FORM_ID);
   ScriptApp.newTrigger('onDiagnosticoSubmit').forForm(form).onFormSubmit().create();
-  Logger.log('Trigger instalado correctamente.');
+  Logger.log('Trigger instalado correctamente sobre el formulario: %s', form.getTitle());
+}
+
+/**
+ * Toma la última respuesta ya guardada en el formulario y la procesa,
+ * sin esperar un envío nuevo. Para debuguear rápido.
+ */
+function probarConUltimaRespuesta() {
+  const form = FormApp.openById(FORM_ID);
+  const respuestas = form.getResponses();
+  if (respuestas.length === 0) {
+    Logger.log('El formulario todavía no tiene ninguna respuesta guardada.');
+    return;
+  }
+  const ultima = respuestas[respuestas.length - 1];
+  Logger.log('Procesando la última respuesta (de %s en total)...', respuestas.length);
+  onDiagnosticoSubmit({ response: ultima });
 }
 
 function onDiagnosticoSubmit(e) {
   const itemResponses = e.response.getItemResponses();
+  Logger.log('Respuestas recibidas: %s ítems.', itemResponses.length);
 
-  let nombre = '';
-  let email = '';
+  if (itemResponses.length < 8) {
+    Logger.log(
+      'ATENCIÓN: se esperaban al menos 8 preguntas (Nombre, Negocio, Email + 5 puntuadas) y llegaron %s. ' +
+        '¿Se agregó o sacó alguna pregunta del formulario después de crearlo? Revisá el orden.',
+      itemResponses.length,
+    );
+  }
+
+  const nombre = itemResponses[0] ? itemResponses[0].getResponse() : '';
+  const email = itemResponses[2] ? itemResponses[2].getResponse() : '';
+  Logger.log('Nombre detectado: "%s" — Email detectado: "%s"', nombre, email);
+
   const scores = [];
+  for (let i = 0; i < DIMENSIONES_POR_POSICION.length; i++) {
+    const item = itemResponses[3 + i];
+    if (!item) continue;
 
-  itemResponses.forEach((item) => {
-    const title = item.getItem().getTitle();
-    const answer = item.getResponse();
+    const respuestaTexto = item.getResponse();
+    const opciones = item.getItem().asMultipleChoiceItem().getChoices().map((c) => c.getValue());
+    const valor = opciones.indexOf(respuestaTexto) + 1; // 1 a 4
 
-    if (title === 'Nombre') nombre = answer;
-    if (title === 'Email') email = answer;
+    Logger.log(
+      'Pregunta %s (%s): respondió "%s" → valor %s',
+      i + 4,
+      DIMENSIONES_POR_POSICION[i],
+      respuestaTexto,
+      valor,
+    );
 
-    const dimIndex = DIMENSIONES_EN_ORDEN.indexOf(tituloADimension(title));
-    if (dimIndex !== -1) {
-      const opciones = item.getItem().asMultipleChoiceItem().getChoices().map((c) => c.getValue());
-      const valor = opciones.indexOf(answer) + 1; // 1 a 4, mismo orden que en el sitio
-      scores.push({ dimension: DIMENSIONES_EN_ORDEN[dimIndex], valor: valor });
+    if (valor > 0) {
+      scores.push({ dimension: DIMENSIONES_POR_POSICION[i], valor: valor });
     }
-  });
+  }
 
-  if (!email || scores.length === 0) return;
+  if (!email) {
+    Logger.log('ABORTADO: no se detectó ningún email. Revisá que la pregunta 3 del formulario sea "Email".');
+    return;
+  }
+  if (scores.length === 0) {
+    Logger.log('ABORTADO: no se pudo calcular ningún puntaje. Revisá que las opciones de las preguntas 4 a 8 no se hayan modificado.');
+    return;
+  }
 
   const ordenado = scores.slice().sort((a, b) => a.valor - b.valor);
   const oportunidades = ordenado.slice(0, 2);
   const overallPercent = Math.round((scores.reduce((s, x) => s + x.valor, 0) / (scores.length * 4)) * 100);
 
-  const filasMapa = scores
-    .map((s) => `${s.dimension}: ${Math.round((s.valor / 4) * 100)}%`)
-    .join('\n');
+  const filasMapa = scores.map((s) => `${s.dimension}: ${Math.round((s.valor / 4) * 100)}%`).join('\n');
 
   const recomendaciones = oportunidades
     .map((o) => {
@@ -111,19 +165,13 @@ function onDiagnosticoSubmit(e) {
     'Primeras recomendaciones:',
     recomendaciones,
     '',
-    'Si querés profundizar esto en una conversación, respondé este email o completá el formulario de agendamiento.',
+    'Con este diagnóstico ya estás a mitad de camino: el próximo paso es que conversemos sobre tu negocio.',
+    `Agendá tu primera conversación acá: ${AGENDAR_URL}`,
     '',
     'Prisma Consultora',
   ].join('\n');
 
+  Logger.log('Enviando email a %s...', email);
   MailApp.sendEmail(email, 'Tu Informe Ejecutivo Prisma®', cuerpo);
-}
-
-function tituloADimension(titulo) {
-  if (titulo.indexOf('organización interna') !== -1) return 'Organización';
-  if (titulo.indexOf('tomar decisiones') !== -1) return 'Información y decisiones';
-  if (titulo.indexOf('contables e impositivas') !== -1) return 'Cumplimiento';
-  if (titulo.indexOf('estrategia clara para crecer') !== -1) return 'Crecimiento';
-  if (titulo.indexOf('tecnología y lo digital') !== -1) return 'Presencia digital';
-  return null;
+  Logger.log('Email enviado correctamente.');
 }
