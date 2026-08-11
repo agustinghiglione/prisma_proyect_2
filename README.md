@@ -1,6 +1,6 @@
 # Prisma Consultora
 
-Sitio web oficial de Prisma Consultora — Sprint 01. Single Page Application construida como embudo comercial: desde el primer impacto en el Hero hasta el Diagnóstico Prisma® interactivo y el agendamiento de la primera conversación.
+Sitio web oficial de Prisma Consultora. Single Page Application construida como embudo comercial: desde el primer impacto en el Hero hasta el Método y el agendamiento de la primera conversación.
 
 ## Stack
 
@@ -9,7 +9,10 @@ Sitio web oficial de Prisma Consultora — Sprint 01. Single Page Application co
 - [Framer Motion](https://www.framer.com/motion/) para animaciones
 - [Lucide React](https://lucide.dev/) para íconos
 
-Sitio 100% frontend: no requiere backend ni base de datos. El Diagnóstico Prisma® calcula el informe en el cliente, y el agendamiento redirige a un Google Form externo.
+Sitio 100% estático: no requiere backend ni base de datos. Tanto el
+Diagnóstico Prisma® como el agendamiento de la primera conversación viven en
+Google Forms externos (ver `google-apps-script/` para cómo se crearon y
+cómo mantenerlos).
 
 ## Cómo correr el proyecto
 
@@ -27,17 +30,25 @@ npm run build
 npm run preview
 ```
 
+## Deploy
+
+Sitio puramente estático — en DigitalOcean App Platform (o cualquier
+hosting similar) alcanza con un componente **Static Site**:
+
+- Build command: `npm install && npm run build`
+- Output directory: `dist`
+
+No hace falta ningún componente de backend ni base de datos.
+
 ## Estructura
 
 ```
 src/
   components/        Secciones de la landing (Hero, Soluciones, Método, etc.)
-  components/diagnostic/  Motor del Diagnóstico Prisma® (preguntas, informe)
-  components/visuals/     Ilustraciones SVG propias (placeholders de fotografía)
-  data/              Contenido editable (preguntas, soluciones, FAQ, nav)
-  hooks/             Estado del diagnóstico (useDiagnostic)
-  lib/               Lógica de scoring del diagnóstico
+  components/visuals/    Ilustraciones e ilustraciones SVG propias (ShineSweep, etc.)
+  data/              Contenido editable (soluciones, FAQ, nav, links a los Forms)
 public/img/          Imágenes estáticas del sitio
+google-apps-script/  Scripts para crear y mantener los Google Forms (Diagnóstico y Agendar)
 ```
 
 ## Imágenes
@@ -46,6 +57,5 @@ Las imágenes definitivas van en `public/img/`. Las secciones sin foto real toda
 
 ## Configuración pendiente
 
-- Reemplazar imágenes placeholder restantes por fotografía definitiva.
 - Datos de contacto y redes sociales reales en el footer.
-- El link de agendamiento (Google Form) vive en `src/data/nav.ts` (`GOOGLE_FORM_URL`).
+- Los links a los Google Forms (Diagnóstico y Agendar) viven en `src/data/nav.ts`.

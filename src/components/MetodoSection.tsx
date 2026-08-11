@@ -26,7 +26,7 @@ export default function MetodoSection() {
           alt="Prisma de cristal atravesado por un haz de luz"
           className="h-full w-full object-cover"
         />
-        <ShineSweep duration={2.2} repeatDelay={3} bandWidth="30%" />
+        <ShineSweep duration={2.2} repeatDelay={3} bandWidth="12%" />
         <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-b from-transparent to-background" />
       </div>
 
@@ -66,7 +66,7 @@ export default function MetodoSection() {
                 className="relative rounded-2xl border border-border bg-background p-7"
               >
                 <span className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-primary text-sm font-bold text-white">
-                  <ShineSweep duration={1.4} repeatDelay={4 + i * 0.6} bandWidth="45%" />
+                  <ShineSweep duration={1.4} repeatDelay={4 + i * 0.6} bandWidth="20%" />
                   {i + 1}
                 </span>
                 <Icon size={22} className="mt-5 text-primary" strokeWidth={1.75} />
@@ -82,7 +82,7 @@ export default function MetodoSection() {
             onClick={scrollToContacto}
             className="relative overflow-hidden rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5"
           >
-            <ShineSweep duration={1.6} repeatDelay={3.4} bandWidth="35%" />
+            <ShineSweep duration={1.6} repeatDelay={3.4} bandWidth="16%" />
             Conversemos sobre tu negocio
           </button>
         </div>

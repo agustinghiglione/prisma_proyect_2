@@ -17,7 +17,7 @@ interface ShineSweepProps {
 export default function ShineSweep({
   duration = 1.8,
   repeatDelay = 3.2,
-  bandWidth = '40%',
+  bandWidth = '16%',
   className = '',
 }: ShineSweepProps) {
   return (
@@ -28,8 +28,8 @@ export default function ShineSweep({
         background: `linear-gradient(115deg, transparent calc(50% - ${bandWidth}), rgba(255,248,230,0.75) 50%, transparent calc(50% + ${bandWidth}))`,
         mixBlendMode: 'screen',
       }}
-      initial={{ x: '-60%' }}
-      animate={{ x: '60%' }}
+      initial={{ x: '-130%' }}
+      animate={{ x: '130%' }}
       transition={{ duration, ease: 'easeInOut', repeat: Infinity, repeatDelay }}
     />
   );
