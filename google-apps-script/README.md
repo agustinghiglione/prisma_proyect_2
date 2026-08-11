@@ -17,14 +17,19 @@ mano campo por campo. Se corren una sola vez desde [script.google.com](https://s
 ## Archivos
 
 - `crear_formularios.gs` — crea ambos formularios ya conectados entre sí,
-  con todas las preguntas cargadas y sus planillas de respuestas.
+  con todas las preguntas cargadas y sus planillas de respuestas. Correr
+  desde script.google.com (ver abajo).
+- `prompt_gemini.md` — la misma especificación, en formato de prompt, para
+  pedirle a Gemini (con acceso a Google Workspace) que arme ambos
+  formularios directamente desde el chat. Alternativa más rápida si no
+  querés tocar código.
 - `diagnostico_feedback.gs` — opcional. Manda un email automático con un
   resumen del resultado a quien completa el Diagnóstico (lo más parecido a
   "feedback automático" que se puede lograr con Forms, ya que el modo Quiz
   nativo de Google no permite puntuar cada opción de forma graduada como
   hace el sitio).
 
-## Cómo usarlo
+## Cómo usarlo (con Apps Script)
 
 1. Ir a [script.google.com](https://script.google.com) → **Nuevo proyecto**.
 2. Pegar el contenido de `crear_formularios.gs`.
