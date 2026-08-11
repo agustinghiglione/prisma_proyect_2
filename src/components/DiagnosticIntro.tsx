@@ -20,6 +20,7 @@ export default function DiagnosticIntro({ onStartDiagnostic }: DiagnosticIntroPr
     <section id="diagnostico" className="relative overflow-hidden bg-gradient-prisma px-6 py-28 lg:px-10">
       <div className="pointer-events-none absolute -top-32 -right-24 h-96 w-96 rounded-full bg-gold/25 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-surface" />
 
       <div className="relative mx-auto max-w-4xl text-center">
         <motion.h2

@@ -7,7 +7,7 @@ export default function SolucionesSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section id="soluciones" className="px-6 py-28 lg:px-10">
+    <section id="soluciones" className="bg-surface px-6 py-28 lg:px-10">
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-2xl text-center">
           <motion.h2
@@ -31,7 +31,7 @@ export default function SolucionesSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.4 }}
                 transition={{ duration: 0.5, delay: i * 0.06 }}
-                className="overflow-hidden rounded-2xl border border-border bg-surface"
+                className="overflow-hidden rounded-2xl border border-border bg-background"
               >
                 <button
                   onClick={() => setOpenIndex(open ? null : i)}
