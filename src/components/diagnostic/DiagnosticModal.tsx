@@ -11,9 +11,10 @@ import ReportScreen from './ReportScreen';
 interface DiagnosticModalProps {
   open: boolean;
   onClose: () => void;
+  onComplete?: () => void;
 }
 
-export default function DiagnosticModal({ open, onClose }: DiagnosticModalProps) {
+export default function DiagnosticModal({ open, onClose, onComplete }: DiagnosticModalProps) {
   const diag = useDiagnostic();
 
   useEffect(() => {
@@ -26,6 +27,12 @@ export default function DiagnosticModal({ open, onClose }: DiagnosticModalProps)
       document.body.style.overflow = '';
     };
   }, [open]);
+
+  useEffect(() => {
+    if (diag.phase === 'report') {
+      onComplete?.();
+    }
+  }, [diag.phase, onComplete]);
 
   const handleClose = () => {
     onClose();

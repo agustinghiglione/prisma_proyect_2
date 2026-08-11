@@ -11,11 +11,20 @@ import ContactoSection from './components/ContactoSection';
 import Footer from './components/Footer';
 import DiagnosticModal from './components/diagnostic/DiagnosticModal';
 
+const DIAGNOSTIC_DONE_KEY = 'prisma_diagnostic_completed';
+
 function App() {
   const [diagnosticOpen, setDiagnosticOpen] = useState(false);
+  const [diagnosticCompleted, setDiagnosticCompleted] = useState(
+    () => sessionStorage.getItem(DIAGNOSTIC_DONE_KEY) === 'true',
+  );
 
   const openDiagnostic = () => setDiagnosticOpen(true);
   const closeDiagnostic = () => setDiagnosticOpen(false);
+  const markDiagnosticCompleted = () => {
+    sessionStorage.setItem(DIAGNOSTIC_DONE_KEY, 'true');
+    setDiagnosticCompleted(true);
+  };
 
   return (
     <div className="min-h-screen bg-background font-sans text-ink antialiased">
@@ -29,10 +38,10 @@ function App() {
         <MetodoSection />
         <PorQueSection />
         <TransitionQuote text="Toda gran decisión empieza con una conversación clara." />
-        <ContactoSection />
+        <ContactoSection diagnosticCompleted={diagnosticCompleted} onStartDiagnostic={openDiagnostic} />
       </main>
       <Footer />
-      <DiagnosticModal open={diagnosticOpen} onClose={closeDiagnostic} />
+      <DiagnosticModal open={diagnosticOpen} onClose={closeDiagnostic} onComplete={markDiagnosticCompleted} />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { METODO_STEPS } from '../data/metodo';
+import ShineSweep from './visuals/ShineSweep';
 
 export default function MetodoSection() {
   const scrollToContacto = () => {
@@ -25,16 +26,7 @@ export default function MetodoSection() {
           alt="Prisma de cristal atravesado por un haz de luz"
           className="h-full w-full object-cover"
         />
-        <motion.div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(circle at 64% 46%, rgba(255,255,255,0.85) 0%, rgba(228,177,94,0.35) 22%, transparent 55%)',
-            mixBlendMode: 'screen',
-          }}
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 3.6, repeat: Infinity, ease: 'easeInOut' }}
-        />
+        <ShineSweep duration={2.2} repeatDelay={3} bandWidth="30%" />
         <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-b from-transparent to-background" />
       </div>
 
@@ -73,7 +65,8 @@ export default function MetodoSection() {
                 transition={{ duration: 0.6, delay: i * 0.1 }}
                 className="relative rounded-2xl border border-border bg-background p-7"
               >
-                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
+                <span className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-primary text-sm font-bold text-white">
+                  <ShineSweep duration={1.4} repeatDelay={4 + i * 0.6} bandWidth="45%" />
                   {i + 1}
                 </span>
                 <Icon size={22} className="mt-5 text-primary" strokeWidth={1.75} />
@@ -87,8 +80,9 @@ export default function MetodoSection() {
         <div className="mt-16 text-center">
           <button
             onClick={scrollToContacto}
-            className="rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5"
+            className="relative overflow-hidden rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5"
           >
+            <ShineSweep duration={1.6} repeatDelay={3.4} bandWidth="35%" />
             Conversemos sobre tu negocio
           </button>
         </div>

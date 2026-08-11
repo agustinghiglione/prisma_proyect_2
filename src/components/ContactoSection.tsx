@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Calendar, Link2, MessageCircle } from 'lucide-react';
+import { ArrowRight, Calendar, Link2, MessageCircle, Sparkles } from 'lucide-react';
 import FaqAccordion from './FaqAccordion';
 import { GOOGLE_FORM_URL } from '../data/nav';
 
@@ -9,7 +9,12 @@ const PASOS = [
   { icon: MessageCircle, text: 'Conversamos sobre tu negocio, sin compromiso.' },
 ];
 
-export default function ContactoSection() {
+interface ContactoSectionProps {
+  diagnosticCompleted: boolean;
+  onStartDiagnostic: () => void;
+}
+
+export default function ContactoSection({ diagnosticCompleted, onStartDiagnostic }: ContactoSectionProps) {
   const handleSchedule = () => {
     window.open(GOOGLE_FORM_URL, '_blank', 'noopener,noreferrer');
   };
@@ -26,16 +31,52 @@ export default function ContactoSection() {
           >
             Conversemos sobre tu negocio.
           </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="mt-5 max-w-lg leading-relaxed text-ink-soft"
-          >
-            Contanos brevemente quién sos y en qué momento está tu negocio. Es el primer paso para
-            que empecemos a mirar juntos con más claridad.
-          </motion.p>
+
+          {diagnosticCompleted ? (
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="mt-5 max-w-lg leading-relaxed text-ink-soft"
+            >
+              Ya conocemos un poco mejor el momento de tu negocio. Ahora nos gustaría conocerte a
+              vos.
+            </motion.p>
+          ) : (
+            <>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="mt-5 max-w-lg leading-relaxed text-ink-soft"
+              >
+                Contanos brevemente quién sos y en qué momento está tu negocio. Es el primer paso
+                para que empecemos a mirar juntos con más claridad.
+              </motion.p>
+
+              <motion.button
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 }}
+                onClick={onStartDiagnostic}
+                className="mt-5 flex items-center gap-3 rounded-2xl border border-gold/40 bg-gold/10 px-5 py-4 text-left transition-colors hover:bg-gold/15"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold/25 text-primary-dark">
+                  <Sparkles size={16} strokeWidth={1.75} />
+                </span>
+                <span className="text-sm text-ink">
+                  Antes de conversar, si querés, podés realizar nuestro{' '}
+                  <span className="font-semibold text-primary-dark">Diagnóstico Prisma® gratuito.</span>
+                  <span className="mt-0.5 block font-semibold text-primary underline underline-offset-2">
+                    Hacer mi diagnóstico
+                  </span>
+                </span>
+              </motion.button>
+            </>
+          )}
 
           <div className="mt-10 flex flex-col gap-4">
             {PASOS.map(({ icon: Icon, text }, i) => (
