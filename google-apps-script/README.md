@@ -4,44 +4,37 @@ Estos archivos **no forman parte del sitio** — son scripts de Google Apps
 Script para generar los formularios de Google rápido, en vez de armarlos a
 mano campo por campo. Se corren una sola vez desde [script.google.com](https://script.google.com).
 
-## Antes de leer esto
+## Cómo se conectan los dos formularios
 
-Ver la conversación con Claude para el contexto completo, pero en resumen:
-el **Diagnóstico Prisma®** ya vive en el sitio como una experiencia
-interactiva (una pregunta por pantalla) que calcula el informe al instante y
-guarda cada respuesta en la planilla de Google Sheets automáticamente. Pasar
-ese diagnóstico a un Google Form externo pierde esa experiencia y rompe la
-función que reconoce si el visitante ya hizo el diagnóstico antes de llegar
-a "Conversemos sobre tu negocio". Por eso estos scripts están pensados como
-una **alternativa o complemento**, no un reemplazo recomendado del
-diagnóstico del sitio.
-
-Distinto es el formulario para **agendar la primera conversación**: ese
-siempre fue pensado como un Google Form externo, así que no hay ningún
-conflicto en armarlo así.
+- Al completar el **Diagnóstico**, el mensaje de confirmación invita a
+  agendar la conversación y deja el link directo al formulario de Agendar.
+- El formulario de **Agendar** pregunta "¿Ya completaste el Diagnóstico
+  Prisma®?", así el equipo sabe antes de la reunión si hay un diagnóstico
+  previo para revisar.
+- Cada formulario queda conectado a su propia planilla de respuestas nueva
+  (el "Link to Sheets" de la interfaz de Forms, hecho automáticamente).
 
 ## Archivos
 
-- `crear_formularios.gs` — crea ambos formularios (Diagnóstico y Agendar)
-  con todas las preguntas ya cargadas.
-- `diagnostico_feedback.gs` — opcional. Si igual querés que el Formulario de
-  Diagnóstico le mande un email automático con un resumen del resultado a
-  quien lo completa (lo más parecido a "feedback automático" que se puede
-  lograr con Forms, ya que el modo Quiz nativo de Google no permite puntuar
-  cada opción de forma graduada como hace el sitio).
+- `crear_formularios.gs` — crea ambos formularios ya conectados entre sí,
+  con todas las preguntas cargadas y sus planillas de respuestas.
+- `diagnostico_feedback.gs` — opcional. Manda un email automático con un
+  resumen del resultado a quien completa el Diagnóstico (lo más parecido a
+  "feedback automático" que se puede lograr con Forms, ya que el modo Quiz
+  nativo de Google no permite puntuar cada opción de forma graduada como
+  hace el sitio).
 
 ## Cómo usarlo
 
 1. Ir a [script.google.com](https://script.google.com) → **Nuevo proyecto**.
 2. Pegar el contenido de `crear_formularios.gs`.
 3. En el menú de funciones (arriba de la barra de herramientas), elegir
-   `crearFormularioDiagnostico` → **Ejecutar**. La primera vez pide
-   autorización (es tu propia cuenta de Google, no hay riesgo).
-4. Repetir con `crearFormularioAgendar`.
-5. Abrir **Ver → Registros de ejecución** para copiar los links de cada
+   `crearAmbosFormularios` → **Ejecutar**. La primera vez pide autorización
+   (es tu propia cuenta de Google, no hay riesgo).
+4. Abrir **Ver → Registros de ejecución** para copiar los links de cada
    formulario (edición y para compartir) y el ID del formulario de
    Diagnóstico.
-6. *(Opcional)* Si querés el email automático: pegar `diagnostico_feedback.gs`
+5. *(Opcional)* Si querés el email automático: pegar `diagnostico_feedback.gs`
    en el mismo proyecto, reemplazar `FORM_ID` por el ID copiado en el paso
    anterior, elegir `instalarTrigger` → **Ejecutar**. Desde ahí, cada
    respuesta nueva dispara un email automático.
