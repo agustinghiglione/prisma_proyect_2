@@ -13,4 +13,8 @@ export const NAV_ITEMS: NavItem[] = [
 
 export const NAV_CTA: NavItem = { label: 'Conversemos sobre tu negocio', href: '#contacto' };
 
-export const GOOGLE_FORM_URL = 'https://forms.gle/9Gw51drKN3Y38DHB6';
+export const GOOGLE_DIAGNOSTICO_FORM_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSe4nq4U1y60FDDIYSulvqqJtBNXFF7wLYhlX2u6PZcit6UK2g/viewform';
+
+export const GOOGLE_AGENDAR_FORM_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSeV-_ghT6kB363USK_9cypfasaxauq93H1gTrmtHL0CYxOOgQ/viewform';

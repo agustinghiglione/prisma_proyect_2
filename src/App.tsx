@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ProblemsSection from './components/ProblemsSection';
@@ -9,21 +8,11 @@ import MetodoSection from './components/MetodoSection';
 import PorQueSection from './components/PorQueSection';
 import ContactoSection from './components/ContactoSection';
 import Footer from './components/Footer';
-import DiagnosticModal from './components/diagnostic/DiagnosticModal';
-
-const DIAGNOSTIC_DONE_KEY = 'prisma_diagnostic_completed';
+import { GOOGLE_DIAGNOSTICO_FORM_URL } from './data/nav';
 
 function App() {
-  const [diagnosticOpen, setDiagnosticOpen] = useState(false);
-  const [diagnosticCompleted, setDiagnosticCompleted] = useState(
-    () => sessionStorage.getItem(DIAGNOSTIC_DONE_KEY) === 'true',
-  );
-
-  const openDiagnostic = () => setDiagnosticOpen(true);
-  const closeDiagnostic = () => setDiagnosticOpen(false);
-  const markDiagnosticCompleted = () => {
-    sessionStorage.setItem(DIAGNOSTIC_DONE_KEY, 'true');
-    setDiagnosticCompleted(true);
+  const openDiagnostic = () => {
+    window.open(GOOGLE_DIAGNOSTICO_FORM_URL, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -38,10 +27,9 @@ function App() {
         <MetodoSection />
         <PorQueSection />
         <TransitionQuote text="Toda gran decisión empieza con una conversación clara." />
-        <ContactoSection diagnosticCompleted={diagnosticCompleted} onStartDiagnostic={openDiagnostic} />
+        <ContactoSection onStartDiagnostic={openDiagnostic} />
       </main>
       <Footer />
-      <DiagnosticModal open={diagnosticOpen} onClose={closeDiagnostic} onComplete={markDiagnosticCompleted} />
     </div>
   );
 }
