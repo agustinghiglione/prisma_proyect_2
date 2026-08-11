@@ -112,7 +112,11 @@ function onDiagnosticoSubmit(e) {
   Logger.log('---------------------------------------------------');
 
   let nombre = '';
-  let email = '';
+  // El email ya no es una pregunta del formulario: se usa la opción nativa
+  // "Recopilar direcciones de correo electrónico" de Configuración, que
+  // Apps Script expone por un método aparte, no como un ítem más.
+  let email = e.response.getRespondentEmail() || '';
+  Logger.log('Email recopilado por Forms (Configuración → Respuestas): "%s"', email);
   const scores = [];
 
   itemResponses.forEach((item) => {
@@ -125,7 +129,9 @@ function onDiagnosticoSubmit(e) {
       return;
     }
     if (titulo === 'email') {
-      email = respuesta;
+      // Por si en algún momento se vuelve a usar una pregunta manual de
+      // Email en vez de (o además de) la recopilación automática.
+      if (!email) email = respuesta;
       return;
     }
     if (titulo === 'negocio') {
@@ -149,7 +155,12 @@ function onDiagnosticoSubmit(e) {
   });
 
   if (!nombre) Logger.log('Nombre: (sin responder o no se encontró la pregunta "Nombre")');
-  if (!email) Logger.log('Email: (sin responder o no se encontró la pregunta "Email")');
+  if (!email) {
+    Logger.log(
+      'Email: vacío. Revisá que Configuración → Respuestas → "Recopilar direcciones de correo electrónico" ' +
+        'esté activado en el formulario.',
+    );
+  }
   Logger.log('Puntajes calculados: %s de 5 dimensiones.', scores.length);
 
   if (!email) {
@@ -157,7 +168,7 @@ function onDiagnosticoSubmit(e) {
     return;
   }
   if (!EMAIL_RE.test(email)) {
-    Logger.log('ABORTADO: "%s" no tiene formato de email válido. ¿La pregunta 3 es realmente "Email"?', email);
+    Logger.log('ABORTADO: "%s" no tiene formato de email válido.', email);
     return;
   }
   if (scores.length === 0) {
