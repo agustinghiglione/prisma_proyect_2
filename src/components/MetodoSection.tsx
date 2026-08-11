@@ -7,7 +7,14 @@ export default function MetodoSection() {
   };
 
   return (
-    <section id="metodo" className="relative bg-background pb-28">
+    <section
+      id="metodo"
+      className="relative pb-28"
+      style={{
+        background:
+          'linear-gradient(to bottom, var(--color-background) 0%, var(--color-background) 55%, var(--color-surface) 100%)',
+      }}
+    >
       <div className="relative h-[46vh] min-h-[320px] w-full overflow-hidden sm:h-[52vh]">
         <motion.img
           initial={{ opacity: 0, scale: 1.05 }}
@@ -17,6 +24,16 @@ export default function MetodoSection() {
           src="/img/foto_metodo.png"
           alt="Prisma de cristal atravesado por un haz de luz"
           className="h-full w-full object-cover"
+        />
+        <motion.div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(circle at 64% 46%, rgba(255,255,255,0.85) 0%, rgba(228,177,94,0.35) 22%, transparent 55%)',
+            mixBlendMode: 'screen',
+          }}
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 3.6, repeat: Infinity, ease: 'easeInOut' }}
         />
         <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-b from-transparent to-background" />
       </div>
@@ -54,7 +71,7 @@ export default function MetodoSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.5 }}
                 transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="relative rounded-2xl border border-border bg-surface p-7"
+                className="relative rounded-2xl border border-border bg-background p-7"
               >
                 <span className="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
                   {i + 1}

@@ -23,6 +23,7 @@ export default function Hero({ onStartDiagnostic }: HeroProps) {
         className="absolute inset-0 h-full w-full object-cover"
       />
       <div className="absolute inset-0 bg-gradient-to-r from-primary-dark/75 via-primary-dark/35 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-b from-transparent to-surface sm:h-72" />
 
       <div className="relative mx-auto grid w-full max-w-7xl gap-10 px-6 pt-28 pb-16 lg:px-10">
         <motion.div
@@ -66,8 +67,8 @@ export default function Hero({ onStartDiagnostic }: HeroProps) {
         </motion.div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-white/70 sm:flex">
-        <span className="h-10 w-px animate-fade-in bg-white/40" />
+      <div className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 sm:flex">
+        <span className="h-10 w-px animate-fade-in bg-primary-dark/30" />
       </div>
     </section>
   );
