@@ -1,4 +1,4 @@
-import { Linkedin, Instagram, Mail } from 'lucide-react';
+import { Linkedin, Instagram, Mail, MessageCircle } from 'lucide-react';
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -18,6 +18,9 @@ export default function Footer() {
             <Mail size={15} /> contacto@prismaconsultora.com
           </a>
           <div className="flex gap-4">
+            <a href="#" aria-label="WhatsApp" className="hover:text-white">
+              <MessageCircle size={18} />
+            </a>
             <a href="#" aria-label="LinkedIn" className="hover:text-white">
               <Linkedin size={18} />
             </a>
@@ -27,9 +30,18 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <p className="mt-10 text-center text-xs text-white/40">
-        © {year} Prisma Consultora. Todos los derechos reservados.
-      </p>
+
+      <div className="mx-auto mt-8 flex max-w-6xl flex-col items-center gap-4 border-t border-white/10 pt-6 text-xs sm:flex-row sm:justify-between">
+        <p className="text-white/40">© {year} Prisma Consultora. Todos los derechos reservados.</p>
+        <div className="flex gap-5">
+          <a href="#" className="hover:text-white">
+            Política de privacidad
+          </a>
+          <a href="#" className="hover:text-white">
+            Términos
+          </a>
+        </div>
+      </div>
     </footer>
   );
 }

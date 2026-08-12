@@ -22,7 +22,7 @@ export const SOLUCIONES: Solucion[] = [
   },
   {
     icon: ShieldCheck,
-    title: 'Quiero cumplir con tranquilidad',
+    title: 'Quiero trabajar con tranquilidad',
     detail:
       'Acompañamos tus obligaciones contables e impositivas para que dejen de ser una fuente de estrés.',
   },
@@ -33,7 +33,7 @@ export const SOLUCIONES: Solucion[] = [
   },
   {
     icon: Globe,
-    title: 'Quiero potenciar mi presencia digital',
-    detail: 'Incorporamos las herramientas digitales adecuadas para que tu negocio se gestione mejor y se muestre de forma más profesional.',
+    title: 'Quiero modernizar mi negocio',
+    detail: 'Incorporamos tecnología y herramientas actuales para que tu negocio se gestione mejor y esté a la altura de lo que hoy esperan tus clientes.',
   },
 ];

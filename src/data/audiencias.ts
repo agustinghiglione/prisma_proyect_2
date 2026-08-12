@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { Rocket, Briefcase, Receipt, Globe, Store, Building2 } from 'lucide-react';
+import { Sprout, Briefcase, Receipt, Globe, Store, Building2 } from 'lucide-react';
 
 export interface Audiencia {
   icon: LucideIcon;
@@ -9,7 +9,7 @@ export interface Audiencia {
 
 export const AUDIENCIAS: Audiencia[] = [
   {
-    icon: Rocket,
+    icon: Sprout,
     title: 'Estoy comenzando un emprendimiento',
     detail: 'Te ayudamos a construir una base sólida para que puedas crecer con organización desde el primer día.',
   },

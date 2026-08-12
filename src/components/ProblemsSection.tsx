@@ -2,11 +2,7 @@ import { motion } from 'framer-motion';
 import { PROBLEMS } from '../data/problems';
 import MinimalDeskVisual from './visuals/MinimalDeskVisual';
 
-interface ProblemsSectionProps {
-  onStartDiagnostic: () => void;
-}
-
-export default function ProblemsSection({ onStartDiagnostic }: ProblemsSectionProps) {
+export default function ProblemsSection() {
   return (
     <section className="bg-surface px-6 py-28 lg:px-10">
       <div className="mx-auto max-w-6xl">
@@ -58,12 +54,6 @@ export default function ProblemsSection({ onStartDiagnostic }: ProblemsSectionPr
           <p className="mx-auto max-w-xl font-heading text-xl font-semibold text-primary">
             No se trata de trabajar más. Se trata de ver con mayor claridad.
           </p>
-          <button
-            onClick={onStartDiagnostic}
-            className="mt-8 rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5"
-          >
-            Comenzar Diagnóstico
-          </button>
         </motion.div>
       </div>
     </section>

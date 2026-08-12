@@ -11,21 +11,21 @@ export const METODO_STEPS: MetodoStep[] = [
   {
     icon: Search,
     title: 'Observar',
-    detail: 'Escuchamos y analizamos tu negocio tal como es hoy, sin apurar conclusiones.',
+    detail: 'Comprendemos tu realidad.',
   },
   {
     icon: Eye,
     title: 'Interpretar',
-    detail: 'Transformamos lo que observamos en información clara sobre oportunidades y riesgos.',
+    detail: 'Encontramos lo que realmente necesita atención.',
   },
   {
     icon: PenTool,
     title: 'Diseñar',
-    detail: 'Creamos una estrategia hecha a medida de tus objetivos y de la realidad de tu negocio.',
+    detail: 'Construimos una solución adaptada.',
   },
   {
     icon: Users,
     title: 'Acompañar',
-    detail: 'Caminamos junto a vos en la implementación, ajustando el rumbo cuando hace falta.',
+    detail: 'Te ayudamos a llevarla adelante.',
   },
 ];

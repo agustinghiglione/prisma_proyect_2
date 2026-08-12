@@ -1,9 +1,0 @@
-node_modules/
-.env
-.env.local
-*.log
-
-# Credenciales de Google (service account) — nunca deben subirse al repo.
-*.json
-!package.json
-!package-lock.json

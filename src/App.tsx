@@ -21,15 +21,19 @@ function App() {
       <Navbar />
       <main>
         <Hero onStartDiagnostic={openDiagnostic} />
-        <ProblemsSection onStartDiagnostic={openDiagnostic} />
-        <AudienciaSection onStartDiagnostic={openDiagnostic} />
+        <ProblemsSection />
+        <AudienciaSection />
+        <TransitionQuote text="Cada momento necesita una mirada diferente." variant="horizon-light" />
         <DiagnosticIntro onStartDiagnostic={openDiagnostic} />
         <SolucionesSection />
         <TransitionQuote text="Antes de proponer soluciones, entendemos tu negocio." />
         <MetodoSection />
         <PorQueSection />
-        <TransitionQuote text="Toda gran decisión empieza con una conversación clara." />
-        <ContactoSection onStartDiagnostic={openDiagnostic} />
+        <TransitionQuote
+          text="Toda gran decisión empieza con una conversación clara."
+          variant="horizon-light"
+        />
+        <ContactoSection />
       </main>
       <Footer />
     </div>

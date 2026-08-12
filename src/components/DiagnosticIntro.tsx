@@ -39,8 +39,8 @@ export default function DiagnosticIntro({ onStartDiagnostic }: DiagnosticIntroPr
           transition={{ duration: 0.7, delay: 0.2 }}
           className="mx-auto mt-5 max-w-2xl text-white/80"
         >
-          Respondé unas pocas preguntas y recibí un primer vistazo claro sobre dónde está parado
-          tu negocio hoy, y qué oportunidades tiene por delante.
+          Un diagnóstico breve, gratuito y personalizado para obtener una primera mirada sobre el
+          momento actual de tu negocio.
         </motion.p>
 
         <div className="mt-14 grid gap-6 sm:grid-cols-3">
