@@ -33,7 +33,7 @@ function App() {
           text="Toda gran decisión empieza con una conversación clara."
           variant="horizon-light"
         />
-        <ContactoSection />
+        <ContactoSection onStartDiagnostic={openDiagnostic} />
       </main>
       <Footer />
     </div>

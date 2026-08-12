@@ -1,13 +1,12 @@
 import { motion } from 'framer-motion';
-import ShineSweep from './visuals/ShineSweep';
 
 interface TransitionQuoteProps {
   text: string;
   tone?: 'surface' | 'background';
   /**
    * 'plain' keeps the original text-only transition. 'horizon-light' and
-   * 'horizon-dark' add a glowing horizon line + light sweep, for beats that
-   * need to carry the "luz, horizonte y transformación" visual language.
+   * 'horizon-dark' add a horizon line, for beats that need to carry the
+   * "luz, horizonte y transformación" visual language.
    */
   variant?: 'plain' | 'horizon-light' | 'horizon-dark';
 }
@@ -35,11 +34,6 @@ export default function TransitionQuote({ text, tone = 'surface', variant = 'pla
     <section
       className={`relative overflow-hidden px-6 py-24 lg:px-10 ${isDark ? 'bg-gradient-prisma' : 'bg-surface'}`}
     >
-      <div
-        className={`pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full blur-3xl ${
-          isDark ? 'bg-gold/25' : 'bg-gold/20'
-        }`}
-      />
       <motion.div
         aria-hidden="true"
         initial={{ opacity: 0, scaleX: 0.6 }}
@@ -47,10 +41,9 @@ export default function TransitionQuote({ text, tone = 'surface', variant = 'pla
         viewport={{ once: true, amount: 0.6 }}
         transition={{ duration: 1 }}
         className={`pointer-events-none absolute inset-x-0 top-1/2 h-px bg-gradient-to-r from-transparent ${
-          isDark ? 'via-white/50' : 'via-gold/70'
+          isDark ? 'via-white/40' : 'via-gold/50'
         } to-transparent`}
       />
-      <ShineSweep bandWidth="10%" duration={2.4} repeatDelay={4} className="opacity-60" />
 
       <motion.div
         initial={{ opacity: 0, y: 16 }}
