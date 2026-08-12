@@ -31,8 +31,7 @@
 const FORM_ID = '1axGOn7juupJ1xBOYsrTjlC20T669_X_5GFad5zZLhPw';
 
 // Link del formulario de Agendar — se incluye en el email de feedback.
-const AGENDAR_URL =
-  'https://docs.google.com/forms/d/e/1FAIpQLSeV-_ghT6kB363USK_9cypfasaxauq93H1gTrmtHL0CYxOOgQ/viewform';
+const AGENDAR_URL = 'https://forms.gle/WTvCQxcx3Z96XRii9';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
