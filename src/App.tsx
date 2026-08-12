@@ -1,6 +1,7 @@
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ProblemsSection from './components/ProblemsSection';
+import AudienciaSection from './components/AudienciaSection';
 import DiagnosticIntro from './components/DiagnosticIntro';
 import SolucionesSection from './components/SolucionesSection';
 import TransitionQuote from './components/TransitionQuote';
@@ -21,6 +22,7 @@ function App() {
       <main>
         <Hero onStartDiagnostic={openDiagnostic} />
         <ProblemsSection onStartDiagnostic={openDiagnostic} />
+        <AudienciaSection onStartDiagnostic={openDiagnostic} />
         <DiagnosticIntro onStartDiagnostic={openDiagnostic} />
         <SolucionesSection />
         <TransitionQuote text="Antes de proponer soluciones, entendemos tu negocio." />
