@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ProblemsSection from './components/ProblemsSection';
@@ -9,12 +10,11 @@ import MetodoSection from './components/MetodoSection';
 import PorQueSection from './components/PorQueSection';
 import ContactoSection from './components/ContactoSection';
 import Footer from './components/Footer';
-import { GOOGLE_DIAGNOSTICO_FORM_URL } from './data/nav';
+import DiagnosticoFlow from './components/DiagnosticoFlow';
 
 function App() {
-  const openDiagnostic = () => {
-    window.open(GOOGLE_DIAGNOSTICO_FORM_URL, '_blank', 'noopener,noreferrer');
-  };
+  const [diagnosticoAbierto, setDiagnosticoAbierto] = useState(false);
+  const openDiagnostic = () => setDiagnosticoAbierto(true);
 
   return (
     <div className="min-h-screen bg-background font-sans text-ink antialiased">
@@ -36,6 +36,7 @@ function App() {
         <ContactoSection onStartDiagnostic={openDiagnostic} />
       </main>
       <Footer />
+      {diagnosticoAbierto && <DiagnosticoFlow onClose={() => setDiagnosticoAbierto(false)} />}
     </div>
   );
 }

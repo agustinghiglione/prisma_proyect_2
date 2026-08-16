@@ -1,0 +1,308 @@
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, ArrowRight, Lock, CheckCircle2, Loader2 } from 'lucide-react';
+import {
+  DIMENSIONES,
+  RECOMENDACIONES,
+  nivelDe,
+  PRECIO_DIAGNOSTICO_COMPLETO,
+  type ResultadoDiagnostico,
+} from '../lib/diagnostico';
+
+type Paso = 'preguntas' | 'contacto' | 'resultado' | 'pago';
+
+interface DiagnosticoFlowProps {
+  onClose: () => void;
+}
+
+const formatoARS = new Intl.NumberFormat('es-AR', {
+  style: 'currency',
+  currency: 'ARS',
+  maximumFractionDigits: 0,
+});
+
+export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
+  const [paso, setPaso] = useState<Paso>('preguntas');
+  const [preguntaActual, setPreguntaActual] = useState(0);
+  const [respuestas, setRespuestas] = useState<number[]>([]);
+
+  const [nombre, setNombre] = useState('');
+  const [email, setEmail] = useState('');
+  const [negocio, setNegocio] = useState('');
+  const [webUrl, setWebUrl] = useState('');
+  const [enviando, setEnviando] = useState(false);
+  const [error, setError] = useState('');
+
+  const [diagnosticoId, setDiagnosticoId] = useState<string | null>(null);
+  const [resultado, setResultado] = useState<ResultadoDiagnostico | null>(null);
+
+  const [qr, setQr] = useState<{ qrDataUrl: string; initPoint: string } | null>(null);
+  const [pagado, setPagado] = useState(false);
+  const [creandoPago, setCreandoPago] = useState(false);
+
+  const elegirOpcion = (valor: number) => {
+    const nuevas = [...respuestas, valor];
+    setRespuestas(nuevas);
+    if (preguntaActual + 1 < DIMENSIONES.length) {
+      setPreguntaActual(preguntaActual + 1);
+    } else {
+      setPaso('contacto');
+    }
+  };
+
+  const enviarDiagnostico = async () => {
+    if (!email.trim()) {
+      setError('Necesitamos tu email para mandarte el resultado.');
+      return;
+    }
+    setEnviando(true);
+    setError('');
+    try {
+      const res = await fetch('/api/diagnostico', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre, email, negocio, respuestas, webUrl: webUrl || undefined }),
+      });
+      if (!res.ok) throw new Error('No se pudo guardar el diagnóstico.');
+      const data = await res.json();
+      setDiagnosticoId(data.id);
+      setResultado(data.resultado);
+      setPaso('resultado');
+    } catch {
+      setError('Algo falló al guardar tu diagnóstico. Probá de nuevo en un momento.');
+    } finally {
+      setEnviando(false);
+    }
+  };
+
+  const pedirDiagnosticoCompleto = async () => {
+    if (!diagnosticoId) return;
+    setCreandoPago(true);
+    setError('');
+    try {
+      const res = await fetch(`/api/diagnostico/${diagnosticoId}/pagar`, { method: 'POST' });
+      if (!res.ok) throw new Error('No se pudo iniciar el pago.');
+      const data = await res.json();
+      setQr(data);
+      setPaso('pago');
+    } catch {
+      setError('No pudimos iniciar el pago. Probá de nuevo en un momento.');
+    } finally {
+      setCreandoPago(false);
+    }
+  };
+
+  // Mientras se muestra el QR, se consulta cada 4s si el pago ya se confirmó.
+  useEffect(() => {
+    if (paso !== 'pago' || !diagnosticoId || pagado) return;
+    const intervalo = setInterval(async () => {
+      const res = await fetch(`/api/diagnostico/${diagnosticoId}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data.estado === 'pagado') {
+        setResultado(data.resultado);
+        setPagado(true);
+      }
+    }, 4000);
+    return () => clearInterval(intervalo);
+  }, [paso, diagnosticoId, pagado]);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary-dark/60 px-4 py-8 backdrop-blur-sm">
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 24 }}
+        className="relative max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-3xl bg-background p-8 shadow-soft sm:p-10"
+      >
+        <button
+          onClick={onClose}
+          aria-label="Cerrar"
+          className="absolute right-5 top-5 flex h-9 w-9 items-center justify-center rounded-full text-ink-soft transition-colors hover:bg-surface hover:text-ink"
+        >
+          <X size={18} />
+        </button>
+
+        <AnimatePresence mode="wait">
+          {paso === 'preguntas' && (
+            <motion.div key="preguntas" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <div className="mb-6 flex gap-1.5">
+                {DIMENSIONES.map((_, i) => (
+                  <div
+                    key={i}
+                    className={`h-1.5 flex-1 rounded-full ${i <= preguntaActual ? 'bg-gold' : 'bg-surface'}`}
+                  />
+                ))}
+              </div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                Pregunta {preguntaActual + 1} de {DIMENSIONES.length}
+              </p>
+              <h3 className="mt-3 font-heading text-2xl font-bold text-ink">
+                {DIMENSIONES[preguntaActual].pregunta}
+              </h3>
+              <div className="mt-7 flex flex-col gap-3">
+                {DIMENSIONES[preguntaActual].opciones.map((op) => (
+                  <button
+                    key={op.texto}
+                    onClick={() => elegirOpcion(op.valor)}
+                    className="rounded-2xl border border-border bg-white px-5 py-4 text-left text-sm text-ink transition-colors hover:border-primary hover:bg-surface/40"
+                  >
+                    {op.texto}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {paso === 'contacto' && (
+            <motion.div key="contacto" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <h3 className="font-heading text-2xl font-bold text-ink">¿A dónde te mandamos el resultado?</h3>
+              <p className="mt-2 text-sm text-ink-soft">
+                Un último paso — tu informe te llega también por mail.
+              </p>
+              <div className="mt-6 flex flex-col gap-4">
+                <input
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                  placeholder="Tu nombre"
+                  className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-ink outline-none focus:border-primary"
+                />
+                <input
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  type="email"
+                  placeholder="Tu email"
+                  className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-ink outline-none focus:border-primary"
+                />
+                <input
+                  value={negocio}
+                  onChange={(e) => setNegocio(e.target.value)}
+                  placeholder="Tu negocio"
+                  className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-ink outline-none focus:border-primary"
+                />
+                <div>
+                  <input
+                    value={webUrl}
+                    onChange={(e) => setWebUrl(e.target.value)}
+                    placeholder="El link de tu web (opcional)"
+                    className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm text-ink outline-none focus:border-primary"
+                  />
+                  <p className="mt-1.5 text-xs text-ink-soft">
+                    Si nos lo dejás, la miramos antes de la conversación.
+                  </p>
+                </div>
+                {error && <p className="text-sm text-red-600">{error}</p>}
+                <button
+                  onClick={enviarDiagnostico}
+                  disabled={enviando}
+                  className="mt-2 flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5 disabled:opacity-60"
+                >
+                  {enviando ? <Loader2 size={16} className="animate-spin" /> : null}
+                  Ver mi resultado
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {paso === 'resultado' && resultado && (
+            <motion.div key="resultado" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                Tu Diagnóstico Prisma®
+              </p>
+              <h3 className="mt-2 font-heading text-2xl font-bold text-ink">
+                Nivel general de claridad: {resultado.overallPercent}%
+              </h3>
+
+              <div className="mt-6 flex flex-col gap-3">
+                {/* Una fortaleza, mostrada entera */}
+                <div className="flex items-start gap-3 rounded-2xl border border-border bg-white p-4">
+                  <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-green" />
+                  <p className="text-sm text-ink">
+                    En <strong>{resultado.fortalezas[0].dimension}</strong> estás bien encaminado.{' '}
+                    {RECOMENDACIONES[resultado.fortalezas[0].dimension][nivelDe(resultado.fortalezas[0].valor)]}
+                  </p>
+                </div>
+
+                {/* Las oportunidades, tapadas — esto es lo que se paga */}
+                {resultado.oportunidades.map((o) => (
+                  <div key={o.dimension} className="flex items-start gap-3 rounded-2xl border border-gold/30 bg-gold/10 p-4">
+                    <Lock size={18} className="mt-0.5 shrink-0 text-primary-dark" />
+                    <p className="text-sm text-ink-soft">
+                      Detectamos una oportunidad en <strong className="text-ink">{o.dimension}</strong> que
+                      podría estar costándote más de lo que pensás.
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+
+              <button
+                onClick={pedirDiagnosticoCompleto}
+                disabled={creandoPago}
+                className="mt-7 flex w-full items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 text-sm font-semibold text-primary-dark shadow-soft transition-transform hover:-translate-y-0.5 disabled:opacity-60"
+              >
+                {creandoPago ? <Loader2 size={16} className="animate-spin" /> : null}
+                Ver mi diagnóstico completo — {formatoARS.format(PRECIO_DIAGNOSTICO_COMPLETO)}
+                <ArrowRight size={16} />
+              </button>
+              <p className="mt-3 text-center text-xs text-ink-soft">
+                Ya te mandamos este primer resultado a {email}.
+              </p>
+            </motion.div>
+          )}
+
+          {paso === 'pago' && qr && (
+            <motion.div key="pago" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              {!pagado ? (
+                <>
+                  <h3 className="font-heading text-2xl font-bold text-ink">Escaneá para pagar</h3>
+                  <p className="mt-2 text-sm text-ink-soft">
+                    Con la cámara de tu celular, o tocá el botón si ya estás en tu celu.
+                  </p>
+                  <div className="mt-6 flex justify-center">
+                    <img src={qr.qrDataUrl} alt="Código QR para pagar con Mercado Pago" className="h-56 w-56 rounded-2xl border border-border" />
+                  </div>
+                  <a
+                    href={qr.initPoint}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5"
+                  >
+                    Pagar desde esta pantalla <ArrowRight size={16} />
+                  </a>
+                  <p className="mt-5 flex items-center justify-center gap-2 text-xs text-ink-soft">
+                    <Loader2 size={14} className="animate-spin" /> Esperando la confirmación del pago…
+                  </p>
+                </>
+              ) : (
+                resultado && (
+                  <>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-green">Pago confirmado</p>
+                    <h3 className="mt-2 font-heading text-2xl font-bold text-ink">Tu diagnóstico completo</h3>
+                    <div className="mt-6 flex flex-col gap-3">
+                      {resultado.scores.map((s) => (
+                        <div key={s.dimension} className="rounded-2xl border border-border bg-white p-4">
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="font-semibold text-ink">{s.dimension}</span>
+                            <span className="text-ink-soft">{Math.round((s.valor / 4) * 100)}%</span>
+                          </div>
+                          <p className="mt-2 text-sm text-ink-soft">
+                            {RECOMENDACIONES[s.dimension][nivelDe(s.valor)]}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="mt-6 text-center text-sm text-ink-soft">
+                      También te lo mandamos por mail. El siguiente paso es conversar sobre cómo implementarlo.
+                    </p>
+                  </>
+                )
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </div>
+  );
+}

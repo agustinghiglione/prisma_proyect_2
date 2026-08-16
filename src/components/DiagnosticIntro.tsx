@@ -7,7 +7,7 @@ interface DiagnosticIntroProps {
 
 const FEATURES = [
   { icon: Gift, title: 'Gratuito', text: 'Sin costo ni compromiso. Es nuestra forma de empezar a conocerte.' },
-  { icon: Timer, title: 'Rápido', text: 'Seis preguntas simples. Menos de un minuto de tu tiempo.' },
+  { icon: Timer, title: 'Rápido', text: 'Cinco preguntas simples. Menos de un minuto de tu tiempo.' },
   {
     icon: FileText,
     title: 'Personalizado',

@@ -3,6 +3,8 @@ dist/
 dist-ssr/
 *.tsbuildinfo
 
+server/data/
+
 .env
 .env.local
 .env.*.local
