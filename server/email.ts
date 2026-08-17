@@ -1,8 +1,10 @@
 import nodemailer from 'nodemailer';
 import {
   RECOMENDACIONES,
+  RECOMENDACIONES_TODAS,
   nivelDe,
   type ResultadoDiagnostico,
+  type ResultadoCompleto,
 } from '../src/lib/diagnostico';
 
 const AZUL_OCEANO = '#223C54';
@@ -129,5 +131,91 @@ export async function enviarResultado(params: {
     to: email,
     subject: asunto,
     html: emailHtml(nombre, resultado, completo),
+  });
+}
+
+/** El informe completo: las once dimensiones de las dos partes, juntas. */
+export async function enviarInformeCompleto(params: {
+  email: string;
+  nombre: string;
+  resultado: ResultadoCompleto;
+}) {
+  const { email, nombre, resultado } = params;
+
+  const ordenado = [...resultado.todos].sort((a, b) => b.valor - a.valor);
+  const fortalezas = ordenado.slice(0, 3);
+  const oportunidades = [...ordenado].reverse().slice(0, 3);
+
+  const combinado: ResultadoDiagnostico = {
+    overallPercent: resultado.overallPercent,
+    scores: resultado.todos,
+    fortalezas,
+    oportunidades,
+  };
+
+  const recomendacionesHtml = oportunidades
+    .map((o) => {
+      const nivel = nivelDe(o.valor);
+      return `<li style="margin-bottom:8px;font-family:Arial,sans-serif;font-size:14px;color:${TEXTO};line-height:1.5;">${RECOMENDACIONES_TODAS[o.dimension][nivel]}</li>`;
+    })
+    .join('');
+
+  const agendarUrl = process.env.AGENDAR_URL ?? `${process.env.SITE_URL}/#contacto`;
+
+  const html = `
+  <div style="background:${MARFIL};padding:32px 16px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #E7DDC9;">
+      <tr>
+        <td style="background:${AZUL_OCEANO};padding:28px 32px;">
+          <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${ARENA};">Diagnóstico Prisma&reg; completo</p>
+          <p style="margin:10px 0 0;font-family:Arial,sans-serif;font-size:14px;color:#ffffff;opacity:0.85;">Preparado para ${nombre || 'vos'}</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:28px 32px;">
+          <p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:13px;color:${TEXTO_SUAVE};">Nivel general de claridad</p>
+          <p style="margin:0 0 24px;font-family:Arial,sans-serif;font-size:36px;font-weight:bold;color:${AZUL_HORIZONTE};">${combinado.overallPercent}%</p>
+
+          <p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:${AZUL_OCEANO};">Las cinco de siempre</p>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${resultado.parte1.scores.map(filaBarra).join('')}</table>
+
+          <p style="margin:24px 0 4px;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:${AZUL_OCEANO};">Las seis de tu diagnóstico completo</p>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${resultado.parte2.scores.map(filaBarra).join('')}</table>
+
+          <p style="margin:24px 0 8px;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:${AZUL_OCEANO};">Fortalezas</p>
+          <div>${listaChips(fortalezas, ARENA)}</div>
+
+          <p style="margin:20px 0 8px;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:${AZUL_OCEANO};">Oportunidades</p>
+          <div>${listaChips(oportunidades, ARENA_CLARA)}</div>
+
+          <p style="margin:24px 0 8px;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:${AZUL_OCEANO};">Recomendaciones</p>
+          <ul style="margin:0;padding-left:18px;">${recomendacionesHtml}</ul>
+
+          <p style="margin:28px 0 0;font-family:Arial,sans-serif;font-size:14px;color:${TEXTO};line-height:1.6;">
+            Este es tu diagnóstico completo. El siguiente paso es que conversemos sobre cómo implementarlo en tu negocio.
+          </p>
+
+          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:20px auto 4px;">
+            <tr>
+              <td align="center" bgcolor="${AZUL_HORIZONTE}" style="border-radius:999px;">
+                <a href="${agendarUrl}" style="display:inline-block;padding:14px 28px;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;text-decoration:none;">Agendar mi primera conversación</a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:18px 32px;background:${MARFIL};border-top:1px solid #E7DDC9;">
+          <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;color:${TEXTO_SUAVE};text-align:center;">Prisma Consultora</p>
+        </td>
+      </tr>
+    </table>
+  </div>`;
+
+  await transportador().sendMail({
+    from: process.env.MAIL_FROM ?? '"Prisma Consultora" <contacto@prismaconsultora.com>',
+    to: email,
+    subject: 'Tu Diagnóstico Prisma® completo',
+    html,
   });
 }

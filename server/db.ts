@@ -14,7 +14,8 @@ db.exec(`
     nombre TEXT NOT NULL,
     email TEXT,                       -- se pide recién si el usuario quiere el mail, o al pasar a pagar
     negocio TEXT,
-    respuestas TEXT NOT NULL,        -- JSON: número[] (1-4 por dimensión)
+    respuestas TEXT NOT NULL,        -- JSON: número[] (1-4 por dimensión) — Parte 1, gratis
+    respuestas_2 TEXT,                -- JSON: número[] — Parte 2, se completa recién tras pagar
     web_url TEXT,                     -- opcional: URL que el cliente dejó para el análisis "por fuera"
     estado TEXT NOT NULL DEFAULT 'pendiente',  -- pendiente | pagado
     mp_preference_id TEXT,
@@ -24,12 +25,21 @@ db.exec(`
   );
 `);
 
+// Migración liviana: si la tabla ya existía de una versión anterior sin esta
+// columna, se agrega ahora. No pasa nada si ya está (se ignora el error).
+try {
+  db.exec('ALTER TABLE diagnosticos ADD COLUMN respuestas_2 TEXT');
+} catch {
+  // ya existe, seguimos
+}
+
 export interface DiagnosticoRow {
   id: string;
   nombre: string;
   email: string | null;
   negocio: string | null;
   respuestas: string;
+  respuestas_2: string | null;
   web_url: string | null;
   estado: 'pendiente' | 'pagado';
   mp_preference_id: string | null;
@@ -76,6 +86,13 @@ export function marcarComoPagado(id: string, paymentId: string) {
   db.prepare(
     `UPDATE diagnosticos SET estado = 'pagado', mp_payment_id = ?, pagado_en = datetime('now') WHERE id = ?`,
   ).run(paymentId, id);
+}
+
+export function guardarParte2(id: string, respuestas: number[]) {
+  db.prepare('UPDATE diagnosticos SET respuestas_2 = ? WHERE id = ?').run(
+    JSON.stringify(respuestas),
+    id,
+  );
 }
 
 /** Busca un diagnóstico por el ID de preferencia de Mercado Pago (lo manda el webhook vía external_reference, pero esto sirve de respaldo). */

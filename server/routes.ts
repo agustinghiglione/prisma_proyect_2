@@ -1,15 +1,21 @@
 import { Router } from 'express';
 import { randomUUID } from 'node:crypto';
-import { calcularResultado, DIMENSIONES } from '../src/lib/diagnostico';
+import {
+  calcularResultado,
+  calcularResultadoCompleto,
+  DIMENSIONES,
+  DIMENSIONES_PARTE2,
+} from '../src/lib/diagnostico';
 import {
   crearDiagnostico,
   obtenerDiagnostico,
   actualizarContacto,
   guardarPreferencia,
   marcarComoPagado,
+  guardarParte2,
 } from './db';
 import { crearPreferenciaDePago, consultarPago } from './mercadopago';
-import { enviarResultado } from './email';
+import { enviarResultado, enviarInformeCompleto } from './email';
 
 export const router = Router();
 
@@ -88,21 +94,73 @@ router.post('/diagnostico/:id/pagar', async (req, res) => {
   }
 });
 
-/** El frontend consulta acá si ya se confirmó el pago (polling simple). */
+/**
+ * El frontend consulta acá si ya se confirmó el pago (polling simple), y si
+ * la Parte 2 ya está completa. Mientras no lo esté, el frontend sabe que
+ * tiene que mostrar las 6 preguntas adicionales.
+ */
 router.get('/diagnostico/:id', (req, res) => {
   const diagnostico = obtenerDiagnostico(req.params.id);
   if (!diagnostico) return res.status(404).json({ error: 'Diagnóstico no encontrado.' });
 
   const respuestas = JSON.parse(diagnostico.respuestas);
   const resultado = calcularResultado(respuestas);
+  const parte2Completa = !!diagnostico.respuestas_2;
 
-  res.json({ estado: diagnostico.estado, resultado });
+  res.json({
+    estado: diagnostico.estado,
+    resultado,
+    parte2Completa,
+    resultadoCompleto: parte2Completa
+      ? calcularResultadoCompleto(respuestas, JSON.parse(diagnostico.respuestas_2!))
+      : null,
+  });
+});
+
+/**
+ * Se llama recién cuando el diagnóstico ya está pagado — completa la Parte 2
+ * y con eso arma y manda el informe completo por mail.
+ */
+router.post('/diagnostico/:id/parte-2', async (req, res) => {
+  const diagnostico = obtenerDiagnostico(req.params.id);
+  if (!diagnostico) return res.status(404).json({ error: 'Diagnóstico no encontrado.' });
+  if (diagnostico.estado !== 'pagado') {
+    return res.status(403).json({ error: 'Este diagnóstico todavía no está pagado.' });
+  }
+
+  const { respuestas } = req.body ?? {};
+  if (!Array.isArray(respuestas) || respuestas.length !== DIMENSIONES_PARTE2.length) {
+    return res.status(400).json({ error: `Se esperan ${DIMENSIONES_PARTE2.length} respuestas.` });
+  }
+
+  guardarParte2(diagnostico.id, respuestas);
+
+  const respuestasParte1 = JSON.parse(diagnostico.respuestas);
+  const resultadoCompleto = calcularResultadoCompleto(respuestasParte1, respuestas);
+
+  try {
+    if (diagnostico.email) {
+      await enviarInformeCompleto({
+        email: diagnostico.email,
+        nombre: diagnostico.nombre ?? '',
+        resultado: resultadoCompleto,
+      });
+    }
+  } catch (err) {
+    // No bloquea la respuesta: el informe ya se puede ver en pantalla aunque
+    // el mail falle.
+    console.error('[diagnostico] no se pudo enviar el informe completo:', err);
+  }
+
+  res.json({ resultadoCompleto });
 });
 
 /**
  * Mercado Pago llama acá cada vez que cambia el estado de un pago. NUNCA se
  * confirma un pago por el redirect del navegador solo — siempre se le
  * vuelve a preguntar a la API de Mercado Pago con el ID de pago recibido acá.
+ * Solo desbloquea el acceso a la Parte 2 — el informe y el mail salen recién
+ * cuando el cliente la completa.
  */
 router.post('/webhooks/mercadopago', async (req, res) => {
   try {
@@ -116,14 +174,6 @@ router.post('/webhooks/mercadopago', async (req, res) => {
       const diagnostico = obtenerDiagnostico(diagnosticoId);
       if (diagnostico && diagnostico.estado !== 'pagado') {
         marcarComoPagado(diagnosticoId, String(paymentId));
-        const respuestas = JSON.parse(diagnostico.respuestas);
-        const resultado = calcularResultado(respuestas);
-        await enviarResultado({
-          email: diagnostico.email,
-          nombre: diagnostico.nombre ?? '',
-          resultado,
-          completo: true,
-        });
       }
     }
 
