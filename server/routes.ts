@@ -1,51 +1,82 @@
 import { Router } from 'express';
 import { randomUUID } from 'node:crypto';
 import { calcularResultado, DIMENSIONES } from '../src/lib/diagnostico';
-import { crearDiagnostico, obtenerDiagnostico, guardarPreferencia, marcarComoPagado } from './db';
+import {
+  crearDiagnostico,
+  obtenerDiagnostico,
+  actualizarContacto,
+  guardarPreferencia,
+  marcarComoPagado,
+} from './db';
 import { crearPreferenciaDePago, consultarPago } from './mercadopago';
 import { enviarResultado } from './email';
 
 export const router = Router();
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 /**
  * Guarda las respuestas del diagnóstico gratis y devuelve el resultado
- * completo (el frontend decide qué mostrar y qué tapar). También manda el
- * mail con el informe gratuito — mismo comportamiento que tenía Google Forms
- * antes, ahora nativo.
+ * completo (el frontend decide qué mostrar y qué tapar). Todavía no pide
+ * mail — eso es opcional acá y recién se vuelve obligatorio al pagar.
  */
 router.post('/diagnostico', async (req, res) => {
-  const { nombre, email, negocio, respuestas, webUrl } = req.body ?? {};
+  const { nombre, negocio, respuestas } = req.body ?? {};
 
-  if (!email || typeof email !== 'string') {
-    return res.status(400).json({ error: 'Falta el email.' });
+  if (!nombre || typeof nombre !== 'string' || !nombre.trim()) {
+    return res.status(400).json({ error: 'Falta el nombre.' });
   }
   if (!Array.isArray(respuestas) || respuestas.length !== DIMENSIONES.length) {
     return res.status(400).json({ error: `Se esperan ${DIMENSIONES.length} respuestas.` });
   }
 
   const id = randomUUID();
-  crearDiagnostico({ id, nombre: nombre ?? '', email, negocio: negocio ?? '', respuestas, webUrl });
+  crearDiagnostico({ id, nombre, negocio, respuestas });
 
   const resultado = calcularResultado(respuestas);
-
-  try {
-    await enviarResultado({ email, nombre: nombre ?? '', resultado, completo: false });
-  } catch (err) {
-    // No bloquea la respuesta al usuario si el mail falla — se puede
-    // reintentar; lo importante es que el diagnóstico ya quedó guardado.
-    console.error('[diagnostico] no se pudo enviar el mail gratuito:', err);
-  }
-
   res.json({ id, resultado });
 });
 
-/** Crea la preferencia de pago de Mercado Pago para un diagnóstico ya guardado. */
+/** El usuario elige recibir el resultado gratis por mail (opcional, desde la pantalla de resultado). */
+router.post('/diagnostico/:id/enviar-mail', async (req, res) => {
+  const diagnostico = obtenerDiagnostico(req.params.id);
+  if (!diagnostico) return res.status(404).json({ error: 'Diagnóstico no encontrado.' });
+
+  const { email } = req.body ?? {};
+  if (!email || !EMAIL_RE.test(email)) {
+    return res.status(400).json({ error: 'Ingresá un email válido.' });
+  }
+
+  actualizarContacto(diagnostico.id, { email });
+
+  try {
+    const respuestas = JSON.parse(diagnostico.respuestas);
+    const resultado = calcularResultado(respuestas);
+    await enviarResultado({ email, nombre: diagnostico.nombre ?? '', resultado, completo: false });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[diagnostico] no se pudo enviar el mail gratuito:', err);
+    res.status(502).json({ error: 'No pudimos mandar el mail. Probá de nuevo en un momento.' });
+  }
+});
+
+/**
+ * Crea la preferencia de pago de Mercado Pago. Acá sí es obligatorio el
+ * mail (es donde llega el diagnóstico completo cuando se confirme el pago),
+ * y se guarda el link de la web si lo dejó, para mirarla más adelante.
+ */
 router.post('/diagnostico/:id/pagar', async (req, res) => {
   const diagnostico = obtenerDiagnostico(req.params.id);
   if (!diagnostico) return res.status(404).json({ error: 'Diagnóstico no encontrado.' });
   if (diagnostico.estado === 'pagado') {
     return res.status(400).json({ error: 'Este diagnóstico ya está pagado.' });
   }
+
+  const { email, webUrl } = req.body ?? {};
+  if (!email || !EMAIL_RE.test(email)) {
+    return res.status(400).json({ error: 'Ingresá un email válido para recibir el diagnóstico completo.' });
+  }
+  actualizarContacto(diagnostico.id, { email, webUrl });
 
   try {
     const { preferenceId, initPoint, qrDataUrl } = await crearPreferenciaDePago(diagnostico.id);

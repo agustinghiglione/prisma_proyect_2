@@ -1,0 +1,38 @@
+# Blueprint de Render — un solo servicio que compila el sitio y corre el
+# backend (que además sirve el sitio ya compilado). Se usa desde el
+# dashboard de Render: "New" → "Blueprint" → elegir este repositorio.
+#
+# Las variables marcadas "sync: false" hay que cargarlas a mano en el
+# dashboard de Render (Environment del servicio) — nunca viajan en este
+# archivo ni en el repositorio.
+services:
+  - type: web
+    name: prisma-consultora
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:server
+    healthCheckPath: /api/salud
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: SITE_URL
+        sync: false # la URL pública que Render te asigna (o tu dominio), con https://
+      - key: MP_PUBLIC_KEY
+        sync: false
+      - key: MP_ACCESS_TOKEN
+        sync: false
+      - key: MP_WEBHOOK_URL
+        sync: false # SITE_URL + /api/webhooks/mercadopago
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      - key: AGENDAR_URL
+        sync: false

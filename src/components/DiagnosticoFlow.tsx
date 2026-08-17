@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ArrowRight, Lock, CheckCircle2, Loader2 } from 'lucide-react';
+import { X, ArrowRight, Lock, CheckCircle2, Loader2, Mail } from 'lucide-react';
 import {
   DIMENSIONES,
   RECOMENDACIONES,
@@ -9,7 +9,7 @@ import {
   type ResultadoDiagnostico,
 } from '../lib/diagnostico';
 
-type Paso = 'preguntas' | 'contacto' | 'resultado' | 'pago';
+type Paso = 'preguntas' | 'contacto' | 'resultado' | 'contacto-pago' | 'pago';
 
 interface DiagnosticoFlowProps {
   onClose: () => void;
@@ -21,20 +21,30 @@ const formatoARS = new Intl.NumberFormat('es-AR', {
   maximumFractionDigits: 0,
 });
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
   const [paso, setPaso] = useState<Paso>('preguntas');
   const [preguntaActual, setPreguntaActual] = useState(0);
   const [respuestas, setRespuestas] = useState<number[]>([]);
 
   const [nombre, setNombre] = useState('');
-  const [email, setEmail] = useState('');
   const [negocio, setNegocio] = useState('');
-  const [webUrl, setWebUrl] = useState('');
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState('');
 
   const [diagnosticoId, setDiagnosticoId] = useState<string | null>(null);
   const [resultado, setResultado] = useState<ResultadoDiagnostico | null>(null);
+
+  // Mail del resultado gratis (opcional, se pide en la propia pantalla de resultado)
+  const [mostrarMail, setMostrarMail] = useState(false);
+  const [mailGratis, setMailGratis] = useState('');
+  const [mailGratisEnviado, setMailGratisEnviado] = useState(false);
+  const [enviandoMailGratis, setEnviandoMailGratis] = useState(false);
+
+  // Contacto para el diagnóstico completo (mail obligatorio, web opcional)
+  const [emailPago, setEmailPago] = useState('');
+  const [webUrl, setWebUrl] = useState('');
 
   const [qr, setQr] = useState<{ qrDataUrl: string; initPoint: string } | null>(null);
   const [pagado, setPagado] = useState(false);
@@ -50,9 +60,9 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
     }
   };
 
-  const enviarDiagnostico = async () => {
-    if (!email.trim()) {
-      setError('Necesitamos tu email para mandarte el resultado.');
+  const verResultado = async () => {
+    if (!nombre.trim()) {
+      setError('Necesitamos tu nombre para el informe.');
       return;
     }
     setEnviando(true);
@@ -61,7 +71,7 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
       const res = await fetch('/api/diagnostico', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre, email, negocio, respuestas, webUrl: webUrl || undefined }),
+        body: JSON.stringify({ nombre, negocio, respuestas }),
       });
       if (!res.ok) throw new Error('No se pudo guardar el diagnóstico.');
       const data = await res.json();
@@ -75,18 +85,59 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
     }
   };
 
+  const enviarMailGratis = async () => {
+    if (!diagnosticoId || !EMAIL_RE.test(mailGratis)) {
+      setError('Ingresá un email válido.');
+      return;
+    }
+    setEnviandoMailGratis(true);
+    setError('');
+    try {
+      const res = await fetch(`/api/diagnostico/${diagnosticoId}/enviar-mail`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: mailGratis }),
+      });
+      if (!res.ok) throw new Error();
+      setMailGratisEnviado(true);
+      setEmailPago(mailGratis); // reutilizamos el mismo mail si después pide el completo
+    } catch {
+      setError('No pudimos mandar el mail. Probá de nuevo en un momento.');
+    } finally {
+      setEnviandoMailGratis(false);
+    }
+  };
+
   const pedirDiagnosticoCompleto = async () => {
+    if (!emailPago.trim()) {
+      setEmailPago(mailGratis); // por si ya lo había tipeado arriba sin enviarlo
+    }
+    setPaso('contacto-pago');
+  };
+
+  const confirmarYPagar = async () => {
     if (!diagnosticoId) return;
+    if (!EMAIL_RE.test(emailPago)) {
+      setError('Ingresá un email válido para recibir el diagnóstico completo.');
+      return;
+    }
     setCreandoPago(true);
     setError('');
     try {
-      const res = await fetch(`/api/diagnostico/${diagnosticoId}/pagar`, { method: 'POST' });
-      if (!res.ok) throw new Error('No se pudo iniciar el pago.');
+      const res = await fetch(`/api/diagnostico/${diagnosticoId}/pagar`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailPago, webUrl: webUrl || undefined }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error ?? 'No se pudo iniciar el pago.');
+      }
       const data = await res.json();
       setQr(data);
       setPaso('pago');
-    } catch {
-      setError('No pudimos iniciar el pago. Probá de nuevo en un momento.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'No pudimos iniciar el pago. Probá de nuevo en un momento.');
     } finally {
       setCreandoPago(false);
     }
@@ -156,10 +207,8 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
 
           {paso === 'contacto' && (
             <motion.div key="contacto" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <h3 className="font-heading text-2xl font-bold text-ink">¿A dónde te mandamos el resultado?</h3>
-              <p className="mt-2 text-sm text-ink-soft">
-                Un último paso — tu informe te llega también por mail.
-              </p>
+              <h3 className="font-heading text-2xl font-bold text-ink">Ya casi está.</h3>
+              <p className="mt-2 text-sm text-ink-soft">Un último paso antes de ver tu resultado.</p>
               <div className="mt-6 flex flex-col gap-4">
                 <input
                   value={nombre}
@@ -168,32 +217,14 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
                   className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-ink outline-none focus:border-primary"
                 />
                 <input
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  type="email"
-                  placeholder="Tu email"
-                  className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-ink outline-none focus:border-primary"
-                />
-                <input
                   value={negocio}
                   onChange={(e) => setNegocio(e.target.value)}
-                  placeholder="Tu negocio"
+                  placeholder="Tu negocio (opcional)"
                   className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-ink outline-none focus:border-primary"
                 />
-                <div>
-                  <input
-                    value={webUrl}
-                    onChange={(e) => setWebUrl(e.target.value)}
-                    placeholder="El link de tu web (opcional)"
-                    className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm text-ink outline-none focus:border-primary"
-                  />
-                  <p className="mt-1.5 text-xs text-ink-soft">
-                    Si nos lo dejás, la miramos antes de la conversación.
-                  </p>
-                </div>
                 {error && <p className="text-sm text-red-600">{error}</p>}
                 <button
-                  onClick={enviarDiagnostico}
+                  onClick={verResultado}
                   disabled={enviando}
                   className="mt-2 flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5 disabled:opacity-60"
                 >
@@ -235,20 +266,82 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
                 ))}
               </div>
 
+              {/* Enviar el resultado gratis por mail — opcional */}
+              <div className="mt-5 rounded-2xl border border-border bg-white p-4">
+                {mailGratisEnviado ? (
+                  <p className="flex items-center gap-2 text-sm text-green">
+                    <CheckCircle2 size={16} /> Te lo mandamos a {mailGratis}.
+                  </p>
+                ) : mostrarMail ? (
+                  <div className="flex flex-col gap-2 sm:flex-row">
+                    <input
+                      value={mailGratis}
+                      onChange={(e) => setMailGratis(e.target.value)}
+                      type="email"
+                      placeholder="Tu email"
+                      className="flex-1 rounded-xl border border-border bg-white px-4 py-2.5 text-sm text-ink outline-none focus:border-primary"
+                    />
+                    <button
+                      onClick={enviarMailGratis}
+                      disabled={enviandoMailGratis}
+                      className="flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
+                    >
+                      {enviandoMailGratis ? <Loader2 size={14} className="animate-spin" /> : null}
+                      Enviar
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setMostrarMail(true)}
+                    className="flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
+                  >
+                    <Mail size={16} /> Mandarme este resultado por mail
+                  </button>
+                )}
+              </div>
+
               {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
 
               <button
                 onClick={pedirDiagnosticoCompleto}
-                disabled={creandoPago}
-                className="mt-7 flex w-full items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 text-sm font-semibold text-primary-dark shadow-soft transition-transform hover:-translate-y-0.5 disabled:opacity-60"
+                className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 text-sm font-semibold text-primary-dark shadow-soft transition-transform hover:-translate-y-0.5"
               >
-                {creandoPago ? <Loader2 size={16} className="animate-spin" /> : null}
                 Ver mi diagnóstico completo — {formatoARS.format(PRECIO_DIAGNOSTICO_COMPLETO)}
                 <ArrowRight size={16} />
               </button>
-              <p className="mt-3 text-center text-xs text-ink-soft">
-                Ya te mandamos este primer resultado a {email}.
+            </motion.div>
+          )}
+
+          {paso === 'contacto-pago' && (
+            <motion.div key="contacto-pago" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <h3 className="font-heading text-2xl font-bold text-ink">Tu diagnóstico completo</h3>
+              <p className="mt-2 text-sm text-ink-soft">
+                Ahí te llega en cuanto se confirme el pago. Si nos dejás tu web, la miramos antes de la conversación.
               </p>
+              <div className="mt-6 flex flex-col gap-4">
+                <input
+                  value={emailPago}
+                  onChange={(e) => setEmailPago(e.target.value)}
+                  type="email"
+                  placeholder="Tu email"
+                  className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-ink outline-none focus:border-primary"
+                />
+                <input
+                  value={webUrl}
+                  onChange={(e) => setWebUrl(e.target.value)}
+                  placeholder="El link de tu web (opcional)"
+                  className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-ink outline-none focus:border-primary"
+                />
+                {error && <p className="text-sm text-red-600">{error}</p>}
+                <button
+                  onClick={confirmarYPagar}
+                  disabled={creandoPago}
+                  className="mt-2 flex items-center justify-center gap-2 rounded-full bg-gold px-7 py-3.5 text-sm font-semibold text-primary-dark shadow-soft transition-transform hover:-translate-y-0.5 disabled:opacity-60"
+                >
+                  {creandoPago ? <Loader2 size={16} className="animate-spin" /> : null}
+                  Continuar al pago — {formatoARS.format(PRECIO_DIAGNOSTICO_COMPLETO)}
+                </button>
+              </div>
             </motion.div>
           )}
 

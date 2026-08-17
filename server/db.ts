@@ -11,8 +11,8 @@ db.pragma('journal_mode = WAL');
 db.exec(`
   CREATE TABLE IF NOT EXISTS diagnosticos (
     id TEXT PRIMARY KEY,
-    nombre TEXT,
-    email TEXT NOT NULL,
+    nombre TEXT NOT NULL,
+    email TEXT,                       -- se pide recién si el usuario quiere el mail, o al pasar a pagar
     negocio TEXT,
     respuestas TEXT NOT NULL,        -- JSON: número[] (1-4 por dimensión)
     web_url TEXT,                     -- opcional: URL que el cliente dejó para el análisis "por fuera"
@@ -26,8 +26,8 @@ db.exec(`
 
 export interface DiagnosticoRow {
   id: string;
-  nombre: string | null;
-  email: string;
+  nombre: string;
+  email: string | null;
   negocio: string | null;
   respuestas: string;
   web_url: string | null;
@@ -41,22 +41,27 @@ export interface DiagnosticoRow {
 export function crearDiagnostico(data: {
   id: string;
   nombre: string;
-  email: string;
-  negocio: string;
+  negocio?: string;
   respuestas: number[];
-  webUrl?: string;
 }) {
   db.prepare(
-    `INSERT INTO diagnosticos (id, nombre, email, negocio, respuestas, web_url)
-     VALUES (@id, @nombre, @email, @negocio, @respuestas, @webUrl)`,
+    `INSERT INTO diagnosticos (id, nombre, negocio, respuestas)
+     VALUES (@id, @nombre, @negocio, @respuestas)`,
   ).run({
     id: data.id,
     nombre: data.nombre,
-    email: data.email,
-    negocio: data.negocio,
+    negocio: data.negocio ?? null,
     respuestas: JSON.stringify(data.respuestas),
-    webUrl: data.webUrl ?? null,
   });
+}
+
+/** Se llama al pedir el mail gratis, o al pasar a pagar — ambos casos completan el contacto. */
+export function actualizarContacto(id: string, data: { email: string; webUrl?: string }) {
+  db.prepare('UPDATE diagnosticos SET email = ?, web_url = COALESCE(?, web_url) WHERE id = ?').run(
+    data.email,
+    data.webUrl ?? null,
+    id,
+  );
 }
 
 export function obtenerDiagnostico(id: string): DiagnosticoRow | undefined {
