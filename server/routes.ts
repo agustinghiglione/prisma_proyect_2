@@ -13,9 +13,10 @@ import {
   guardarPreferencia,
   marcarComoPagado,
   guardarParte2,
+  contarDiagnosticos,
 } from './db';
 import { crearPreferenciaDePago, consultarPago } from './mercadopago';
-import { enviarResultado, enviarInformeCompleto } from './email';
+import { enviarInformeCompleto } from './email';
 
 export const router = Router();
 
@@ -43,27 +44,12 @@ router.post('/diagnostico', async (req, res) => {
   res.json({ id, resultado });
 });
 
-/** El usuario elige recibir el resultado gratis por mail (opcional, desde la pantalla de resultado). */
-router.post('/diagnostico/:id/enviar-mail', async (req, res) => {
-  const diagnostico = obtenerDiagnostico(req.params.id);
-  if (!diagnostico) return res.status(404).json({ error: 'Diagnóstico no encontrado.' });
-
-  const { email } = req.body ?? {};
-  if (!email || !EMAIL_RE.test(email)) {
-    return res.status(400).json({ error: 'Ingresá un email válido.' });
-  }
-
-  actualizarContacto(diagnostico.id, { email });
-
-  try {
-    const respuestas = JSON.parse(diagnostico.respuestas);
-    const resultado = calcularResultado(respuestas);
-    await enviarResultado({ email, nombre: diagnostico.nombre ?? '', resultado, completo: false });
-    res.json({ ok: true });
-  } catch (err) {
-    console.error('[diagnostico] no se pudo enviar el mail gratuito:', err);
-    res.status(502).json({ error: 'No pudimos mandar el mail. Probá de nuevo en un momento.' });
-  }
+/**
+ * Cuántos diagnósticos se iniciaron en total — la prueba social que se
+ * muestra al empezar y antes de pagar. Cuenta real, no un número fijo.
+ */
+router.get('/estadisticas', (_req, res) => {
+  res.json({ total: contarDiagnosticos() });
 });
 
 /**

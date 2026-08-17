@@ -115,6 +115,20 @@ export interface ResultadoDiagnostico {
   oportunidades: RespuestaDimension[];
 }
 
+/**
+ * Separa fortalezas de oportunidades por lo que realmente valen, no por
+ * posición. Antes se tomaban siempre las 2 mejores y las 2 peores aunque las
+ * "peores" fueran en realidad un 4 — alguien que contesta perfecto en las 5
+ * preguntas terminaba viendo "detectamos una oportunidad" en algo que no
+ * tiene nada de oportunidad. Con esto, si no hay nada débil de verdad,
+ * "oportunidades" sale vacío, y el llamador decide cómo mostrarlo.
+ */
+function separarPorValor(scores: RespuestaDimension[]) {
+  const fortalezas = scores.filter((s) => s.valor >= 3).sort((a, b) => b.valor - a.valor);
+  const oportunidades = scores.filter((s) => s.valor <= 2).sort((a, b) => a.valor - b.valor);
+  return { fortalezas, oportunidades };
+}
+
 /** respuestas: un valor 1-4 por cada dimensión, en el mismo orden que DIMENSIONES */
 export function calcularResultado(respuestas: number[]): ResultadoDiagnostico {
   const scores: RespuestaDimension[] = DIMENSIONES.map((d, i) => ({
@@ -122,9 +136,7 @@ export function calcularResultado(respuestas: number[]): ResultadoDiagnostico {
     valor: respuestas[i],
   }));
 
-  const ordenado = [...scores].sort((a, b) => b.valor - a.valor);
-  const fortalezas = ordenado.slice(0, 2);
-  const oportunidades = [...ordenado].reverse().slice(0, 2);
+  const { fortalezas, oportunidades } = separarPorValor(scores);
   const overallPercent = Math.round(
     (scores.reduce((s, x) => s + x.valor, 0) / (scores.length * 4)) * 100,
   );
@@ -260,9 +272,7 @@ export function calcularResultadoParte2(respuestas: number[]): ResultadoDiagnost
     dimension: d.nombre,
     valor: respuestas[i],
   }));
-  const ordenado = [...scores].sort((a, b) => b.valor - a.valor);
-  const fortalezas = ordenado.slice(0, 2);
-  const oportunidades = [...ordenado].reverse().slice(0, 2);
+  const { fortalezas, oportunidades } = separarPorValor(scores);
   const overallPercent = Math.round(
     (scores.reduce((s, x) => s + x.valor, 0) / (scores.length * 4)) * 100,
   );
@@ -290,8 +300,8 @@ export const RECOMENDACIONES_TODAS: Record<string, { bajo: string; medio: string
 
 /** Lo que explícitamente se le dice al cliente que va a recibir, antes de pagar. */
 export const QUE_INCLUYE_COMPLETO = [
-  'Seis preguntas más, una por cada área en la que te podemos ayudar de verdad: Estrategia, Finanzas, Administración, Personas, Contabilidad e Impuestos y Tecnología.',
+  'Un vistazo más profundo a las áreas en las que te podemos ayudar de verdad: Estrategia, Finanzas, Administración, Personas, Contabilidad e Impuestos y Tecnología.',
   'Todas tus respuestas de hoy, destapadas, con la recomendación completa de cada una.',
   'Si nos dejás el link de tu web, la revisamos antes de la conversación.',
-  'El informe completo por mail, y el siguiente paso: una conversación para ver cómo lo implementamos.',
+  'El informe completo por mail, y la posibilidad de mandarte el resultado cuando quieras.',
 ];

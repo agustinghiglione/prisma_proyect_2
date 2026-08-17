@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { Gift, Timer, FileText } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Gift, Timer, FileText, Users } from 'lucide-react';
 
 interface DiagnosticIntroProps {
   onStartDiagnostic: () => void;
@@ -16,6 +17,14 @@ const FEATURES = [
 ];
 
 export default function DiagnosticIntro({ onStartDiagnostic }: DiagnosticIntroProps) {
+  const [total, setTotal] = useState<number | null>(null);
+  useEffect(() => {
+    fetch('/api/estadisticas')
+      .then((r) => r.json())
+      .then((d) => setTotal(d.total))
+      .catch(() => {});
+  }, []);
+
   return (
     <section id="diagnostico" className="relative overflow-hidden bg-gradient-prisma px-6 py-28 lg:px-10">
       <div className="pointer-events-none absolute -top-32 -right-24 h-96 w-96 rounded-full bg-gold/25 blur-3xl" />
@@ -70,6 +79,18 @@ export default function DiagnosticIntro({ onStartDiagnostic }: DiagnosticIntroPr
         >
           Comenzar Diagnóstico
         </motion.button>
+
+        {total !== null && total > 0 && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="mt-4 flex items-center justify-center gap-1.5 text-xs text-white/70"
+          >
+            <Users size={13} /> Ya lo hicieron {total} {total === 1 ? 'negocio' : 'negocios'}
+          </motion.p>
+        )}
       </div>
     </section>
   );

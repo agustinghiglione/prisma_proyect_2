@@ -95,6 +95,11 @@ export function guardarParte2(id: string, respuestas: number[]) {
   );
 }
 
+export function contarDiagnosticos(): number {
+  const row = db.prepare('SELECT COUNT(*) as n FROM diagnosticos').get() as { n: number };
+  return row.n;
+}
+
 /** Busca un diagnóstico por el ID de preferencia de Mercado Pago (lo manda el webhook vía external_reference, pero esto sirve de respaldo). */
 export function buscarPorPreferencia(preferenceId: string): DiagnosticoRow | undefined {
   return db

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ArrowRight, Lock, CheckCircle2, Loader2, Mail, ShieldCheck } from 'lucide-react';
+import { X, ArrowRight, Lock, CheckCircle2, Loader2, Mail, ShieldCheck, Users } from 'lucide-react';
 import {
   DIMENSIONES,
   DIMENSIONES_PARTE2,
@@ -51,12 +51,6 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
   const [diagnosticoId, setDiagnosticoId] = useState<string | null>(null);
   const [resultado, setResultado] = useState<ResultadoDiagnostico | null>(null);
 
-  // Mail del resultado gratis (opcional, se pide en la propia pantalla de resultado)
-  const [mostrarMail, setMostrarMail] = useState(false);
-  const [mailGratis, setMailGratis] = useState('');
-  const [mailGratisEnviado, setMailGratisEnviado] = useState(false);
-  const [enviandoMailGratis, setEnviandoMailGratis] = useState(false);
-
   // Contacto para el diagnóstico completo (mail obligatorio, web opcional)
   const [emailPago, setEmailPago] = useState('');
   const [webUrl, setWebUrl] = useState('');
@@ -70,6 +64,15 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
   const [respuestas2, setRespuestas2] = useState<number[]>([]);
   const [enviandoParte2, setEnviandoParte2] = useState(false);
   const [resultadoCompleto, setResultadoCompleto] = useState<ResultadoCompleto | null>(null);
+
+  // Prueba social: cuántos diagnósticos se hicieron en total (dato real, no fijo)
+  const [totalDiagnosticos, setTotalDiagnosticos] = useState<number | null>(null);
+  useEffect(() => {
+    fetch('/api/estadisticas')
+      .then((r) => r.json())
+      .then((d) => setTotalDiagnosticos(d.total))
+      .catch(() => {});
+  }, []);
 
   const elegirOpcion = (valor: number) => {
     const nuevas = [...respuestas, valor];
@@ -106,33 +109,7 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
     }
   };
 
-  const enviarMailGratis = async () => {
-    if (!diagnosticoId || !EMAIL_RE.test(mailGratis)) {
-      setError('Ingresá un email válido.');
-      return;
-    }
-    setEnviandoMailGratis(true);
-    setError('');
-    try {
-      const res = await fetch(`/api/diagnostico/${diagnosticoId}/enviar-mail`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: mailGratis }),
-      });
-      if (!res.ok) throw new Error();
-      setMailGratisEnviado(true);
-      setEmailPago(mailGratis); // reutilizamos el mismo mail si después pide el completo
-    } catch {
-      setError('No pudimos mandar el mail. Probá de nuevo en un momento.');
-    } finally {
-      setEnviandoMailGratis(false);
-    }
-  };
-
-  const pedirDiagnosticoCompleto = async () => {
-    if (!emailPago.trim()) {
-      setEmailPago(mailGratis); // por si ya lo había tipeado arriba sin enviarlo
-    }
+  const pedirDiagnosticoCompleto = () => {
     setPaso('contacto-pago');
   };
 
@@ -235,6 +212,12 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
         <AnimatePresence mode="wait">
           {paso === 'preguntas' && (
             <motion.div key="preguntas" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              {preguntaActual === 0 && totalDiagnosticos !== null && totalDiagnosticos > 0 && (
+                <p className="mb-5 flex items-center gap-1.5 text-xs text-ink-soft">
+                  <Users size={13} className="text-primary" />
+                  Ya lo hicieron {totalDiagnosticos} {totalDiagnosticos === 1 ? 'negocio' : 'negocios'}
+                </p>
+              )}
               <div className="mb-6 flex gap-1.5">
                 {DIMENSIONES.map((_, i) => (
                   <div
@@ -303,60 +286,56 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
               </h3>
 
               <div className="mt-6 flex flex-col gap-3">
-                {/* Una fortaleza, mostrada entera */}
-                <div className="flex items-start gap-3 rounded-2xl border border-border bg-white p-4">
-                  <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-green" />
-                  <p className="text-sm text-ink">
-                    En <strong>{resultado.fortalezas[0].dimension}</strong> estás bien encaminado.{' '}
-                    {RECOMENDACIONES[resultado.fortalezas[0].dimension][nivelDe(resultado.fortalezas[0].valor)]}
-                  </p>
-                </div>
-
-                {/* Las oportunidades, tapadas — esto es lo que se paga */}
-                {resultado.oportunidades.map((o) => (
-                  <div key={o.dimension} className="flex items-start gap-3 rounded-2xl border border-gold/30 bg-gold/10 p-4">
-                    <Lock size={18} className="mt-0.5 shrink-0 text-primary-dark" />
-                    <p className="text-sm text-ink-soft">
-                      Detectamos una oportunidad en <strong className="text-ink">{o.dimension}</strong> que
-                      podría estar costándote más de lo que pensás.
+                {resultado.fortalezas.length > 0 ? (
+                  <div className="flex items-start gap-3 rounded-2xl border border-border bg-white p-4">
+                    <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-green" />
+                    <p className="text-sm text-ink">
+                      En <strong>{resultado.fortalezas[0].dimension}</strong> estás bien encaminado.{' '}
+                      {RECOMENDACIONES[resultado.fortalezas[0].dimension][nivelDe(resultado.fortalezas[0].valor)]}
                     </p>
                   </div>
-                ))}
-              </div>
-
-              {/* Enviar el resultado gratis por mail — opcional */}
-              <div className="mt-5 rounded-2xl border border-border bg-white p-4">
-                {mailGratisEnviado ? (
-                  <p className="flex items-center gap-2 text-sm text-green">
-                    <CheckCircle2 size={16} /> Te lo mandamos a {mailGratis}.
-                  </p>
-                ) : mostrarMail ? (
-                  <div className="flex flex-col gap-2 sm:flex-row">
-                    <input
-                      value={mailGratis}
-                      onChange={(e) => setMailGratis(e.target.value)}
-                      type="email"
-                      placeholder="Tu email"
-                      className="flex-1 rounded-xl border border-border bg-white px-4 py-2.5 text-sm text-ink outline-none focus:border-primary"
-                    />
-                    <button
-                      onClick={enviarMailGratis}
-                      disabled={enviandoMailGratis}
-                      className="flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
-                    >
-                      {enviandoMailGratis ? <Loader2 size={14} className="animate-spin" /> : null}
-                      Enviar
-                    </button>
-                  </div>
                 ) : (
-                  <button
-                    onClick={() => setMostrarMail(true)}
-                    className="flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
-                  >
-                    <Mail size={16} /> Mandarme este resultado por mail
-                  </button>
+                  <div className="flex items-start gap-3 rounded-2xl border border-border bg-white p-4">
+                    <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-primary" />
+                    <p className="text-sm text-ink">
+                      Tu punto de partida más fuerte hoy es <strong>{resultado.scores[0].dimension}</strong>,
+                      aunque todavía tiene camino por recorrer.
+                    </p>
+                  </div>
+                )}
+
+                {resultado.oportunidades.length > 0 ? (
+                  resultado.oportunidades.slice(0, 2).map((o) => (
+                    <div key={o.dimension} className="flex items-start gap-3 rounded-2xl border border-gold/30 bg-gold/10 p-4">
+                      <Lock size={18} className="mt-0.5 shrink-0 text-primary-dark" />
+                      <p className="text-sm text-ink-soft">
+                        Detectamos una oportunidad en <strong className="text-ink">{o.dimension}</strong> que
+                        podría estar costándote más de lo que pensás.
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex items-start gap-3 rounded-2xl border border-green/30 bg-green/10 p-4">
+                    <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-green" />
+                    <p className="text-sm text-ink-soft">
+                      Las 5 áreas que medimos hoy están sólidas. El diagnóstico completo mira otras 6 que
+                      todavía no tocamos acá.
+                    </p>
+                  </div>
                 )}
               </div>
+
+              {/* El envío por mail es parte del diagnóstico completo — esto solo llama la atención hacia eso */}
+              <button
+                onClick={pedirDiagnosticoCompleto}
+                className="mt-5 flex w-full items-center gap-2 rounded-2xl border border-border bg-white p-4 text-left transition-colors hover:border-primary hover:bg-surface/40"
+              >
+                <Mail size={18} className="shrink-0 text-primary" />
+                <span className="text-sm text-ink-soft">
+                  <span className="font-semibold text-ink">Mandarme este resultado por mail</span> — es parte
+                  del diagnóstico completo.
+                </span>
+              </button>
 
               {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
 
@@ -382,6 +361,11 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
                 Ver mi diagnóstico completo — {formatoARS.format(PRECIO_DIAGNOSTICO_COMPLETO)}
                 <ArrowRight size={16} />
               </button>
+              {totalDiagnosticos !== null && totalDiagnosticos > 0 && (
+                <p className="mt-3 flex items-center justify-center gap-1.5 text-xs text-ink-soft">
+                  <Users size={12} /> {totalDiagnosticos} {totalDiagnosticos === 1 ? 'negocio ya lo hizo' : 'negocios ya lo hicieron'}
+                </p>
+              )}
             </motion.div>
           )}
 
@@ -389,7 +373,7 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
             <motion.div key="contacto-pago" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <h3 className="font-heading text-2xl font-bold text-ink">Tu diagnóstico completo</h3>
               <p className="mt-2 text-sm text-ink-soft">
-                Después de pagar vas a responder 6 preguntas más y vas a poder dejarnos el link de tu web.
+                Después de pagar vas a responder algunas preguntas más y vas a poder dejarnos el link de tu web.
               </p>
               <div className="mt-6 flex flex-col gap-4">
                 <input
