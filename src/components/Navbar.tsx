@@ -68,8 +68,14 @@ export default function Navbar() {
                 e.preventDefault();
                 handleNavClick(item.href);
               }}
-              className={`text-sm font-medium transition-colors hover:text-primary ${
-                active === item.href ? 'text-primary' : 'text-ink-soft'
+              className={`text-sm font-medium transition-colors ${
+                scrolled
+                  ? active === item.href
+                    ? 'text-primary'
+                    : 'text-ink-soft hover:text-primary'
+                  : active === item.href
+                    ? 'text-white [text-shadow:0_1px_3px_rgb(0_0_0_/_45%)]'
+                    : 'text-white/90 hover:text-white [text-shadow:0_1px_3px_rgb(0_0_0_/_45%)]'
               }`}
             >
               {item.label}
@@ -84,7 +90,9 @@ export default function Navbar() {
         </div>
 
         <button
-          className="text-primary lg:hidden"
+          className={`lg:hidden ${
+            scrolled ? 'text-primary' : 'text-white [filter:drop-shadow(0_1px_3px_rgb(0_0_0_/_45%))]'
+          }`}
           onClick={() => setMobileOpen((v) => !v)}
           aria-label="Abrir menú"
         >

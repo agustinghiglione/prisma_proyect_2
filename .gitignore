@@ -12,9 +12,10 @@ server/data/
 .claude/
 
 # graphify: el grafo se comparte (graph.json, GRAPH_REPORT.md, graph.html);
-# la caché de extracción es solo local, se reconstruye sola.
+# la caché y las copias de seguridad fechadas son solo locales.
 graphify-out/cache/
 graphify-out/cost.json
+graphify-out/20*/
 
 .DS_Store
 Thumbs.db

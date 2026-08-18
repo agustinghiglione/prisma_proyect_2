@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { Linkedin, Instagram, Mail, MessageCircle } from 'lucide-react';
+import LegalModal from './LegalModal';
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const [legalAbierto, setLegalAbierto] = useState(false);
 
   return (
     <footer className="bg-gradient-prisma px-6 py-12 text-white/70 lg:px-10">
@@ -34,14 +37,16 @@ export default function Footer() {
       <div className="mx-auto mt-8 flex max-w-6xl flex-col items-center gap-4 border-t border-white/10 pt-6 text-xs sm:flex-row sm:justify-between">
         <p className="text-white/40">© {year} Prisma Consultora. Todos los derechos reservados.</p>
         <div className="flex gap-5">
-          <a href="#" className="hover:text-white">
+          <button onClick={() => setLegalAbierto(true)} className="hover:text-white">
             Política de privacidad
-          </a>
-          <a href="#" className="hover:text-white">
+          </button>
+          <button onClick={() => setLegalAbierto(true)} className="hover:text-white">
             Términos
-          </a>
+          </button>
         </div>
       </div>
+
+      {legalAbierto && <LegalModal onClose={() => setLegalAbierto(false)} />}
     </footer>
   );
 }

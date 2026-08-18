@@ -1,0 +1,19 @@
+{
+  "0": "devDependencies",
+  "1": "diagnostico.ts",
+  "2": "App.tsx",
+  "3": "dependencies",
+  "4": "routes.ts",
+  "5": "compilerOptions",
+  "6": "ContactoSection.tsx",
+  "7": "package.json",
+  "8": "PorQueSection.tsx",
+  "9": "MetodoSection.tsx",
+  "10": "ProblemsSection.tsx",
+  "11": "vite-env.d.ts",
+  "12": "vite.config.ts",
+  "13": "CLAUDE.md",
+  "14": "Prisma Consultora",
+  "15": "Scripts para crear los formularios de Google",
+  "16": "Prompt para Gemini (con acceso a Google Workspace)"
+}

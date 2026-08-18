@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ArrowRight, Lock, CheckCircle2, Loader2, Mail, ShieldCheck, Users } from 'lucide-react';
+import { X, ArrowRight, ArrowLeft, Lock, CheckCircle2, Loader2, Mail, ShieldCheck, Users } from 'lucide-react';
 import {
   DIMENSIONES,
   DIMENSIONES_PARTE2,
@@ -212,10 +212,12 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
         <AnimatePresence mode="wait">
           {paso === 'preguntas' && (
             <motion.div key="preguntas" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              {preguntaActual === 0 && totalDiagnosticos !== null && totalDiagnosticos > 0 && (
+              {preguntaActual === 0 && totalDiagnosticos !== null && (
                 <p className="mb-5 flex items-center gap-1.5 text-xs text-ink-soft">
                   <Users size={13} className="text-primary" />
-                  Ya lo hicieron {totalDiagnosticos} {totalDiagnosticos === 1 ? 'negocio' : 'negocios'}
+                  {totalDiagnosticos > 0
+                    ? `Ya lo hicieron ${totalDiagnosticos} ${totalDiagnosticos === 1 ? 'negocio' : 'negocios'}`
+                    : 'Sé de los primeros en probarlo'}
                 </p>
               )}
               <div className="mb-6 flex gap-1.5">
@@ -366,11 +368,25 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
                   <Users size={12} /> {totalDiagnosticos} {totalDiagnosticos === 1 ? 'negocio ya lo hizo' : 'negocios ya lo hicieron'}
                 </p>
               )}
+              {totalDiagnosticos === 0 && (
+                <p className="mt-3 flex items-center justify-center gap-1.5 text-xs text-ink-soft">
+                  <Users size={12} /> Vas a ser de los primeros en tenerlo
+                </p>
+              )}
             </motion.div>
           )}
 
           {paso === 'contacto-pago' && (
             <motion.div key="contacto-pago" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <button
+                onClick={() => {
+                  setError('');
+                  setPaso('resultado');
+                }}
+                className="mb-5 flex items-center gap-1.5 text-sm font-medium text-ink-soft hover:text-primary"
+              >
+                <ArrowLeft size={15} /> Volver a mi resultado
+              </button>
               <h3 className="font-heading text-2xl font-bold text-ink">Tu diagnóstico completo</h3>
               <p className="mt-2 text-sm text-ink-soft">
                 Después de pagar vas a responder algunas preguntas más y vas a poder dejarnos el link de tu web.

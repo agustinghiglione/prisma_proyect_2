@@ -37,7 +37,7 @@ export default function DiagnosticIntro({ onStartDiagnostic }: DiagnosticIntroPr
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="font-heading text-3xl font-bold text-white sm:text-4xl"
+          className="font-heading text-3xl font-bold text-white [text-shadow:0_2px_10px_rgb(0_0_0_/_35%)] sm:text-4xl"
         >
           Antes de hablar de soluciones, queremos entender tu negocio.
         </motion.h2>
@@ -80,7 +80,7 @@ export default function DiagnosticIntro({ onStartDiagnostic }: DiagnosticIntroPr
           Comenzar Diagnóstico
         </motion.button>
 
-        {total !== null && total > 0 && (
+        {total !== null && (
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -88,7 +88,10 @@ export default function DiagnosticIntro({ onStartDiagnostic }: DiagnosticIntroPr
             transition={{ duration: 0.6, delay: 0.4 }}
             className="mt-4 flex items-center justify-center gap-1.5 text-xs text-white/70"
           >
-            <Users size={13} /> Ya lo hicieron {total} {total === 1 ? 'negocio' : 'negocios'}
+            <Users size={13} />
+            {total > 0
+              ? `Ya lo hicieron ${total} ${total === 1 ? 'negocio' : 'negocios'}`
+              : 'Sé de los primeros en probarlo'}
           </motion.p>
         )}
       </div>
