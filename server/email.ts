@@ -135,3 +135,64 @@ export async function enviarInformeCompleto(params: {
     html,
   });
 }
+
+const HIZO_DIAGNOSTICO_TEXTO: Record<string, string> = {
+  si: 'Sí',
+  no: 'No',
+  no_seguro: 'No está seguro',
+};
+
+const HORARIO_TEXTO: Record<string, string> = {
+  manana: 'Mañana',
+  mediodia: 'Mediodía',
+  tarde: 'Tarde',
+  cualquiera: 'Cualquier horario',
+};
+
+/**
+ * Notificación interna al equipo (no al cliente) cuando alguien pide agendar
+ * una conversación. Sin esto, los pedidos quedarían solo en la base de datos
+ * y nadie se enteraría de que llegó un lead nuevo.
+ */
+export async function enviarNotificacionAgendamiento(datos: {
+  nombre: string;
+  email: string;
+  telefono?: string;
+  hizoDiagnostico: string;
+  horario: string;
+  contexto?: string;
+}) {
+  const destino = process.env.TEAM_EMAIL ?? 'contacto@prismaconsultora.com';
+
+  const filas = [
+    ['Nombre', datos.nombre],
+    ['Email', datos.email],
+    ['Teléfono / WhatsApp', datos.telefono || '—'],
+    ['¿Ya hizo el diagnóstico?', HIZO_DIAGNOSTICO_TEXTO[datos.hizoDiagnostico] ?? datos.hizoDiagnostico],
+    ['Horario preferido', HORARIO_TEXTO[datos.horario] ?? datos.horario],
+    ['Contexto', datos.contexto || '—'],
+  ]
+    .map(
+      ([label, value]) =>
+        `<tr><td style="padding:6px 12px 6px 0;font-family:Arial,sans-serif;font-size:13px;color:${TEXTO_SUAVE};white-space:nowrap;">${label}</td><td style="padding:6px 0;font-family:Arial,sans-serif;font-size:14px;color:${TEXTO};">${value}</td></tr>`,
+    )
+    .join('');
+
+  await transportador().sendMail({
+    from: process.env.MAIL_FROM ?? '"Prisma Consultora" <contacto@prismaconsultora.com>',
+    to: destino,
+    replyTo: datos.email,
+    subject: `Nuevo pedido de conversación — ${datos.nombre}`,
+    html: `
+      <div style="background:${MARFIL};padding:24px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;margin:0 auto;background:#ffffff;border-radius:12px;padding:24px;border:1px solid #E7DDC9;">
+          <tr><td>
+            <p style="margin:0 0 14px;font-family:Arial,sans-serif;font-size:15px;font-weight:bold;color:${AZUL_OCEANO};">
+              Alguien pidió agendar una primera conversación
+            </p>
+            <table role="presentation" cellpadding="0" cellspacing="0">${filas}</table>
+          </td></tr>
+        </table>
+      </div>`,
+  });
+}

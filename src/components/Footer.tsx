@@ -1,10 +1,18 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Linkedin, Instagram, Mail, MessageCircle } from 'lucide-react';
 import LegalModal from './LegalModal';
 
 export default function Footer() {
   const year = new Date().getFullYear();
   const [legalAbierto, setLegalAbierto] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+  const toastTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const avisarProximamente = (nombre: string) => {
+    if (toastTimeout.current) clearTimeout(toastTimeout.current);
+    setToast(`${nombre} no está disponible todavía — estamos trabajando en ella.`);
+    toastTimeout.current = setTimeout(() => setToast(null), 3500);
+  };
 
   return (
     <footer className="bg-gradient-prisma px-6 py-12 text-white/70 lg:px-10">
@@ -21,32 +29,33 @@ export default function Footer() {
             <Mail size={15} /> contacto@prismaconsultora.com
           </a>
           <div className="flex gap-4">
-            <a href="#" aria-label="WhatsApp" className="hover:text-white">
+            <button onClick={() => avisarProximamente('WhatsApp')} aria-label="WhatsApp" className="hover:text-white">
               <MessageCircle size={18} />
-            </a>
-            <a href="#" aria-label="LinkedIn" className="hover:text-white">
+            </button>
+            <button onClick={() => avisarProximamente('LinkedIn')} aria-label="LinkedIn" className="hover:text-white">
               <Linkedin size={18} />
-            </a>
-            <a href="#" aria-label="Instagram" className="hover:text-white">
+            </button>
+            <button onClick={() => avisarProximamente('Instagram')} aria-label="Instagram" className="hover:text-white">
               <Instagram size={18} />
-            </a>
+            </button>
           </div>
         </div>
       </div>
 
       <div className="mx-auto mt-8 flex max-w-6xl flex-col items-center gap-4 border-t border-white/10 pt-6 text-xs sm:flex-row sm:justify-between">
         <p className="text-white/40">© {year} Prisma Consultora. Todos los derechos reservados.</p>
-        <div className="flex gap-5">
-          <button onClick={() => setLegalAbierto(true)} className="hover:text-white">
-            Política de privacidad
-          </button>
-          <button onClick={() => setLegalAbierto(true)} className="hover:text-white">
-            Términos
-          </button>
-        </div>
+        <button onClick={() => setLegalAbierto(true)} className="hover:text-white">
+          Privacidad y Términos
+        </button>
       </div>
 
       {legalAbierto && <LegalModal onClose={() => setLegalAbierto(false)} />}
+
+      {toast && (
+        <div className="fixed inset-x-0 bottom-6 z-[60] flex justify-center px-4">
+          <div className="rounded-full bg-primary-dark px-5 py-3 text-sm text-white shadow-soft">{toast}</div>
+        </div>
+      )}
     </footer>
   );
 }

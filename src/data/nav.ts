@@ -13,6 +13,5 @@ export const NAV_ITEMS: NavItem[] = [
 
 export const NAV_CTA: NavItem = { label: 'Conversemos sobre tu negocio', href: '#contacto' };
 
-// El diagnóstico ahora es nativo (ver src/components/DiagnosticoFlow.tsx).
-// El de Agendar sigue en Google Forms por ahora.
-export const GOOGLE_AGENDAR_FORM_URL = 'https://forms.gle/WTvCQxcx3Z96XRii9';
+// El diagnóstico y el agendamiento ahora son nativos (ver
+// src/components/DiagnosticoFlow.tsx y src/components/AgendarModal.tsx).

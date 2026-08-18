@@ -1,16 +1,16 @@
 # Graph Report - prisma_2  (2026-08-18)
 
 ## Corpus Check
-- 41 files · ~276,527 words
+- 42 files · ~278,219 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 230 nodes · 291 edges · 17 communities (16 shown, 1 thin omitted)
+- 241 nodes · 304 edges · 18 communities (17 shown, 1 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `eccfefa8`
+- Built from commit: `392ab30e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -30,6 +30,7 @@
 - Prisma Consultora
 - Scripts para crear los formularios de Google
 - Prompt para Gemini (con acceso a Google Workspace)
+- Navbar.tsx
 
 ## God Nodes (most connected - your core abstractions)
 1. `compilerOptions` - 16 edges
@@ -41,7 +42,7 @@
 7. `calcularResultadoCompleto()` - 4 edges
 8. `lib` - 4 edges
 9. `Scripts para crear los formularios de Google` - 4 edges
-10. `DiagnosticoFlow()` - 3 edges
+10. `transportador()` - 3 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `enviarInformeCompleto()` --calls--> `nivelDe()`  [EXTRACTED]
@@ -52,19 +53,19 @@
 ## Import Cycles
 - None detected.
 
-## Communities (17 total, 1 thin omitted)
+## Communities (18 total, 1 thin omitted)
 
 ### Community 0 - "devDependencies"
 Cohesion: 0.07
 Nodes (29): concurrently, devDependencies, concurrently, tailwindcss, @tailwindcss/vite, @types/better-sqlite3, @types/cors, @types/express (+21 more)
 
 ### Community 1 - "diagnostico.ts"
-Cohesion: 0.13
-Nodes (25): enviarInformeCompleto(), filaBarra(), listaChips(), seccionOpcional(), transportador(), DiagnosticoFlowProps, formatoARS, Paso (+17 more)
+Cohesion: 0.09
+Nodes (32): enviarInformeCompleto(), enviarNotificacionAgendamiento(), filaBarra(), HIZO_DIAGNOSTICO_TEXTO, HORARIO_TEXTO, listaChips(), seccionOpcional(), transportador() (+24 more)
 
 ### Community 2 - "App.tsx"
 Cohesion: 0.09
-Nodes (19): App(), AudienciaSection(), DiagnosticIntro(), DiagnosticIntroProps, FEATURES, DiagnosticoFlow(), Footer(), CHECKS (+11 more)
+Nodes (18): App(), AudienciaSection(), DiagnosticIntro(), DiagnosticIntroProps, FEATURES, Footer(), CHECKS, Hero() (+10 more)
 
 ### Community 3 - "dependencies"
 Cohesion: 0.08
@@ -72,15 +73,15 @@ Nodes (25): better-sqlite3, cors, dotenv, express, framer-motion, lucide-react, 
 
 ### Community 4 - "routes.ts"
 Cohesion: 0.13
-Nodes (17): actualizarContacto(), contarDiagnosticos(), crearDiagnostico(), DATA_DIR, db, DiagnosticoRow, guardarParte2(), guardarPreferencia() (+9 more)
+Nodes (18): actualizarContacto(), AgendamientoData, contarDiagnosticos(), crearAgendamiento(), crearDiagnostico(), DATA_DIR, db, DiagnosticoRow (+10 more)
 
 ### Community 5 - "compilerOptions"
 Cohesion: 0.09
 Nodes (21): DOM, DOM.Iterable, ES2022, src, compilerOptions, allowImportingTsExtensions, isolatedModules, jsx (+13 more)
 
 ### Community 6 - "ContactoSection.tsx"
-Cohesion: 0.17
-Nodes (11): ContactoSection(), ContactoSectionProps, PASOS, FaqAccordion(), Navbar(), FAQ, FaqItem, GOOGLE_AGENDAR_FORM_URL (+3 more)
+Cohesion: 0.18
+Nodes (10): AgendarModal(), AgendarModalProps, HIZO_DIAGNOSTICO, HORARIOS, ContactoSection(), ContactoSectionProps, PASOS, FaqAccordion() (+2 more)
 
 ### Community 7 - "package.json"
 Cohesion: 0.17
@@ -110,8 +111,12 @@ Nodes (4): Archivos, Cómo se conectan los dos formularios, Cómo usarlo (con Ap
 Cohesion: 0.50
 Nodes (3): 1. Formulario "Agendar una conversación — Prisma Consultora", 2. Formulario "Diagnóstico Prisma®", Prompt para Gemini (con acceso a Google Workspace)
 
+### Community 17 - "Navbar.tsx"
+Cohesion: 0.47
+Nodes (4): Navbar(), NAV_CTA, NAV_ITEMS, NavItem
+
 ## Knowledge Gaps
-- **97 isolated node(s):** `name`, `private`, `version`, `type`, `dev` (+92 more)
+- **105 isolated node(s):** `name`, `private`, `version`, `type`, `dev` (+100 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **1 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -119,16 +124,16 @@ Nodes (3): 1. Formulario "Agendar una conversación — Prisma Consultora", 2. F
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `devDependencies` connect `devDependencies` to `package.json`?**
-  _High betweenness centrality (0.054) - this node is a cross-community bridge._
+  _High betweenness centrality (0.049) - this node is a cross-community bridge._
 - **Why does `dependencies` connect `dependencies` to `package.json`?**
-  _High betweenness centrality (0.048) - this node is a cross-community bridge._
+  _High betweenness centrality (0.044) - this node is a cross-community bridge._
 - **Why does `DIMENSIONES` connect `diagnostico.ts` to `routes.ts`?**
-  _High betweenness centrality (0.019) - this node is a cross-community bridge._
+  _High betweenness centrality (0.022) - this node is a cross-community bridge._
 - **What connects `name`, `private`, `version` to the rest of the system?**
-  _97 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _105 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `devDependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.06896551724137931 - nodes in this community are weakly interconnected._
 - **Should `diagnostico.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.12698412698412698 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09365079365079365 - nodes in this community are weakly interconnected._
 - **Should `App.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.0896551724137931 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09359605911330049 - nodes in this community are weakly interconnected._

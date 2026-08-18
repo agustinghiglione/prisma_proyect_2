@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
-import { Gift, Timer, FileText, Users } from 'lucide-react';
+import { Gift, Timer, FileText, Sparkles } from 'lucide-react';
 
 interface DiagnosticIntroProps {
   onStartDiagnostic: () => void;
@@ -17,27 +16,28 @@ const FEATURES = [
 ];
 
 export default function DiagnosticIntro({ onStartDiagnostic }: DiagnosticIntroProps) {
-  const [total, setTotal] = useState<number | null>(null);
-  useEffect(() => {
-    fetch('/api/estadisticas')
-      .then((r) => r.json())
-      .then((d) => setTotal(d.total))
-      .catch(() => {});
-  }, []);
-
   return (
     <section id="diagnostico" className="relative overflow-hidden bg-gradient-prisma px-6 py-28 lg:px-10">
-      <div className="pointer-events-none absolute -top-32 -right-24 h-96 w-96 rounded-full bg-gold/25 blur-3xl" />
+      <div className="pointer-events-none absolute -top-32 -right-24 h-96 w-96 rounded-full bg-gold/10 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-surface" />
 
       <div className="relative mx-auto max-w-4xl text-center">
+        <motion.span
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gold"
+        >
+          <Sparkles size={12} /> Nuevo: ahora 100% online
+        </motion.span>
+
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="font-heading text-3xl font-bold text-white [text-shadow:0_2px_10px_rgb(0_0_0_/_35%)] sm:text-4xl"
+          className="mt-5 font-heading text-3xl font-bold text-white [text-shadow:0_1px_3px_rgb(15_23_32_/_45%)] sm:text-4xl"
         >
           Antes de hablar de soluciones, queremos entender tu negocio.
         </motion.h2>
@@ -80,20 +80,15 @@ export default function DiagnosticIntro({ onStartDiagnostic }: DiagnosticIntroPr
           Comenzar Diagnóstico
         </motion.button>
 
-        {total !== null && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="mt-4 flex items-center justify-center gap-1.5 text-xs text-white/70"
-          >
-            <Users size={13} />
-            {total > 0
-              ? `Ya lo hicieron ${total} ${total === 1 ? 'negocio' : 'negocios'}`
-              : 'Sé de los primeros en probarlo'}
-          </motion.p>
-        )}
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="mt-4 text-xs text-white/70"
+        >
+          Lo acabamos de poner online — probalo antes que nadie.
+        </motion.p>
       </div>
     </section>
   );

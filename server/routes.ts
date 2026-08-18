@@ -14,9 +14,13 @@ import {
   marcarComoPagado,
   guardarParte2,
   contarDiagnosticos,
+  crearAgendamiento,
 } from './db';
 import { crearPreferenciaDePago, consultarPago } from './mercadopago';
-import { enviarInformeCompleto } from './email';
+import { enviarInformeCompleto, enviarNotificacionAgendamiento } from './email';
+
+const HORARIOS_VALIDOS = ['manana', 'mediodia', 'tarde', 'cualquiera'];
+const DIAGNOSTICO_VALIDOS = ['si', 'no', 'no_seguro'];
 
 export const router = Router();
 
@@ -171,4 +175,38 @@ router.post('/webhooks/mercadopago', async (req, res) => {
     // pago de prueba viejo). El log ya deja rastro para revisar a mano.
     res.sendStatus(200);
   }
+});
+
+/**
+ * Pedido de una primera conversación — reemplaza el Google Form. Guarda el
+ * pedido y le avisa al equipo por mail (a diferencia del diagnóstico, acá el
+ * mail va para nosotros, no para quien completa el formulario).
+ */
+router.post('/agendar', async (req, res) => {
+  const { nombre, email, telefono, hizoDiagnostico, horario, contexto } = req.body ?? {};
+
+  if (!nombre || typeof nombre !== 'string' || !nombre.trim()) {
+    return res.status(400).json({ error: 'Falta el nombre.' });
+  }
+  if (!email || !EMAIL_RE.test(email)) {
+    return res.status(400).json({ error: 'Ingresá un email válido.' });
+  }
+  if (!DIAGNOSTICO_VALIDOS.includes(hizoDiagnostico)) {
+    return res.status(400).json({ error: 'Falta indicar si ya hiciste el diagnóstico.' });
+  }
+  if (!HORARIOS_VALIDOS.includes(horario)) {
+    return res.status(400).json({ error: 'Falta elegir un horario.' });
+  }
+
+  const id = randomUUID();
+  crearAgendamiento({ id, nombre, email, telefono, hizoDiagnostico, horario, contexto });
+
+  try {
+    await enviarNotificacionAgendamiento({ nombre, email, telefono, hizoDiagnostico, horario, contexto });
+  } catch (err) {
+    // El pedido ya quedó guardado en la base aunque el mail de aviso falle.
+    console.error('[agendar] no se pudo enviar la notificación al equipo:', err);
+  }
+
+  res.json({ ok: true });
 });

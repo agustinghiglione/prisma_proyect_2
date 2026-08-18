@@ -1,11 +1,12 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Calendar, Link2, MessageCircle, Sparkles } from 'lucide-react';
 import FaqAccordion from './FaqAccordion';
-import { GOOGLE_AGENDAR_FORM_URL } from '../data/nav';
+import AgendarModal from './AgendarModal';
 
 const PASOS = [
-  { icon: Calendar, text: 'Elegís un horario que te quede cómodo.' },
-  { icon: Link2, text: 'Recibís el enlace para conectarte.' },
+  { icon: Calendar, text: 'Contanos tu disponibilidad.' },
+  { icon: Link2, text: 'Te confirmamos por mail el horario.' },
   { icon: MessageCircle, text: 'Conversamos sobre tu negocio, sin compromiso.' },
 ];
 
@@ -14,9 +15,7 @@ interface ContactoSectionProps {
 }
 
 export default function ContactoSection({ onStartDiagnostic }: ContactoSectionProps) {
-  const handleSchedule = () => {
-    window.open(GOOGLE_AGENDAR_FORM_URL, '_blank', 'noopener,noreferrer');
-  };
+  const [agendarAbierto, setAgendarAbierto] = useState(false);
 
   return (
     <section id="contacto" className="relative overflow-hidden bg-surface px-6 py-28 lg:px-10">
@@ -89,11 +88,11 @@ export default function ContactoSection({ onStartDiagnostic }: ContactoSectionPr
             className="mt-10 rounded-2xl border border-border bg-background p-7"
           >
             <p className="text-sm text-ink-soft">
-              Al hacer clic vas a completar un breve formulario con tu nombre, tu negocio y tus
-              datos de contacto para que podamos coordinar la primera conversación.
+              Al hacer clic vas a completar un breve formulario con tu nombre y tus datos de
+              contacto para que podamos coordinar la primera conversación.
             </p>
             <button
-              onClick={handleSchedule}
+              onClick={() => setAgendarAbierto(true)}
               className="mt-5 flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5"
             >
               Agendar una primera conversación <ArrowRight size={16} />
@@ -124,6 +123,8 @@ export default function ContactoSection({ onStartDiagnostic }: ContactoSectionPr
           <FaqAccordion />
         </div>
       </div>
+
+      {agendarAbierto && <AgendarModal onClose={() => setAgendarAbierto(false)} />}
     </section>
   );
 }

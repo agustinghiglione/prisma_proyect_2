@@ -33,6 +33,19 @@ try {
   // ya existe, seguimos
 }
 
+db.exec(`
+  CREATE TABLE IF NOT EXISTS agendamientos (
+    id TEXT PRIMARY KEY,
+    nombre TEXT NOT NULL,
+    email TEXT NOT NULL,
+    telefono TEXT,
+    hizo_diagnostico TEXT NOT NULL,   -- 'si' | 'no' | 'no_seguro'
+    horario TEXT NOT NULL,             -- 'manana' | 'mediodia' | 'tarde' | 'cualquiera'
+    contexto TEXT,
+    creado_en TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+`);
+
 export interface DiagnosticoRow {
   id: string;
   nombre: string;
@@ -105,4 +118,29 @@ export function buscarPorPreferencia(preferenceId: string): DiagnosticoRow | und
   return db
     .prepare('SELECT * FROM diagnosticos WHERE mp_preference_id = ?')
     .get(preferenceId) as DiagnosticoRow | undefined;
+}
+
+export interface AgendamientoData {
+  id: string;
+  nombre: string;
+  email: string;
+  telefono?: string;
+  hizoDiagnostico: 'si' | 'no' | 'no_seguro';
+  horario: 'manana' | 'mediodia' | 'tarde' | 'cualquiera';
+  contexto?: string;
+}
+
+export function crearAgendamiento(data: AgendamientoData) {
+  db.prepare(
+    `INSERT INTO agendamientos (id, nombre, email, telefono, hizo_diagnostico, horario, contexto)
+     VALUES (@id, @nombre, @email, @telefono, @hizoDiagnostico, @horario, @contexto)`,
+  ).run({
+    id: data.id,
+    nombre: data.nombre,
+    email: data.email,
+    telefono: data.telefono ?? null,
+    hizoDiagnostico: data.hizoDiagnostico,
+    horario: data.horario,
+    contexto: data.contexto ?? null,
+  });
 }

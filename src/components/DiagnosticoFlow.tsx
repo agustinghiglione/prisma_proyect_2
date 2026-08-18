@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ArrowRight, ArrowLeft, Lock, CheckCircle2, Loader2, Mail, ShieldCheck, Users } from 'lucide-react';
+import { X, ArrowRight, ArrowLeft, Lock, CheckCircle2, Loader2, Mail, ShieldCheck, Sparkles } from 'lucide-react';
 import {
   DIMENSIONES,
   DIMENSIONES_PARTE2,
@@ -64,15 +64,6 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
   const [respuestas2, setRespuestas2] = useState<number[]>([]);
   const [enviandoParte2, setEnviandoParte2] = useState(false);
   const [resultadoCompleto, setResultadoCompleto] = useState<ResultadoCompleto | null>(null);
-
-  // Prueba social: cuántos diagnósticos se hicieron en total (dato real, no fijo)
-  const [totalDiagnosticos, setTotalDiagnosticos] = useState<number | null>(null);
-  useEffect(() => {
-    fetch('/api/estadisticas')
-      .then((r) => r.json())
-      .then((d) => setTotalDiagnosticos(d.total))
-      .catch(() => {});
-  }, []);
 
   const elegirOpcion = (valor: number) => {
     const nuevas = [...respuestas, valor];
@@ -212,12 +203,9 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
         <AnimatePresence mode="wait">
           {paso === 'preguntas' && (
             <motion.div key="preguntas" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              {preguntaActual === 0 && totalDiagnosticos !== null && (
-                <p className="mb-5 flex items-center gap-1.5 text-xs text-ink-soft">
-                  <Users size={13} className="text-primary" />
-                  {totalDiagnosticos > 0
-                    ? `Ya lo hicieron ${totalDiagnosticos} ${totalDiagnosticos === 1 ? 'negocio' : 'negocios'}`
-                    : 'Sé de los primeros en probarlo'}
+              {preguntaActual === 0 && (
+                <p className="mb-5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-primary">
+                  <Sparkles size={13} /> Nuevo: diagnóstico 100% online
                 </p>
               )}
               <div className="mb-6 flex gap-1.5">
@@ -363,16 +351,9 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
                 Ver mi diagnóstico completo — {formatoARS.format(PRECIO_DIAGNOSTICO_COMPLETO)}
                 <ArrowRight size={16} />
               </button>
-              {totalDiagnosticos !== null && totalDiagnosticos > 0 && (
-                <p className="mt-3 flex items-center justify-center gap-1.5 text-xs text-ink-soft">
-                  <Users size={12} /> {totalDiagnosticos} {totalDiagnosticos === 1 ? 'negocio ya lo hizo' : 'negocios ya lo hicieron'}
-                </p>
-              )}
-              {totalDiagnosticos === 0 && (
-                <p className="mt-3 flex items-center justify-center gap-1.5 text-xs text-ink-soft">
-                  <Users size={12} /> Vas a ser de los primeros en tenerlo
-                </p>
-              )}
+              <p className="mt-3 text-center text-xs text-ink-soft">
+                Sé de los primeros en probar el diagnóstico completo.
+              </p>
             </motion.div>
           )}
 
