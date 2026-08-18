@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { X, ArrowRight, CheckCircle2, Loader2 } from 'lucide-react';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
+import { SCROLL_PANEL, SCROLL_PANEL_STYLE } from '../lib/ui';
 
 interface AgendarModalProps {
   onClose: () => void;
@@ -21,6 +23,7 @@ const HORARIOS = [
 ];
 
 export default function AgendarModal({ onClose }: AgendarModalProps) {
+  useBodyScrollLock();
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [telefono, setTelefono] = useState('');
@@ -59,8 +62,15 @@ export default function AgendarModal({ onClose }: AgendarModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary-dark/60 px-4 py-8 backdrop-blur-sm">
-      <div className="relative max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-background p-8 shadow-soft sm:p-10 [&::-webkit-scrollbar]:w-2.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-track]:my-3 [&::-webkit-scrollbar-track]:bg-transparent">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-primary-dark/60 px-4 py-8 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className={`relative max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-background p-8 shadow-soft sm:p-10 ${SCROLL_PANEL}`}
+        style={SCROLL_PANEL_STYLE}
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           onClick={onClose}
           aria-label="Cerrar"

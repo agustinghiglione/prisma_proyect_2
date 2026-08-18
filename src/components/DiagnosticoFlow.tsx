@@ -12,6 +12,8 @@ import {
   type ResultadoDiagnostico,
   type ResultadoCompleto,
 } from '../lib/diagnostico';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
+import { SCROLL_PANEL, SCROLL_PANEL_STYLE } from '../lib/ui';
 
 type Paso =
   | 'preguntas'
@@ -39,6 +41,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MP_AZUL = '#009EE3';
 
 export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
+  useBodyScrollLock();
   const [paso, setPaso] = useState<Paso>('preguntas');
   const [preguntaActual, setPreguntaActual] = useState(0);
   const [respuestas, setRespuestas] = useState<number[]>([]);
@@ -185,12 +188,17 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary-dark/60 px-4 py-8 backdrop-blur-sm">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-primary-dark/60 px-4 py-8 backdrop-blur-sm"
+      onClick={onClose}
+    >
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 24 }}
-        className="relative max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-3xl bg-background p-8 shadow-soft sm:p-10"
+        className={`relative max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-3xl bg-background p-8 shadow-soft sm:p-10 ${SCROLL_PANEL}`}
+        style={SCROLL_PANEL_STYLE}
+        onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}

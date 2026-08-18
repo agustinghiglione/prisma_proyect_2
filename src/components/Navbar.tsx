@@ -54,9 +54,11 @@ export default function Navbar() {
             e.preventDefault();
             handleNavClick('#inicio');
           }}
-          className="font-heading text-lg font-extrabold tracking-tight text-primary"
+          className={`font-heading text-lg font-extrabold tracking-tight transition-colors ${
+            scrolled ? 'text-primary' : 'text-white [text-shadow:0_1px_3px_rgb(0_0_0_/_45%)]'
+          }`}
         >
-          PRISMA <span className="font-medium text-primary">CONSULTORA</span>
+          PRISMA <span className={`font-medium ${scrolled ? 'text-primary' : 'text-white/90'}`}>CONSULTORA</span>
         </a>
 
         <div className="hidden items-center gap-8 lg:flex">

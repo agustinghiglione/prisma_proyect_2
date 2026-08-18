@@ -1,15 +1,23 @@
 import { X } from 'lucide-react';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
+import { SCROLL_PANEL, SCROLL_PANEL_STYLE } from '../lib/ui';
 
 interface LegalModalProps {
   onClose: () => void;
 }
 
 export default function LegalModal({ onClose }: LegalModalProps) {
+  useBodyScrollLock();
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary-dark/60 px-4 py-8 backdrop-blur-sm">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-primary-dark/60 px-4 py-8 backdrop-blur-sm"
+      onClick={onClose}
+    >
       <div
-        className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-background p-8 shadow-soft sm:p-10 [&::-webkit-scrollbar]:w-2.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-thumb]:hover:bg-ink-soft/50 [&::-webkit-scrollbar-track]:my-3 [&::-webkit-scrollbar-track]:bg-transparent"
-        style={{ scrollbarWidth: 'thin', scrollbarColor: 'var(--color-border) transparent' }}
+        className={`relative max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-background p-8 shadow-soft sm:p-10 ${SCROLL_PANEL}`}
+        style={SCROLL_PANEL_STYLE}
+        onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}

@@ -7,7 +7,7 @@
       "label": "DiagnosticoFlowProps",
       "file_type": "code",
       "source_file": "src/components/DiagnosticoFlow.tsx",
-      "source_location": "L25",
+      "source_location": "L27",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
@@ -20,7 +20,7 @@
       "label": "Paso",
       "file_type": "code",
       "source_file": "src/components/DiagnosticoFlow.tsx",
-      "source_location": "L16",
+      "source_location": "L18",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
@@ -108,17 +108,30 @@
       "norm_label": "problem"
     },
     {
-      "label": "NavItem",
+      "label": "AgendarModalProps",
       "file_type": "code",
-      "source_file": "src/data/nav.ts",
-      "source_location": "L1",
+      "source_file": "src/components/AgendarModal.tsx",
+      "source_location": "L6",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "id": "src_data_nav_navitem",
+      "id": "src_components_agendarmodal_agendarmodalprops",
       "community": 17,
-      "community_name": "Navbar.tsx",
-      "norm_label": "navitem"
+      "community_name": "AgendarModal.tsx",
+      "norm_label": "agendarmodalprops"
+    },
+    {
+      "label": "LegalModalProps",
+      "file_type": "code",
+      "source_file": "src/components/LegalModal.tsx",
+      "source_location": "L5",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "src_components_legalmodal_legalmodalprops",
+      "community": 17,
+      "community_name": "AgendarModal.tsx",
+      "norm_label": "legalmodalprops"
     },
     {
       "label": "DiagnosticIntroProps",
@@ -147,19 +160,6 @@
       "norm_label": "heroprops"
     },
     {
-      "label": "LegalModalProps",
-      "file_type": "code",
-      "source_file": "src/components/LegalModal.tsx",
-      "source_location": "L3",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "src_components_legalmodal_legalmodalprops",
-      "community": 2,
-      "community_name": "App.tsx",
-      "norm_label": "legalmodalprops"
-    },
-    {
       "label": "TransitionQuoteProps",
       "file_type": "code",
       "source_file": "src/components/TransitionQuote.tsx",
@@ -184,6 +184,19 @@
       "community": 2,
       "community_name": "App.tsx",
       "norm_label": "audiencia"
+    },
+    {
+      "label": "NavItem",
+      "file_type": "code",
+      "source_file": "src/data/nav.ts",
+      "source_location": "L1",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "src_data_nav_navitem",
+      "community": 2,
+      "community_name": "App.tsx",
+      "norm_label": "navitem"
     },
     {
       "label": "Solucion",
@@ -223,19 +236,6 @@
       "community": 4,
       "community_name": "routes.ts",
       "norm_label": "diagnosticorow"
-    },
-    {
-      "label": "AgendarModalProps",
-      "file_type": "code",
-      "source_file": "src/components/AgendarModal.tsx",
-      "source_location": "L4",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "src_components_agendarmodal_agendarmodalprops",
-      "community": 6,
-      "community_name": "ContactoSection.tsx",
-      "norm_label": "agendarmodalprops"
     },
     {
       "label": "ContactoSectionProps",
@@ -415,7 +415,7 @@
       "label": "DiagnosticoFlow()",
       "file_type": "code",
       "source_file": "src/components/DiagnosticoFlow.tsx",
-      "source_location": "L41",
+      "source_location": "L43",
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_diagnosticoflow_diagnosticoflow",
@@ -508,16 +508,52 @@
       "norm_label": "minimaldeskvisual()"
     },
     {
-      "label": "Navbar()",
+      "label": "AgendarModal()",
       "file_type": "code",
-      "source_file": "src/components/Navbar.tsx",
+      "source_file": "src/components/AgendarModal.tsx",
+      "source_location": "L25",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "src_components_agendarmodal_agendarmodal",
+      "community": 17,
+      "community_name": "AgendarModal.tsx",
+      "norm_label": "agendarmodal()"
+    },
+    {
+      "label": "Footer()",
+      "file_type": "code",
+      "source_file": "src/components/Footer.tsx",
       "source_location": "L5",
       "_callable": true,
       "_origin": "ast",
-      "id": "src_components_navbar_navbar",
+      "id": "src_components_footer_footer",
       "community": 17,
-      "community_name": "Navbar.tsx",
-      "norm_label": "navbar()"
+      "community_name": "AgendarModal.tsx",
+      "norm_label": "footer()"
+    },
+    {
+      "label": "LegalModal()",
+      "file_type": "code",
+      "source_file": "src/components/LegalModal.tsx",
+      "source_location": "L9",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "src_components_legalmodal_legalmodal",
+      "community": 17,
+      "community_name": "AgendarModal.tsx",
+      "norm_label": "legalmodal()"
+    },
+    {
+      "label": "useBodyScrollLock()",
+      "file_type": "code",
+      "source_file": "src/hooks/useBodyScrollLock.ts",
+      "source_location": "L4",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "src_hooks_usebodyscrolllock_usebodyscrolllock",
+      "community": 17,
+      "community_name": "AgendarModal.tsx",
+      "norm_label": "usebodyscrolllock()"
     },
     {
       "label": "App()",
@@ -547,25 +583,13 @@
       "label": "DiagnosticIntro()",
       "file_type": "code",
       "source_file": "src/components/DiagnosticIntro.tsx",
-      "source_location": "L18",
+      "source_location": "L20",
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_diagnosticintro_diagnosticintro",
       "community": 2,
       "community_name": "App.tsx",
       "norm_label": "diagnosticintro()"
-    },
-    {
-      "label": "Footer()",
-      "file_type": "code",
-      "source_file": "src/components/Footer.tsx",
-      "source_location": "L5",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "src_components_footer_footer",
-      "community": 2,
-      "community_name": "App.tsx",
-      "norm_label": "footer()"
     },
     {
       "label": "Hero()",
@@ -580,16 +604,16 @@
       "norm_label": "hero()"
     },
     {
-      "label": "LegalModal()",
+      "label": "Navbar()",
       "file_type": "code",
-      "source_file": "src/components/LegalModal.tsx",
-      "source_location": "L7",
+      "source_file": "src/components/Navbar.tsx",
+      "source_location": "L5",
       "_callable": true,
       "_origin": "ast",
-      "id": "src_components_legalmodal_legalmodal",
+      "id": "src_components_navbar_navbar",
       "community": 2,
       "community_name": "App.tsx",
-      "norm_label": "legalmodal()"
+      "norm_label": "navbar()"
     },
     {
       "label": "SolucionesSection()",
@@ -722,18 +746,6 @@
       "community": 4,
       "community_name": "routes.ts",
       "norm_label": "obtenerdiagnostico()"
-    },
-    {
-      "label": "AgendarModal()",
-      "file_type": "code",
-      "source_file": "src/components/AgendarModal.tsx",
-      "source_location": "L23",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "src_components_agendarmodal_agendarmodal",
-      "community": 6,
-      "community_name": "ContactoSection.tsx",
-      "norm_label": "agendarmodal()"
     },
     {
       "label": "ContactoSection()",
@@ -1196,7 +1208,7 @@
       "label": "formatoARS",
       "file_type": "code",
       "source_file": "src/components/DiagnosticoFlow.tsx",
-      "source_location": "L29",
+      "source_location": "L31",
       "_origin": "ast",
       "id": "src_components_diagnosticoflow_formatoars",
       "community": 1,
@@ -1567,48 +1579,103 @@
       "norm_label": "prompt para gemini (con acceso a google workspace)"
     },
     {
-      "label": "Navbar.tsx",
+      "label": "AgendarModal.tsx",
       "file_type": "code",
-      "source_file": "src/components/Navbar.tsx",
+      "source_file": "src/components/AgendarModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_components_navbar",
+      "id": "src_components_agendarmodal",
       "community": 17,
-      "community_name": "Navbar.tsx",
-      "norm_label": "navbar.tsx"
+      "community_name": "AgendarModal.tsx",
+      "norm_label": "agendarmodal.tsx"
     },
     {
-      "label": "nav.ts",
+      "label": "HIZO_DIAGNOSTICO",
       "file_type": "code",
-      "source_file": "src/data/nav.ts",
+      "source_file": "src/components/AgendarModal.tsx",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "src_components_agendarmodal_hizo_diagnostico",
+      "community": 17,
+      "community_name": "AgendarModal.tsx",
+      "norm_label": "hizo_diagnostico"
+    },
+    {
+      "label": "HORARIOS",
+      "file_type": "code",
+      "source_file": "src/components/AgendarModal.tsx",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "src_components_agendarmodal_horarios",
+      "community": 17,
+      "community_name": "AgendarModal.tsx",
+      "norm_label": "horarios"
+    },
+    {
+      "label": "Footer.tsx",
+      "file_type": "code",
+      "source_file": "src/components/Footer.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_data_nav",
+      "id": "src_components_footer",
       "community": 17,
-      "community_name": "Navbar.tsx",
-      "norm_label": "nav.ts"
+      "community_name": "AgendarModal.tsx",
+      "norm_label": "footer.tsx"
     },
     {
-      "label": "NAV_CTA",
+      "label": "LegalModal.tsx",
       "file_type": "code",
-      "source_file": "src/data/nav.ts",
-      "source_location": "L14",
+      "source_file": "src/components/LegalModal.tsx",
+      "source_location": "L1",
       "_origin": "ast",
-      "id": "src_data_nav_nav_cta",
+      "id": "src_components_legalmodal",
       "community": 17,
-      "community_name": "Navbar.tsx",
-      "norm_label": "nav_cta"
+      "community_name": "AgendarModal.tsx",
+      "norm_label": "legalmodal.tsx"
     },
     {
-      "label": "NAV_ITEMS",
+      "label": "useBodyScrollLock.ts",
       "file_type": "code",
-      "source_file": "src/data/nav.ts",
-      "source_location": "L6",
+      "source_file": "src/hooks/useBodyScrollLock.ts",
+      "source_location": "L1",
       "_origin": "ast",
-      "id": "src_data_nav_nav_items",
+      "id": "src_hooks_usebodyscrolllock",
       "community": 17,
-      "community_name": "Navbar.tsx",
-      "norm_label": "nav_items"
+      "community_name": "AgendarModal.tsx",
+      "norm_label": "usebodyscrolllock.ts"
+    },
+    {
+      "label": "ui.ts",
+      "file_type": "code",
+      "source_file": "src/lib/ui.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_lib_ui",
+      "community": 17,
+      "community_name": "AgendarModal.tsx",
+      "norm_label": "ui.ts"
+    },
+    {
+      "label": "SCROLL_PANEL",
+      "file_type": "code",
+      "source_file": "src/lib/ui.ts",
+      "source_location": "L2",
+      "_origin": "ast",
+      "id": "src_lib_ui_scroll_panel",
+      "community": 17,
+      "community_name": "AgendarModal.tsx",
+      "norm_label": "scroll_panel"
+    },
+    {
+      "label": "SCROLL_PANEL_STYLE",
+      "file_type": "code",
+      "source_file": "src/lib/ui.ts",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "src_lib_ui_scroll_panel_style",
+      "community": 17,
+      "community_name": "AgendarModal.tsx",
+      "norm_label": "scroll_panel_style"
     },
     {
       "label": "App.tsx",
@@ -1644,6 +1711,17 @@
       "norm_label": "diagnosticintro.tsx"
     },
     {
+      "label": "CHECKS",
+      "file_type": "code",
+      "source_file": "src/components/DiagnosticIntro.tsx",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "src_components_diagnosticintro_checks",
+      "community": 2,
+      "community_name": "App.tsx",
+      "norm_label": "checks"
+    },
+    {
       "label": "FEATURES",
       "file_type": "code",
       "source_file": "src/components/DiagnosticIntro.tsx",
@@ -1653,17 +1731,6 @@
       "community": 2,
       "community_name": "App.tsx",
       "norm_label": "features"
-    },
-    {
-      "label": "Footer.tsx",
-      "file_type": "code",
-      "source_file": "src/components/Footer.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "src_components_footer",
-      "community": 2,
-      "community_name": "App.tsx",
-      "norm_label": "footer.tsx"
     },
     {
       "label": "Hero.tsx",
@@ -1688,15 +1755,15 @@
       "norm_label": "checks"
     },
     {
-      "label": "LegalModal.tsx",
+      "label": "Navbar.tsx",
       "file_type": "code",
-      "source_file": "src/components/LegalModal.tsx",
+      "source_file": "src/components/Navbar.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_components_legalmodal",
+      "id": "src_components_navbar",
       "community": 2,
       "community_name": "App.tsx",
-      "norm_label": "legalmodal.tsx"
+      "norm_label": "navbar.tsx"
     },
     {
       "label": "SolucionesSection.tsx",
@@ -1741,6 +1808,39 @@
       "community": 2,
       "community_name": "App.tsx",
       "norm_label": "audiencias"
+    },
+    {
+      "label": "nav.ts",
+      "file_type": "code",
+      "source_file": "src/data/nav.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_data_nav",
+      "community": 2,
+      "community_name": "App.tsx",
+      "norm_label": "nav.ts"
+    },
+    {
+      "label": "NAV_CTA",
+      "file_type": "code",
+      "source_file": "src/data/nav.ts",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "src_data_nav_nav_cta",
+      "community": 2,
+      "community_name": "App.tsx",
+      "norm_label": "nav_cta"
+    },
+    {
+      "label": "NAV_ITEMS",
+      "file_type": "code",
+      "source_file": "src/data/nav.ts",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "src_data_nav_nav_items",
+      "community": 2,
+      "community_name": "App.tsx",
+      "norm_label": "nav_items"
     },
     {
       "label": "soluciones.ts",
@@ -2425,39 +2525,6 @@
       "norm_label": "src"
     },
     {
-      "label": "AgendarModal.tsx",
-      "file_type": "code",
-      "source_file": "src/components/AgendarModal.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "src_components_agendarmodal",
-      "community": 6,
-      "community_name": "ContactoSection.tsx",
-      "norm_label": "agendarmodal.tsx"
-    },
-    {
-      "label": "HIZO_DIAGNOSTICO",
-      "file_type": "code",
-      "source_file": "src/components/AgendarModal.tsx",
-      "source_location": "L10",
-      "_origin": "ast",
-      "id": "src_components_agendarmodal_hizo_diagnostico",
-      "community": 6,
-      "community_name": "ContactoSection.tsx",
-      "norm_label": "hizo_diagnostico"
-    },
-    {
-      "label": "HORARIOS",
-      "file_type": "code",
-      "source_file": "src/components/AgendarModal.tsx",
-      "source_location": "L16",
-      "_origin": "ast",
-      "id": "src_components_agendarmodal_horarios",
-      "community": 6,
-      "community_name": "ContactoSection.tsx",
-      "norm_label": "horarios"
-    },
-    {
       "label": "ContactoSection.tsx",
       "file_type": "code",
       "source_file": "src/components/ContactoSection.tsx",
@@ -2810,12 +2877,48 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
+      "source_file": "src/components/AgendarModal.tsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_agendarmodal_agendarmodal",
+      "target": "src_hooks_usebodyscrolllock_usebodyscrolllock"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "src/components/DiagnosticoFlow.tsx",
-      "source_location": "L284",
+      "source_location": "L292",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_diagnosticoflow_diagnosticoflow",
       "target": "src_lib_diagnostico_nivelde"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/DiagnosticoFlow.tsx",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_diagnosticoflow_diagnosticoflow",
+      "target": "src_hooks_usebodyscrolllock_usebodyscrolllock"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/LegalModal.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_legalmodal_legalmodal",
+      "target": "src_hooks_usebodyscrolllock_usebodyscrolllock"
     },
     {
       "relation": "calls",
@@ -3625,6 +3728,42 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/components/AgendarModal.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_agendarmodal",
+      "target": "src_hooks_usebodyscrolllock_usebodyscrolllock",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/AgendarModal.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_agendarmodal",
+      "target": "src_lib_ui_scroll_panel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/AgendarModal.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_agendarmodal",
+      "target": "src_lib_ui_scroll_panel_style",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/components/AudienciaSection.tsx",
       "source_location": "L2",
       "weight": 1.0,
@@ -3655,6 +3794,42 @@
       "_origin": "ast",
       "source": "src_components_contactosection",
       "target": "src_components_agendarmodal_agendarmodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/DiagnosticoFlow.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_diagnosticoflow",
+      "target": "src_hooks_usebodyscrolllock_usebodyscrolllock",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/DiagnosticoFlow.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_diagnosticoflow",
+      "target": "src_lib_ui_scroll_panel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/DiagnosticoFlow.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_diagnosticoflow",
+      "target": "src_lib_ui_scroll_panel_style",
       "confidence_score": 1.0
     },
     {
@@ -3787,6 +3962,42 @@
       "_origin": "ast",
       "source": "src_components_footer",
       "target": "src_components_legalmodal_legalmodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/LegalModal.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_legalmodal",
+      "target": "src_hooks_usebodyscrolllock_usebodyscrolllock",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/LegalModal.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_legalmodal",
+      "target": "src_lib_ui_scroll_panel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/LegalModal.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_legalmodal",
+      "target": "src_lib_ui_scroll_panel_style",
       "confidence_score": 1.0
     },
     {
@@ -4177,6 +4388,30 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/components/AgendarModal.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_agendarmodal",
+      "target": "src_hooks_usebodyscrolllock",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/AgendarModal.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_agendarmodal",
+      "target": "src_lib_ui",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/components/AudienciaSection.tsx",
       "source_location": "L2",
       "weight": 1.0,
@@ -4214,6 +4449,30 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/components/DiagnosticoFlow.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_diagnosticoflow",
+      "target": "src_hooks_usebodyscrolllock",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/DiagnosticoFlow.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_diagnosticoflow",
+      "target": "src_lib_ui",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/DiagnosticoFlow.tsx",
       "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
@@ -4243,6 +4502,30 @@
       "_origin": "ast",
       "source": "src_components_footer",
       "target": "src_components_legalmodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/LegalModal.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_legalmodal",
+      "target": "src_hooks_usebodyscrolllock",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/LegalModal.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_legalmodal",
+      "target": "src_lib_ui",
       "confidence_score": 1.0
     },
     {
@@ -5292,7 +5575,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AgendarModal.tsx",
-      "source_location": "L10",
+      "source_location": "L12",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_agendarmodal",
@@ -5303,7 +5586,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AgendarModal.tsx",
-      "source_location": "L16",
+      "source_location": "L18",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_agendarmodal",
@@ -5314,7 +5597,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AgendarModal.tsx",
-      "source_location": "L23",
+      "source_location": "L25",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_agendarmodal",
@@ -5325,7 +5608,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AgendarModal.tsx",
-      "source_location": "L4",
+      "source_location": "L6",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_agendarmodal",
@@ -5384,6 +5667,17 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_diagnosticintro",
+      "target": "src_components_diagnosticintro_checks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/DiagnosticIntro.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_diagnosticintro",
       "target": "src_components_diagnosticintro_diagnosticintro",
       "confidence_score": 1.0
     },
@@ -5413,7 +5707,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/DiagnosticoFlow.tsx",
-      "source_location": "L16",
+      "source_location": "L18",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_diagnosticoflow",
@@ -5424,7 +5718,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/DiagnosticoFlow.tsx",
-      "source_location": "L25",
+      "source_location": "L27",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_diagnosticoflow",
@@ -5435,7 +5729,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/DiagnosticoFlow.tsx",
-      "source_location": "L29",
+      "source_location": "L31",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_diagnosticoflow",
@@ -5446,7 +5740,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/DiagnosticoFlow.tsx",
-      "source_location": "L41",
+      "source_location": "L43",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_diagnosticoflow",
@@ -5512,7 +5806,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/LegalModal.tsx",
-      "source_location": "L3",
+      "source_location": "L5",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_legalmodal",
@@ -5523,7 +5817,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/LegalModal.tsx",
-      "source_location": "L7",
+      "source_location": "L9",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_legalmodal",
@@ -5841,6 +6135,17 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useBodyScrollLock.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_hooks_usebodyscrolllock",
+      "target": "src_hooks_usebodyscrolllock_usebodyscrolllock",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src/lib/diagnostico.ts",
       "source_location": "L106",
       "weight": 1.0,
@@ -6023,6 +6328,28 @@
       "_origin": "ast",
       "source": "src_lib_diagnostico",
       "target": "src_lib_diagnostico_opcion",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/ui.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_lib_ui",
+      "target": "src_lib_ui_scroll_panel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/ui.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_lib_ui",
+      "target": "src_lib_ui_scroll_panel_style",
       "confidence_score": 1.0
     },
     {
@@ -6226,5 +6553,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "392ab30ede7a8f32213ab73fbf6faa1b002d6d30"
+  "built_at_commit": "97b2af3fc984e3191a0dfe55127967c04dd9dba4"
 }

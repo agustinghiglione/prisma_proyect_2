@@ -1,16 +1,16 @@
 # Graph Report - prisma_2  (2026-08-18)
 
 ## Corpus Check
-- 42 files · ~278,219 words
+- 44 files · ~278,395 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 241 nodes · 304 edges · 18 communities (17 shown, 1 thin omitted)
+- 247 nodes · 326 edges · 18 communities (17 shown, 1 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `392ab30e`
+- Built from commit: `97b2af3f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -30,25 +30,31 @@
 - Prisma Consultora
 - Scripts para crear los formularios de Google
 - Prompt para Gemini (con acceso a Google Workspace)
-- Navbar.tsx
+- AgendarModal.tsx
 
 ## God Nodes (most connected - your core abstractions)
 1. `compilerOptions` - 16 edges
 2. `scripts` - 7 edges
 3. `enviarInformeCompleto()` - 7 edges
-4. `Prisma Consultora` - 7 edges
-5. `nivelDe()` - 5 edges
-6. `calcularResultado()` - 4 edges
-7. `calcularResultadoCompleto()` - 4 edges
-8. `lib` - 4 edges
-9. `Scripts para crear los formularios de Google` - 4 edges
-10. `transportador()` - 3 edges
+4. `useBodyScrollLock()` - 7 edges
+5. `Prisma Consultora` - 7 edges
+6. `nivelDe()` - 5 edges
+7. `DiagnosticoFlow()` - 4 edges
+8. `calcularResultado()` - 4 edges
+9. `calcularResultadoCompleto()` - 4 edges
+10. `SCROLL_PANEL` - 4 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `enviarInformeCompleto()` --calls--> `nivelDe()`  [EXTRACTED]
   server/email.ts → src/lib/diagnostico.ts
+- `DiagnosticoFlow()` --calls--> `useBodyScrollLock()`  [EXTRACTED]
+  src/components/DiagnosticoFlow.tsx → src/hooks/useBodyScrollLock.ts
+- `AgendarModal()` --calls--> `useBodyScrollLock()`  [EXTRACTED]
+  src/components/AgendarModal.tsx → src/hooks/useBodyScrollLock.ts
 - `DiagnosticoFlow()` --calls--> `nivelDe()`  [EXTRACTED]
   src/components/DiagnosticoFlow.tsx → src/lib/diagnostico.ts
+- `LegalModal()` --calls--> `useBodyScrollLock()`  [EXTRACTED]
+  src/components/LegalModal.tsx → src/hooks/useBodyScrollLock.ts
 
 ## Import Cycles
 - None detected.
@@ -65,7 +71,7 @@ Nodes (32): enviarInformeCompleto(), enviarNotificacionAgendamiento(), filaBarra
 
 ### Community 2 - "App.tsx"
 Cohesion: 0.09
-Nodes (18): App(), AudienciaSection(), DiagnosticIntro(), DiagnosticIntroProps, FEATURES, Footer(), CHECKS, Hero() (+10 more)
+Nodes (20): App(), AudienciaSection(), CHECKS, DiagnosticIntro(), DiagnosticIntroProps, FEATURES, CHECKS, Hero() (+12 more)
 
 ### Community 3 - "dependencies"
 Cohesion: 0.08
@@ -80,8 +86,8 @@ Cohesion: 0.09
 Nodes (21): DOM, DOM.Iterable, ES2022, src, compilerOptions, allowImportingTsExtensions, isolatedModules, jsx (+13 more)
 
 ### Community 6 - "ContactoSection.tsx"
-Cohesion: 0.18
-Nodes (10): AgendarModal(), AgendarModalProps, HIZO_DIAGNOSTICO, HORARIOS, ContactoSection(), ContactoSectionProps, PASOS, FaqAccordion() (+2 more)
+Cohesion: 0.28
+Nodes (6): ContactoSection(), ContactoSectionProps, PASOS, FaqAccordion(), FAQ, FaqItem
 
 ### Community 7 - "package.json"
 Cohesion: 0.17
@@ -111,12 +117,12 @@ Nodes (4): Archivos, Cómo se conectan los dos formularios, Cómo usarlo (con Ap
 Cohesion: 0.50
 Nodes (3): 1. Formulario "Agendar una conversación — Prisma Consultora", 2. Formulario "Diagnóstico Prisma®", Prompt para Gemini (con acceso a Google Workspace)
 
-### Community 17 - "Navbar.tsx"
-Cohesion: 0.47
-Nodes (4): Navbar(), NAV_CTA, NAV_ITEMS, NavItem
+### Community 17 - "AgendarModal.tsx"
+Cohesion: 0.23
+Nodes (10): AgendarModal(), AgendarModalProps, HIZO_DIAGNOSTICO, HORARIOS, Footer(), LegalModal(), LegalModalProps, useBodyScrollLock() (+2 more)
 
 ## Knowledge Gaps
-- **105 isolated node(s):** `name`, `private`, `version`, `type`, `dev` (+100 more)
+- **106 isolated node(s):** `name`, `private`, `version`, `type`, `dev` (+101 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **1 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -124,16 +130,16 @@ Nodes (4): Navbar(), NAV_CTA, NAV_ITEMS, NavItem
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `devDependencies` connect `devDependencies` to `package.json`?**
-  _High betweenness centrality (0.049) - this node is a cross-community bridge._
+  _High betweenness centrality (0.046) - this node is a cross-community bridge._
 - **Why does `dependencies` connect `dependencies` to `package.json`?**
-  _High betweenness centrality (0.044) - this node is a cross-community bridge._
+  _High betweenness centrality (0.041) - this node is a cross-community bridge._
 - **Why does `DIMENSIONES` connect `diagnostico.ts` to `routes.ts`?**
-  _High betweenness centrality (0.022) - this node is a cross-community bridge._
+  _High betweenness centrality (0.023) - this node is a cross-community bridge._
 - **What connects `name`, `private`, `version` to the rest of the system?**
-  _105 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _106 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `devDependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.06896551724137931 - nodes in this community are weakly interconnected._
 - **Should `diagnostico.ts` be split into smaller, more focused modules?**
   _Cohesion score 0.09365079365079365 - nodes in this community are weakly interconnected._
 - **Should `App.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.09359605911330049 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08817204301075268 - nodes in this community are weakly interconnected._

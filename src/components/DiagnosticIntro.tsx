@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Gift, Timer, FileText, Sparkles } from 'lucide-react';
+import { Gift, Timer, FileText, Globe, Check } from 'lucide-react';
 
 interface DiagnosticIntroProps {
   onStartDiagnostic: () => void;
@@ -15,6 +15,8 @@ const FEATURES = [
   },
 ];
 
+const CHECKS = ['Gratuito', 'Menos de un minuto', 'Informe personalizado'];
+
 export default function DiagnosticIntro({ onStartDiagnostic }: DiagnosticIntroProps) {
   return (
     <section id="diagnostico" className="relative overflow-hidden bg-gradient-prisma px-6 py-28 lg:px-10">
@@ -29,7 +31,7 @@ export default function DiagnosticIntro({ onStartDiagnostic }: DiagnosticIntroPr
           viewport={{ once: true }}
           className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gold"
         >
-          <Sparkles size={12} /> Nuevo: ahora 100% online
+          <Globe size={12} /> Nuestro método, ahora también online
         </motion.span>
 
         <motion.h2
@@ -80,15 +82,20 @@ export default function DiagnosticIntro({ onStartDiagnostic }: DiagnosticIntroPr
           Comenzar Diagnóstico
         </motion.button>
 
-        <motion.p
+        <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-4 text-xs text-white/70"
+          className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2"
         >
-          Lo acabamos de poner online — probalo antes que nadie.
-        </motion.p>
+          {CHECKS.map((label) => (
+            <span key={label} className="flex items-center gap-2 text-sm text-white/80">
+              <Check size={16} className="text-green" strokeWidth={3} />
+              {label}
+            </span>
+          ))}
+        </motion.div>
       </div>
     </section>
   );
