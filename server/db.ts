@@ -17,6 +17,7 @@ db.exec(`
     respuestas TEXT NOT NULL,        -- JSON: número[] (1-4 por dimensión) — Parte 1, gratis
     respuestas_2 TEXT,                -- JSON: número[] — Parte 2, se completa recién tras pagar
     web_url TEXT,                     -- opcional: URL que el cliente dejó para el análisis "por fuera"
+    sintesis TEXT,                    -- texto final (de Gemini, o el de respaldo) — se guarda para no regenerarlo en cada consulta
     estado TEXT NOT NULL DEFAULT 'pendiente',  -- pendiente | pagado
     mp_preference_id TEXT,
     mp_payment_id TEXT,
@@ -25,12 +26,14 @@ db.exec(`
   );
 `);
 
-// Migración liviana: si la tabla ya existía de una versión anterior sin esta
-// columna, se agrega ahora. No pasa nada si ya está (se ignora el error).
-try {
-  db.exec('ALTER TABLE diagnosticos ADD COLUMN respuestas_2 TEXT');
-} catch {
-  // ya existe, seguimos
+// Migraciones livianas: si la tabla ya existía de una versión anterior sin
+// estas columnas, se agregan ahora. No pasa nada si ya están (se ignora el error).
+for (const alter of ['ALTER TABLE diagnosticos ADD COLUMN respuestas_2 TEXT', 'ALTER TABLE diagnosticos ADD COLUMN sintesis TEXT']) {
+  try {
+    db.exec(alter);
+  } catch {
+    // ya existe, seguimos
+  }
 }
 
 db.exec(`
@@ -54,6 +57,7 @@ export interface DiagnosticoRow {
   respuestas: string;
   respuestas_2: string | null;
   web_url: string | null;
+  sintesis: string | null;
   estado: 'pendiente' | 'pagado';
   mp_preference_id: string | null;
   mp_payment_id: string | null;
@@ -106,6 +110,10 @@ export function guardarParte2(id: string, respuestas: number[]) {
     JSON.stringify(respuestas),
     id,
   );
+}
+
+export function guardarSintesis(id: string, sintesis: string) {
+  db.prepare('UPDATE diagnosticos SET sintesis = ? WHERE id = ?').run(sintesis, id);
 }
 
 export function contarDiagnosticos(): number {

@@ -13,11 +13,13 @@ import {
   guardarPreferencia,
   marcarComoPagado,
   guardarParte2,
+  guardarSintesis,
   contarDiagnosticos,
   crearAgendamiento,
 } from './db';
 import { crearPreferenciaDePago, consultarPago } from './mercadopago';
 import { enviarInformeCompleto, enviarNotificacionAgendamiento } from './email';
+import { generarSintesis } from './ia';
 
 const HORARIOS_VALIDOS = ['manana', 'mediodia', 'tarde', 'cualquiera'];
 const DIAGNOSTICO_VALIDOS = ['si', 'no', 'no_seguro'];
@@ -114,6 +116,7 @@ router.get('/diagnostico/:id', (req, res) => {
     resultadoCompleto: parte2Completa
       ? calcularResultadoCompleto(respuestas, JSON.parse(diagnostico.respuestas_2!))
       : null,
+    sintesis: parte2Completa ? diagnostico.sintesis : null,
   });
 });
 
@@ -138,12 +141,16 @@ router.post('/diagnostico/:id/parte-2', async (req, res) => {
   const respuestasParte1 = JSON.parse(diagnostico.respuestas);
   const resultadoCompleto = calcularResultadoCompleto(respuestasParte1, respuestas);
 
+  const sintesis = await generarSintesis(resultadoCompleto, diagnostico.nombre ?? '', diagnostico.negocio);
+  guardarSintesis(diagnostico.id, sintesis);
+
   try {
     if (diagnostico.email) {
       await enviarInformeCompleto({
         email: diagnostico.email,
         nombre: diagnostico.nombre ?? '',
         resultado: resultadoCompleto,
+        sintesis,
       });
     }
   } catch (err) {
@@ -152,7 +159,7 @@ router.post('/diagnostico/:id/parte-2', async (req, res) => {
     console.error('[diagnostico] no se pudo enviar el informe completo:', err);
   }
 
-  res.json({ resultadoCompleto });
+  res.json({ resultadoCompleto, sintesis });
 });
 
 /**

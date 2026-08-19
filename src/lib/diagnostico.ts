@@ -1,8 +1,16 @@
 /**
- * El cerebro del Diagnóstico Prisma®: preguntas, puntaje y recomendaciones.
+ * El cerebro del Diagnóstico Prisma®: preguntas, puntaje y síntesis.
  * Un solo lugar para esto — lo usan el frontend (resultado instantáneo) y el
- * backend (el mail con el informe). Antes esta lógica vivía duplicada entre
- * el sitio y un script de Google Apps Script; ahora hay una sola fuente.
+ * backend (el mail con el informe).
+ *
+ * Las áreas que se preguntan son, a propósito, las mismas seis que Prisma
+ * ofrece como servicio (Estrategia, Finanzas, Administración, Personas,
+ * Contabilidad e Impuestos, Tecnología) — antes la Parte 1 usaba nombres
+ * distintos ("Organización", "Cumplimiento"...) que en los hechos eran las
+ * mismas áreas con otro nombre, y esa doble nomenclatura confundía más de lo
+ * que ayudaba. La Parte 1 gratuita toca cinco de las seis (todas menos
+ * Personas) con una mirada rápida; la Parte 2 paga profundiza en esas cinco
+ * con una pregunta distinta y más específica, y suma Personas como sexta.
  */
 
 export interface Opcion {
@@ -17,10 +25,13 @@ export interface Dimension {
   opciones: Opcion[];
 }
 
+/** Las seis áreas reales de Prisma, en el orden en que se presentan siempre. */
+export const AREAS = ['Estrategia', 'Finanzas', 'Administración', 'Personas', 'Contabilidad e Impuestos', 'Tecnología'] as const;
+
 export const DIMENSIONES: Dimension[] = [
   {
-    id: 'organizacion',
-    nombre: 'Organización',
+    id: 'administracion',
+    nombre: 'Administración',
     pregunta: '¿Cómo describirías la organización interna de tu negocio hoy?',
     opciones: [
       { texto: 'Cada uno resuelve como puede, sobre la marcha', valor: 1 },
@@ -30,8 +41,8 @@ export const DIMENSIONES: Dimension[] = [
     ],
   },
   {
-    id: 'informacion',
-    nombre: 'Información y decisiones',
+    id: 'finanzas',
+    nombre: 'Finanzas',
     pregunta: 'Cuando tenés que tomar una decisión importante, ¿de dónde sacás la información?',
     opciones: [
       { texto: 'La tengo en la cabeza o hay que juntarla a mano', valor: 1 },
@@ -41,8 +52,8 @@ export const DIMENSIONES: Dimension[] = [
     ],
   },
   {
-    id: 'cumplimiento',
-    nombre: 'Cumplimiento',
+    id: 'contabilidad',
+    nombre: 'Contabilidad e Impuestos',
     pregunta: '¿Cómo llevás tus obligaciones contables e impositivas?',
     opciones: [
       { texto: 'Voy resolviendo sobre la hora, cuando se vence algo', valor: 1 },
@@ -52,8 +63,8 @@ export const DIMENSIONES: Dimension[] = [
     ],
   },
   {
-    id: 'crecimiento',
-    nombre: 'Crecimiento',
+    id: 'estrategia',
+    nombre: 'Estrategia',
     pregunta: '¿Tenés una estrategia clara para crecer en los próximos meses?',
     opciones: [
       { texto: 'No, voy resolviendo lo que aparece', valor: 1 },
@@ -63,8 +74,8 @@ export const DIMENSIONES: Dimension[] = [
     ],
   },
   {
-    id: 'digital',
-    nombre: 'Presencia digital',
+    id: 'tecnologia',
+    nombre: 'Tecnología',
     pregunta: '¿Qué lugar ocupan hoy la tecnología y lo digital en tu negocio?',
     opciones: [
       { texto: 'Casi ninguno, todavía es un tema pendiente', valor: 1 },
@@ -76,46 +87,31 @@ export const DIMENSIONES: Dimension[] = [
 ];
 
 export const RECOMENDACIONES: Record<string, { bajo: string; medio: string; alto: string }> = {
-  Organización: {
-    bajo: 'Hoy gran parte de la operación pasa por vos o por la memoria del equipo, y eso frena cualquier intento de crecer sin que todo dependa de una sola persona. Desde Administración diseñamos procesos claros para las tareas que se repiten, así la gestión diaria deja de improvisarse.',
-    medio: 'Tenés rutinas que funcionan, pero todavía viven en la cabeza de alguien más que en un proceso escrito — por eso se rompen apenas esa persona falta o el negocio crece un poco. Desde Administración te ayudamos a formalizarlas para que sostengan el ritmo sin depender de nadie en particular.',
-    alto: 'Tu organización ya es una fortaleza real: los procesos sostienen la operación aunque vos no estés encima de cada detalle. Es la base correcta para escalar — el trabajo que sigue es de Estrategia, para que ese orden acompañe el próximo salto de tamaño.',
+  Administración: {
+    bajo: 'Gran parte de la operación pasa por vos o por la memoria del equipo.',
+    medio: 'Tenés rutinas que funcionan, pero todavía dependen de que alguien se acuerde.',
+    alto: 'Tu organización ya es una fortaleza real: los procesos sostienen la operación.',
   },
-  'Información y decisiones': {
-    bajo: 'Tomás decisiones importantes sin tener los números a mano, así que muchas veces se deciden con la sensación del momento, no con datos. Desde Finanzas centralizamos esa información dispersa en un solo lugar, para que decidir deje de ser un salto de fe.',
-    medio: 'Tenés reportes, pero los mirás recién cuando algo urge — así siempre vas un paso atrás del problema, no adelante. Con un ritmo de revisión fijo desde Finanzas, empezás a anticipar en vez de reaccionar.',
-    alto: 'Tomás decisiones con información real y actualizada, algo que a la mayoría de los negocios le cuesta. El siguiente paso, desde Finanzas, es afinar qué indicadores mirás para que cada número que revisás tenga un motivo concreto.',
+  Finanzas: {
+    bajo: 'Tomás decisiones importantes sin tener los números a mano.',
+    medio: 'Tenés reportes, pero los mirás recién cuando algo urge.',
+    alto: 'Tomás decisiones con información real y actualizada.',
   },
-  Cumplimiento: {
-    bajo: 'Vas resolviendo lo impositivo y contable sobre la hora, lo que además de estrés puede salir caro en intereses o multas evitables. Desde Contabilidad e Impuestos ponemos esto en orden de una vez, para que dejes de vivir pendiente de la próxima fecha límite.',
-    medio: 'Estás en regla, pero cada vencimiento te genera tensión porque no hay un sistema que lo anticipe por vos. Desde Contabilidad e Impuestos armamos ese seguimiento, para que cumplir deje de sentirse una carrera contra el calendario.',
-    alto: 'Tu cumplimiento está sólido — no es poco, es donde más negocios fallan. El paso que sigue, también desde Contabilidad e Impuestos, es que esa prolijidad te sirva además para proyectar impuestos y planificar, no solo para estar en regla.',
+  'Contabilidad e Impuestos': {
+    bajo: 'Vas resolviendo lo impositivo y contable sobre la hora.',
+    medio: 'Estás en regla, pero cada vencimiento te genera tensión.',
+    alto: 'Tu cumplimiento está sólido — no es poco, es donde más negocios fallan.',
   },
-  Crecimiento: {
-    bajo: 'No tenés una dirección definida todavía: vas resolviendo lo que aparece en el día a día, sin un rumbo que ordene esas decisiones. Desde Estrategia definimos objetivos concretos, para que cada decisión de hoy sume a algo más grande.',
-    medio: 'Tenés una idea de hacia dónde ir, pero sin un plan que la sostenga se diluye apenas se complica el día a día. Desde Estrategia la convertimos en un plan con seguimiento real, no en una intención.',
-    alto: 'Tenés una estrategia de crecimiento que funciona — el riesgo ahora no es la falta de rumbo, sino quedarte sin los recursos para sostenerlo. Desde Estrategia trabajamos en acelerarlo sin que la estructura se quede corta.',
+  Estrategia: {
+    bajo: 'No tenés una dirección definida todavía: vas resolviendo lo que aparece.',
+    medio: 'Tenés una idea de hacia dónde ir, pero sin un plan que la sostenga.',
+    alto: 'Tenés una estrategia de crecimiento que funciona.',
   },
-  'Presencia digital': {
-    bajo: 'Lo digital todavía es una materia pendiente, y hoy eso es una desventaja competitiva más que un detalle menor. Desde Tecnología damos los primeros pasos concretos, sin necesidad de una transformación gigante para empezar a notar la diferencia.',
-    medio: 'Tenés herramientas digitales, pero sueltas — cada una hace lo suyo sin hablar con las demás, y así se pierde la mitad del valor de tenerlas. Desde Tecnología las conectamos para que trabajen juntas, no en paralelo.',
-    alto: 'Lo digital ya es parte activa de cómo vendés y te organizás — estás mejor que la mayoría. Desde Tecnología, el siguiente paso es que esas herramientas te den información, no solo que te faciliten tareas.',
+  Tecnología: {
+    bajo: 'Lo digital todavía es una materia pendiente en tu negocio.',
+    medio: 'Tenés herramientas digitales, pero sueltas, sin conectar entre sí.',
+    alto: 'Lo digital ya es parte activa de cómo vendés y te organizás.',
   },
-};
-
-/** A qué área real de Prisma pertenece cada dimensión — para conectar cada resultado con el equipo que lo resuelve. */
-export const AREA_PRISMA: Record<string, string> = {
-  Organización: 'Administración',
-  'Información y decisiones': 'Finanzas',
-  Cumplimiento: 'Contabilidad e Impuestos',
-  Crecimiento: 'Estrategia',
-  'Presencia digital': 'Tecnología',
-  Estrategia: 'Estrategia',
-  Finanzas: 'Finanzas',
-  Administración: 'Administración',
-  Personas: 'Personas',
-  'Contabilidad e Impuestos': 'Contabilidad e Impuestos',
-  Tecnología: 'Tecnología',
 };
 
 export interface RespuestaDimension {
@@ -132,11 +128,7 @@ export interface ResultadoDiagnostico {
 
 /**
  * Separa fortalezas de oportunidades por lo que realmente valen, no por
- * posición. Antes se tomaban siempre las 2 mejores y las 2 peores aunque las
- * "peores" fueran en realidad un 4 — alguien que contesta perfecto en las 5
- * preguntas terminaba viendo "detectamos una oportunidad" en algo que no
- * tiene nada de oportunidad. Con esto, si no hay nada débil de verdad,
- * "oportunidades" sale vacío, y el llamador decide cómo mostrarlo.
+ * posición. Si no hay nada débil de verdad, "oportunidades" sale vacío.
  */
 function separarPorValor(scores: RespuestaDimension[]) {
   const fortalezas = scores.filter((s) => s.valor >= 3).sort((a, b) => b.valor - a.valor);
@@ -160,21 +152,20 @@ export function calcularResultado(respuestas: number[]): ResultadoDiagnostico {
 }
 
 export function nivelDe(valor: number): 'bajo' | 'medio' | 'alto' {
-  return valor <= 2 ? 'bajo' : valor === 3 ? 'medio' : 'alto';
+  return valor < 2.5 ? 'bajo' : valor < 3.5 ? 'medio' : 'alto';
 }
 
 export const PRECIO_DIAGNOSTICO_COMPLETO = 20000; // ARS, definido por Prisma
 
 /**
  * La Parte 2 — seis preguntas, una por cada área que Prisma realmente
- * resuelve. Se desbloquea al pagar el diagnóstico completo. A diferencia de
- * la Parte 1 (un pulso general y gratis), cada pregunta de acá apunta directo
- * a uno de nuestros servicios, así el informe final conecta cada resultado
- * bajo con la conversación que hay que tener.
+ * resuelve. Se desbloquea al pagar. Para las cinco áreas que ya tocó la
+ * Parte 1, la pregunta es distinta y más específica (no repite la misma
+ * pregunta con otras palabras); Personas es enteramente nueva acá.
  */
 export const DIMENSIONES_PARTE2: Dimension[] = [
   {
-    id: 'estrategia',
+    id: 'estrategia-2',
     nombre: 'Estrategia',
     pregunta: '¿Tenés un plan de negocio o proyecciones escritas, más allá de lo que tenés en la cabeza?',
     opciones: [
@@ -185,7 +176,7 @@ export const DIMENSIONES_PARTE2: Dimension[] = [
     ],
   },
   {
-    id: 'finanzas',
+    id: 'finanzas-2',
     nombre: 'Finanzas',
     pregunta: '¿Con qué frecuencia revisás la rentabilidad real de tu negocio (no solo cuánto entra)?',
     opciones: [
@@ -196,7 +187,7 @@ export const DIMENSIONES_PARTE2: Dimension[] = [
     ],
   },
   {
-    id: 'administracion',
+    id: 'administracion-2',
     nombre: 'Administración',
     pregunta: '¿Cómo se maneja hoy la parte administrativa del día a día (facturas, pagos, papeles)?',
     opciones: [
@@ -218,7 +209,7 @@ export const DIMENSIONES_PARTE2: Dimension[] = [
     ],
   },
   {
-    id: 'contabilidad',
+    id: 'contabilidad-2',
     nombre: 'Contabilidad e Impuestos',
     pregunta: '¿Qué tan preparado estás si mañana te piden algo tu contador o la AFIP?',
     opciones: [
@@ -229,7 +220,7 @@ export const DIMENSIONES_PARTE2: Dimension[] = [
     ],
   },
   {
-    id: 'tecnologia',
+    id: 'tecnologia-2',
     nombre: 'Tecnología',
     pregunta: '¿Qué herramientas digitales usás hoy para gestionar tu negocio, más allá de WhatsApp y Excel?',
     opciones: [
@@ -241,82 +232,77 @@ export const DIMENSIONES_PARTE2: Dimension[] = [
   },
 ];
 
-export const RECOMENDACIONES_PARTE2: Record<string, { bajo: string; medio: string; alto: string }> = {
-  Estrategia: {
-    bajo: 'No tener un plan escrito significa que cada decisión importante arranca de cero, sin nada que la sostenga si las cosas se complican. Esto es exactamente lo que trabajamos en Estrategia: convertir una idea general en objetivos concretos con seguimiento real.',
-    medio: 'Tenés un plan, pero desactualizado — y un plan viejo pesa menos que ninguno, porque da una falsa sensación de rumbo. En Estrategia lo actualizamos con tu realidad de hoy para que vuelva a ser una herramienta de decisión.',
-    alto: 'Usás tu plan activamente para decidir, que es exactamente el punto. En Estrategia el siguiente paso es revisarlo con más frecuencia, para que evolucione al ritmo del negocio.',
-  },
-  Finanzas: {
-    bajo: 'Sin calcular la rentabilidad real, es perfectamente posible estar vendiendo cada vez más y ganando cada vez menos, sin darte cuenta. En Finanzas armamos esa visibilidad desde cero, para que sepas con certeza qué te deja plata y qué no.',
-    medio: 'Revisás la rentabilidad, pero sin un ritmo fijo — así los problemas se detectan tarde, cuando ya crecieron. En Finanzas instalamos una revisión mensual simple, para verlos venir antes.',
-    alto: 'Revisás tus números todos los meses con claridad, algo poco común. En Finanzas el siguiente paso es usar esa información para decidir más rápido, no solo para estar informado.',
-  },
-  Administración: {
-    bajo: 'La parte administrativa se resuelve a los ponchazos, lo que se traduce en errores, pagos tardíos y tiempo que se va en apagar incendios en lugar de trabajar. En Administración ordenamos esto con un proceso simple, aunque tu negocio sea chico.',
-    medio: 'Lo administrativo depende enteramente de vos — funciona, pero se detiene apenas no estás disponible. En Administración armamos un sistema que no dependa de una sola persona.',
-    alto: 'Tu administración está ordenada y no depende de vos en cada paso — dejó de ser un cuello de botella. En Administración el siguiente paso es medirla, para encontrar dónde afinarla.',
-  },
-  Personas: {
-    bajo: 'Sin roles claros, todo termina pasando por la misma persona (probablemente vos), y eso pone un techo bajo a cuánto puede crecer el negocio. En Personas definimos esos roles, aunque el equipo sea de una sola persona además de vos.',
-    medio: 'Hay roles, pero se superponen seguido, y esa fricción diaria cuesta más tiempo del que parece. En Personas ajustamos esos límites para que cada quien sepa exactamente qué le toca.',
-    alto: 'Tu equipo funciona sin que estés encima de cada tarea — es un activo real. En Personas el siguiente paso es que ese funcionamiento se sostenga mientras el equipo crece.',
-  },
-  'Contabilidad e Impuestos': {
-    bajo: 'Si mañana te piden algo, hoy tendrías que salir a buscarlo de cero — eso es tiempo y estrés que se puede evitar. En Contabilidad e Impuestos ponemos todo al día ahora, que siempre es más barato que resolverlo bajo presión.',
-    medio: 'Lo tenés, pero desordenado, lo que te hace perder tiempo cada vez que hace falta algo puntual. En Contabilidad e Impuestos lo organizamos para que esté siempre a mano, no solo cuando lo necesitás con urgencia.',
-    alto: 'Todo en orden, sin sobresaltos — es una base sólida. En Contabilidad e Impuestos el siguiente paso es que esa prolijidad también te ayude a anticipar y planificar, no solo a cumplir.',
-  },
-  Tecnología: {
-    bajo: 'Hacer todo de forma manual pone un techo bajo a cuánto podés crecer sin sumar más horas de trabajo. En Tecnología incorporamos la primera herramienta correcta — una sola, bien elegida — antes de pensar en digitalizar todo junto.',
-    medio: 'Tenés varias herramientas, pero no hablan entre sí, y eso te obliga a cargar la misma información más de una vez. En Tecnología las conectamos para que compartan datos automáticamente.',
-    alto: 'Tu stack de herramientas ya te ahorra tiempo real — estás mejor que la mayoría de los negocios de tu tamaño. En Tecnología el siguiente paso es sacarle datos, no solo tareas.',
-  },
-};
-
 export interface ResultadoCompleto {
-  parte1: ResultadoDiagnostico;
-  parte2: ResultadoDiagnostico;
   overallPercent: number;
+  /** Una fila por cada una de las 6 áreas, ya combinando Parte 1 + Parte 2 cuando corresponde. */
   todos: RespuestaDimension[];
+  fortalezas: RespuestaDimension[];
+  oportunidades: RespuestaDimension[];
 }
 
-/** respuestas: un valor 1-4 por cada una de las 6 dimensiones de DIMENSIONES_PARTE2 */
-export function calcularResultadoParte2(respuestas: number[]): ResultadoDiagnostico {
-  const scores: RespuestaDimension[] = DIMENSIONES_PARTE2.map((d, i) => ({
-    dimension: d.nombre,
-    valor: respuestas[i],
-  }));
-  const { fortalezas, oportunidades } = separarPorValor(scores);
-  const overallPercent = Math.round(
-    (scores.reduce((s, x) => s + x.valor, 0) / (scores.length * 4)) * 100,
-  );
-  return { overallPercent, scores, fortalezas, oportunidades };
-}
-
+/**
+ * Combina las respuestas de las dos partes por área (no las apila): si una
+ * área se preguntó en las dos (todas menos Personas), su valor final es el
+ * promedio de ambas respuestas — la mirada rápida gratuita y la pregunta más
+ * específica paga cuentan lo mismo. El resultado son siempre 6 filas, una
+ * por área real de Prisma, nunca 11 líneas repitiendo el mismo tema.
+ */
 export function calcularResultadoCompleto(
   respuestasParte1: number[],
   respuestasParte2: number[],
 ): ResultadoCompleto {
-  const parte1 = calcularResultado(respuestasParte1);
-  const parte2 = calcularResultadoParte2(respuestasParte2);
-  const todos = [...parte1.scores, ...parte2.scores];
+  const p1 = DIMENSIONES.map((d, i) => ({ dimension: d.nombre, valor: respuestasParte1[i] }));
+  const p2 = DIMENSIONES_PARTE2.map((d, i) => ({ dimension: d.nombre, valor: respuestasParte2[i] }));
+
+  const porArea = new Map<string, number[]>();
+  for (const s of [...p1, ...p2]) {
+    porArea.set(s.dimension, [...(porArea.get(s.dimension) ?? []), s.valor]);
+  }
+
+  const todos: RespuestaDimension[] = AREAS.map((area) => {
+    const valores = porArea.get(area) ?? [];
+    const valor = valores.reduce((a, b) => a + b, 0) / valores.length;
+    return { dimension: area, valor };
+  });
+
+  const { fortalezas, oportunidades } = separarPorValor(todos);
   const overallPercent = Math.round(
     (todos.reduce((s, x) => s + x.valor, 0) / (todos.length * 4)) * 100,
   );
-  return { parte1, parte2, overallPercent, todos };
+
+  return { overallPercent, todos, fortalezas, oportunidades };
 }
 
-/** Junta las recomendaciones de las dos partes en un solo diccionario. */
-export const RECOMENDACIONES_TODAS: Record<string, { bajo: string; medio: string; alto: string }> = {
-  ...RECOMENDACIONES,
-  ...RECOMENDACIONES_PARTE2,
-};
+/**
+ * Síntesis de respaldo si no hay clave de IA configurada (o si falla la
+ * llamada) — sin justificar cada respuesta, solo señala 1-2 oportunidades
+ * concretas y punto. Cuando GEMINI_API_KEY está configurada, el backend usa
+ * en su lugar una síntesis generada por IA sobre este mismo resultado.
+ */
+export function sintesisRespaldo(resultado: ResultadoCompleto, nombre: string): string {
+  const { oportunidades, fortalezas } = resultado;
+  const saludo = nombre ? `${nombre}, ` : '';
+
+  if (oportunidades.length === 0) {
+    return `${saludo}tu negocio muestra señales sólidas en las seis áreas que medimos. El siguiente paso natural no es arreglar algo roto, sino profesionalizar lo que ya funciona para que aguante el próximo salto de tamaño.`;
+  }
+
+  const principal = oportunidades[0].dimension;
+  const segunda = oportunidades[1]?.dimension;
+  const fuerte = fortalezas[0]?.dimension;
+
+  let texto = `${saludo}donde más te podemos ayudar hoy es en ${principal}${segunda ? ` y en ${segunda}` : ''}.`;
+  if (fuerte) {
+    texto += ` ${fuerte} está bien encaminado — no es ahí donde hace falta poner el foco.`;
+  }
+  texto += ' Con una conversación de 15 minutos te mostramos exactamente por dónde empezar.';
+  return texto;
+}
 
 /** Lo que explícitamente se le dice al cliente que va a recibir, antes de pagar. */
 export const QUE_INCLUYE_COMPLETO = [
-  'Un vistazo más profundo a las áreas en las que te podemos ayudar de verdad: Estrategia, Finanzas, Administración, Personas, Contabilidad e Impuestos y Tecnología.',
-  'Todas tus respuestas de hoy, destapadas, con la recomendación completa de cada una.',
+  'Una mirada más profunda a las mismas seis áreas en las que te podemos ayudar: Estrategia, Finanzas, Administración, Personas, Contabilidad e Impuestos y Tecnología.',
+  'Un análisis armado especialmente para tu negocio, no una respuesta genérica.',
   'Si nos dejás el link de tu web, la revisamos antes de la conversación.',
   'El informe completo por mail, y la posibilidad de mandarte el resultado cuando quieras.',
 ];

@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { RECOMENDACIONES_TODAS, nivelDe, type ResultadoCompleto } from '../src/lib/diagnostico';
+import type { ResultadoCompleto } from '../src/lib/diagnostico';
 
 const AZUL_OCEANO = '#223C54';
 const AZUL_HORIZONTE = '#345B78';
@@ -54,32 +54,21 @@ function seccionOpcional(titulo: string, contenidoHtml: string) {
 }
 
 /**
- * El informe completo: las once dimensiones de las dos partes, juntas.
- * Fortalezas y oportunidades salen de lo que cada valor realmente significa
- * (no de tomar siempre "las 3 mejores" y "las 3 peores") — si alguien
- * contesta perfecto, no hay ninguna oportunidad forzada que mostrarle.
+ * El informe completo: las seis áreas reales de Prisma, con su puntaje, más
+ * la síntesis final (de Gemini, o el respaldo local si no hay clave o falló
+ * la llamada) — sin justificar cada respuesta una por una, la síntesis va
+ * directo a dónde Prisma puede ayudar.
  */
 export async function enviarInformeCompleto(params: {
   email: string;
   nombre: string;
   resultado: ResultadoCompleto;
+  sintesis: string;
 }) {
-  const { email, nombre, resultado } = params;
+  const { email, nombre, resultado, sintesis } = params;
 
-  const fortalezas = resultado.todos.filter((s) => s.valor >= 3).sort((a, b) => b.valor - a.valor);
-  const oportunidades = resultado.todos.filter((s) => s.valor <= 2).sort((a, b) => a.valor - b.valor);
-
-  const recomendacionesHtml = oportunidades
-    .map((o) => {
-      const nivel = nivelDe(o.valor);
-      return `<li style="margin-bottom:8px;font-family:Arial,sans-serif;font-size:14px;color:${TEXTO};line-height:1.5;">${RECOMENDACIONES_TODAS[o.dimension][nivel]}</li>`;
-    })
-    .join('');
-
-  const mensajeFinal =
-    oportunidades.length > 0
-      ? 'Este es tu diagnóstico completo. El siguiente paso es que conversemos sobre cómo implementarlo en tu negocio.'
-      : 'Tu negocio muestra señales sólidas en las once áreas que medimos. El siguiente paso es una conversación para ver cómo lo llevamos más lejos.';
+  const fortalezas = resultado.fortalezas;
+  const oportunidades = resultado.oportunidades;
 
   const agendarUrl = process.env.AGENDAR_URL ?? `${process.env.SITE_URL}/#contacto`;
 
@@ -97,18 +86,14 @@ export async function enviarInformeCompleto(params: {
           <p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:13px;color:${TEXTO_SUAVE};">Nivel general de claridad</p>
           <p style="margin:0 0 24px;font-family:Arial,sans-serif;font-size:36px;font-weight:bold;color:${AZUL_HORIZONTE};">${resultado.overallPercent}%</p>
 
-          <p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:${AZUL_OCEANO};">Las cinco de siempre</p>
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${resultado.parte1.scores.map(filaBarra).join('')}</table>
-
-          <p style="margin:24px 0 4px;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:${AZUL_OCEANO};">Las seis de tu diagnóstico completo</p>
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${resultado.parte2.scores.map(filaBarra).join('')}</table>
+          <p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:${AZUL_OCEANO};">Tus seis áreas</p>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${resultado.todos.map(filaBarra).join('')}</table>
 
           ${seccionOpcional('Fortalezas', fortalezas.length ? `<div>${listaChips(fortalezas, ARENA)}</div>` : '')}
-          ${seccionOpcional('Oportunidades', oportunidades.length ? `<div>${listaChips(oportunidades, ARENA_CLARA)}</div>` : '')}
-          ${seccionOpcional('Recomendaciones', recomendacionesHtml ? `<ul style="margin:0;padding-left:18px;">${recomendacionesHtml}</ul>` : '')}
+          ${seccionOpcional('Dónde te podemos ayudar', oportunidades.length ? `<div>${listaChips(oportunidades, ARENA_CLARA)}</div>` : '')}
 
           <p style="margin:28px 0 0;font-family:Arial,sans-serif;font-size:14px;color:${TEXTO};line-height:1.6;">
-            ${mensajeFinal}
+            ${sintesis}
           </p>
 
           <table role="presentation" cellpadding="0" cellspacing="0" style="margin:20px auto 4px;">

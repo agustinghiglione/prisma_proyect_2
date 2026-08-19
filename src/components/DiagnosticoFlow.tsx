@@ -5,8 +5,6 @@ import {
   DIMENSIONES,
   DIMENSIONES_PARTE2,
   RECOMENDACIONES,
-  RECOMENDACIONES_TODAS,
-  AREA_PRISMA,
   QUE_INCLUYE_COMPLETO,
   nivelDe,
   PRECIO_DIAGNOSTICO_COMPLETO,
@@ -69,6 +67,7 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
   const [respuestas2, setRespuestas2] = useState<number[]>([]);
   const [enviandoParte2, setEnviandoParte2] = useState(false);
   const [resultadoCompleto, setResultadoCompleto] = useState<ResultadoCompleto | null>(null);
+  const [sintesis, setSintesis] = useState('');
   const [agendarAbierto, setAgendarAbierto] = useState(false);
 
   const elegirOpcion = (valor: number) => {
@@ -156,6 +155,7 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
         setPagado(true);
         if (data.parte2Completa) {
           setResultadoCompleto(data.resultadoCompleto);
+          setSintesis(data.sintesis ?? '');
           setPaso('informe-completo');
         } else {
           setPaso('preguntas-2');
@@ -188,6 +188,7 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
       if (!res.ok) throw new Error('No se pudo guardar la segunda parte.');
       const data = await res.json();
       setResultadoCompleto(data.resultadoCompleto);
+      setSintesis(data.sintesis ?? '');
       setPaso('informe-completo');
     } catch {
       setError('Algo falló al guardar tus respuestas. Probá de nuevo en un momento.');
@@ -325,8 +326,8 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
                   <div className="flex items-start gap-3 rounded-2xl border border-green/30 bg-green/10 p-4">
                     <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-green" />
                     <p className="text-sm text-ink-soft">
-                      Las 5 áreas que medimos hoy están sólidas. El diagnóstico completo mira otras 6 que
-                      todavía no tocamos acá.
+                      Las áreas que medimos hoy están sólidas. El diagnóstico completo profundiza en cada
+                      una y suma Personas, para tener el panorama entero.
                     </p>
                   </div>
                 )}
@@ -491,22 +492,30 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
               <h3 className="mt-2 font-heading text-2xl font-bold text-ink">
                 Nivel general de claridad: {resultadoCompleto.overallPercent}%
               </h3>
+
               <div className="mt-6 flex flex-col gap-3">
-                {resultadoCompleto.todos.map((s) => (
-                  <div key={s.dimension} className="rounded-2xl border border-border bg-white p-4">
-                    <div className="flex items-center justify-between gap-3 text-sm">
-                      <span className="font-semibold text-ink">{s.dimension}</span>
-                      <span className="text-ink-soft">{Math.round((s.valor / 4) * 100)}%</span>
+                {resultadoCompleto.todos.map((s) => {
+                  const pct = Math.round((s.valor / 4) * 100);
+                  return (
+                    <div key={s.dimension} className="rounded-xl border border-border bg-white p-3.5">
+                      <div className="flex items-center justify-between gap-3 text-sm">
+                        <span className="font-medium text-ink">{s.dimension}</span>
+                        <span className="text-ink-soft">{pct}%</span>
+                      </div>
+                      <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface">
+                        <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
+                      </div>
                     </div>
-                    <span className="mt-1.5 inline-block rounded-full bg-gold/15 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-primary-dark">
-                      Área Prisma: {AREA_PRISMA[s.dimension]}
-                    </span>
-                    <p className="mt-2.5 text-sm leading-relaxed text-ink-soft">
-                      {RECOMENDACIONES_TODAS[s.dimension][nivelDe(s.valor)]}
-                    </p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
+
+              {sintesis && (
+                <div className="mt-5 flex items-start gap-3 rounded-2xl border border-primary/15 bg-primary/5 p-5">
+                  <Sparkles size={18} className="mt-0.5 shrink-0 text-primary" />
+                  <p className="text-sm leading-relaxed text-ink">{sintesis}</p>
+                </div>
+              )}
 
               <div className="mt-7 rounded-2xl border border-gold/40 bg-gold/10 p-6 text-center">
                 <p className="text-sm text-ink">
