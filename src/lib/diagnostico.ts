@@ -77,30 +77,45 @@ export const DIMENSIONES: Dimension[] = [
 
 export const RECOMENDACIONES: Record<string, { bajo: string; medio: string; alto: string }> = {
   Organización: {
-    bajo: 'Ordenar procesos básicos de gestión te va a devolver horas cada semana.',
-    medio: 'Formalizar los procesos que ya funcionan evitará que dependan de una sola persona.',
-    alto: 'Tu organización es una fortaleza: es una buena base para escalar sin perder el control.',
+    bajo: 'Hoy gran parte de la operación pasa por vos o por la memoria del equipo, y eso frena cualquier intento de crecer sin que todo dependa de una sola persona. Desde Administración diseñamos procesos claros para las tareas que se repiten, así la gestión diaria deja de improvisarse.',
+    medio: 'Tenés rutinas que funcionan, pero todavía viven en la cabeza de alguien más que en un proceso escrito — por eso se rompen apenas esa persona falta o el negocio crece un poco. Desde Administración te ayudamos a formalizarlas para que sostengan el ritmo sin depender de nadie en particular.',
+    alto: 'Tu organización ya es una fortaleza real: los procesos sostienen la operación aunque vos no estés encima de cada detalle. Es la base correcta para escalar — el trabajo que sigue es de Estrategia, para que ese orden acompañe el próximo salto de tamaño.',
   },
   'Información y decisiones': {
-    bajo: 'Centralizar la información del negocio es el primer paso para decidir con más seguridad.',
-    medio: 'Con reportes más claros y frecuentes vas a anticipar decisiones en lugar de reaccionar.',
-    alto: 'Tomás decisiones con buena información: el próximo paso es afinar los indicadores clave.',
+    bajo: 'Tomás decisiones importantes sin tener los números a mano, así que muchas veces se deciden con la sensación del momento, no con datos. Desde Finanzas centralizamos esa información dispersa en un solo lugar, para que decidir deje de ser un salto de fe.',
+    medio: 'Tenés reportes, pero los mirás recién cuando algo urge — así siempre vas un paso atrás del problema, no adelante. Con un ritmo de revisión fijo desde Finanzas, empezás a anticipar en vez de reaccionar.',
+    alto: 'Tomás decisiones con información real y actualizada, algo que a la mayoría de los negocios le cuesta. El siguiente paso, desde Finanzas, es afinar qué indicadores mirás para que cada número que revisás tenga un motivo concreto.',
   },
   Cumplimiento: {
-    bajo: 'Poner en orden lo impositivo y contable te va a dar tranquilidad inmediata.',
-    medio: 'Con un seguimiento más cercano podés anticiparte en vez de resolver sobre la hora.',
-    alto: 'Tu cumplimiento está bien encaminado: es momento de que trabaje a tu favor, no solo en regla.',
+    bajo: 'Vas resolviendo lo impositivo y contable sobre la hora, lo que además de estrés puede salir caro en intereses o multas evitables. Desde Contabilidad e Impuestos ponemos esto en orden de una vez, para que dejes de vivir pendiente de la próxima fecha límite.',
+    medio: 'Estás en regla, pero cada vencimiento te genera tensión porque no hay un sistema que lo anticipe por vos. Desde Contabilidad e Impuestos armamos ese seguimiento, para que cumplir deje de sentirse una carrera contra el calendario.',
+    alto: 'Tu cumplimiento está sólido — no es poco, es donde más negocios fallan. El paso que sigue, también desde Contabilidad e Impuestos, es que esa prolijidad te sirva además para proyectar impuestos y planificar, no solo para estar en regla.',
   },
   Crecimiento: {
-    bajo: 'Definir objetivos concretos de crecimiento le da dirección a las decisiones del día a día.',
-    medio: 'Tenés dirección; falta un seguimiento más cercano para sostener el ritmo.',
-    alto: 'Tenés una estrategia de crecimiento sólida: el foco ahora es acelerarla con más recursos.',
+    bajo: 'No tenés una dirección definida todavía: vas resolviendo lo que aparece en el día a día, sin un rumbo que ordene esas decisiones. Desde Estrategia definimos objetivos concretos, para que cada decisión de hoy sume a algo más grande.',
+    medio: 'Tenés una idea de hacia dónde ir, pero sin un plan que la sostenga se diluye apenas se complica el día a día. Desde Estrategia la convertimos en un plan con seguimiento real, no en una intención.',
+    alto: 'Tenés una estrategia de crecimiento que funciona — el riesgo ahora no es la falta de rumbo, sino quedarte sin los recursos para sostenerlo. Desde Estrategia trabajamos en acelerarlo sin que la estructura se quede corta.',
   },
   'Presencia digital': {
-    bajo: 'Dar los primeros pasos en lo digital puede abrir una fuente de crecimiento importante.',
-    medio: 'Integrar mejor las herramientas que ya usás puede multiplicar su impacto.',
-    alto: 'Lo digital ya es parte de tu negocio: el próximo paso es que trabaje de forma más inteligente.',
+    bajo: 'Lo digital todavía es una materia pendiente, y hoy eso es una desventaja competitiva más que un detalle menor. Desde Tecnología damos los primeros pasos concretos, sin necesidad de una transformación gigante para empezar a notar la diferencia.',
+    medio: 'Tenés herramientas digitales, pero sueltas — cada una hace lo suyo sin hablar con las demás, y así se pierde la mitad del valor de tenerlas. Desde Tecnología las conectamos para que trabajen juntas, no en paralelo.',
+    alto: 'Lo digital ya es parte activa de cómo vendés y te organizás — estás mejor que la mayoría. Desde Tecnología, el siguiente paso es que esas herramientas te den información, no solo que te faciliten tareas.',
   },
+};
+
+/** A qué área real de Prisma pertenece cada dimensión — para conectar cada resultado con el equipo que lo resuelve. */
+export const AREA_PRISMA: Record<string, string> = {
+  Organización: 'Administración',
+  'Información y decisiones': 'Finanzas',
+  Cumplimiento: 'Contabilidad e Impuestos',
+  Crecimiento: 'Estrategia',
+  'Presencia digital': 'Tecnología',
+  Estrategia: 'Estrategia',
+  Finanzas: 'Finanzas',
+  Administración: 'Administración',
+  Personas: 'Personas',
+  'Contabilidad e Impuestos': 'Contabilidad e Impuestos',
+  Tecnología: 'Tecnología',
 };
 
 export interface RespuestaDimension {
@@ -228,34 +243,34 @@ export const DIMENSIONES_PARTE2: Dimension[] = [
 
 export const RECOMENDACIONES_PARTE2: Record<string, { bajo: string; medio: string; alto: string }> = {
   Estrategia: {
-    bajo: 'Poner el plan por escrito es lo que separa reaccionar de decidir.',
-    medio: 'Actualizar tu plan con la realidad de hoy le devuelve el valor que perdió.',
-    alto: 'Tenés con qué decidir: el siguiente paso es afinarlo con más frecuencia.',
+    bajo: 'No tener un plan escrito significa que cada decisión importante arranca de cero, sin nada que la sostenga si las cosas se complican. Esto es exactamente lo que trabajamos en Estrategia: convertir una idea general en objetivos concretos con seguimiento real.',
+    medio: 'Tenés un plan, pero desactualizado — y un plan viejo pesa menos que ninguno, porque da una falsa sensación de rumbo. En Estrategia lo actualizamos con tu realidad de hoy para que vuelva a ser una herramienta de decisión.',
+    alto: 'Usás tu plan activamente para decidir, que es exactamente el punto. En Estrategia el siguiente paso es revisarlo con más frecuencia, para que evolucione al ritmo del negocio.',
   },
   Finanzas: {
-    bajo: 'Sin ver la rentabilidad real, podés estar vendiendo más y ganando menos.',
-    medio: 'Un ritmo mensual fijo te va a mostrar problemas antes de que se vuelvan grandes.',
-    alto: 'Tenés buena visibilidad: ahora se trata de usarla para decidir con más velocidad.',
+    bajo: 'Sin calcular la rentabilidad real, es perfectamente posible estar vendiendo cada vez más y ganando cada vez menos, sin darte cuenta. En Finanzas armamos esa visibilidad desde cero, para que sepas con certeza qué te deja plata y qué no.',
+    medio: 'Revisás la rentabilidad, pero sin un ritmo fijo — así los problemas se detectan tarde, cuando ya crecieron. En Finanzas instalamos una revisión mensual simple, para verlos venir antes.',
+    alto: 'Revisás tus números todos los meses con claridad, algo poco común. En Finanzas el siguiente paso es usar esa información para decidir más rápido, no solo para estar informado.',
   },
   Administración: {
-    bajo: 'Ordenar lo administrativo básico te devuelve horas que hoy se van en apagar incendios.',
-    medio: 'Que no dependa solo de vos es lo que te permite ausentarte sin que nada se caiga.',
-    alto: 'Tu administración ya no es un cuello de botella: es momento de medirla y afinarla.',
+    bajo: 'La parte administrativa se resuelve a los ponchazos, lo que se traduce en errores, pagos tardíos y tiempo que se va en apagar incendios en lugar de trabajar. En Administración ordenamos esto con un proceso simple, aunque tu negocio sea chico.',
+    medio: 'Lo administrativo depende enteramente de vos — funciona, pero se detiene apenas no estás disponible. En Administración armamos un sistema que no dependa de una sola persona.',
+    alto: 'Tu administración está ordenada y no depende de vos en cada paso — dejó de ser un cuello de botella. En Administración el siguiente paso es medirla, para encontrar dónde afinarla.',
   },
   Personas: {
-    bajo: 'Definir roles claros, aunque el equipo sea chico, evita que todo pase por vos.',
-    medio: 'Un poco más de proceso entre roles reduce la fricción del día a día.',
-    alto: 'Tu equipo funciona bien: el próximo paso es que crezca sin perder eso.',
+    bajo: 'Sin roles claros, todo termina pasando por la misma persona (probablemente vos), y eso pone un techo bajo a cuánto puede crecer el negocio. En Personas definimos esos roles, aunque el equipo sea de una sola persona además de vos.',
+    medio: 'Hay roles, pero se superponen seguido, y esa fricción diaria cuesta más tiempo del que parece. En Personas ajustamos esos límites para que cada quien sepa exactamente qué le toca.',
+    alto: 'Tu equipo funciona sin que estés encima de cada tarea — es un activo real. En Personas el siguiente paso es que ese funcionamiento se sostenga mientras el equipo crece.',
   },
   'Contabilidad e Impuestos': {
-    bajo: 'Ponerte al día ahora es mucho más barato que resolverlo bajo presión después.',
-    medio: 'Un poco de orden adicional te ahorra el apuro de último momento.',
-    alto: 'Estás tranquilo acá: el foco ahora es que esta prolijidad también te ayude a decidir.',
+    bajo: 'Si mañana te piden algo, hoy tendrías que salir a buscarlo de cero — eso es tiempo y estrés que se puede evitar. En Contabilidad e Impuestos ponemos todo al día ahora, que siempre es más barato que resolverlo bajo presión.',
+    medio: 'Lo tenés, pero desordenado, lo que te hace perder tiempo cada vez que hace falta algo puntual. En Contabilidad e Impuestos lo organizamos para que esté siempre a mano, no solo cuando lo necesitás con urgencia.',
+    alto: 'Todo en orden, sin sobresaltos — es una base sólida. En Contabilidad e Impuestos el siguiente paso es que esa prolijidad también te ayude a anticipar y planificar, no solo a cumplir.',
   },
   Tecnología: {
-    bajo: 'Sumar la herramienta correcta, una sola y bien elegida, ya cambia el día a día.',
-    medio: 'Conectar las herramientas que ya tenés multiplica lo que cada una hace sola.',
-    alto: 'Tu stack ya te ahorra tiempo real: el siguiente paso es sacarle más datos.',
+    bajo: 'Hacer todo de forma manual pone un techo bajo a cuánto podés crecer sin sumar más horas de trabajo. En Tecnología incorporamos la primera herramienta correcta — una sola, bien elegida — antes de pensar en digitalizar todo junto.',
+    medio: 'Tenés varias herramientas, pero no hablan entre sí, y eso te obliga a cargar la misma información más de una vez. En Tecnología las conectamos para que compartan datos automáticamente.',
+    alto: 'Tu stack de herramientas ya te ahorra tiempo real — estás mejor que la mayoría de los negocios de tu tamaño. En Tecnología el siguiente paso es sacarle datos, no solo tareas.',
   },
 };
 

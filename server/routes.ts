@@ -60,6 +60,11 @@ router.get('/estadisticas', (_req, res) => {
  * Crea la preferencia de pago de Mercado Pago. Acá sí es obligatorio el
  * mail (es donde llega el diagnóstico completo cuando se confirme el pago),
  * y se guarda el link de la web si lo dejó, para mirarla más adelante.
+ *
+ * Modo de prueba: con SKIP_PAYMENT=true en el entorno, se salta Mercado Pago
+ * por completo y el diagnóstico se marca pagado directo — pensado para
+ * compartir el sitio y que se pueda ver el diagnóstico completo sin pagar
+ * de verdad. Se saca borrando esa variable de entorno, sin tocar código.
  */
 router.post('/diagnostico/:id/pagar', async (req, res) => {
   const diagnostico = obtenerDiagnostico(req.params.id);
@@ -73,6 +78,11 @@ router.post('/diagnostico/:id/pagar', async (req, res) => {
     return res.status(400).json({ error: 'Ingresá un email válido para recibir el diagnóstico completo.' });
   }
   actualizarContacto(diagnostico.id, { email, webUrl });
+
+  if (process.env.SKIP_PAYMENT === 'true') {
+    marcarComoPagado(diagnostico.id, 'modo-prueba');
+    return res.json({ omitido: true });
+  }
 
   try {
     const { preferenceId, initPoint, qrDataUrl } = await crearPreferenciaDePago(diagnostico.id);

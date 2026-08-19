@@ -1,6 +1,6 @@
 {
   "0": "devDependencies",
-  "1": "diagnostico.ts",
+  "1": "DiagnosticoFlow.tsx",
   "2": "App.tsx",
   "3": "dependencies",
   "4": "routes.ts",

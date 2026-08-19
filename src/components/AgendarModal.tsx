@@ -5,6 +5,9 @@ import { SCROLL_PANEL, SCROLL_PANEL_STYLE } from '../lib/ui';
 
 interface AgendarModalProps {
   onClose: () => void;
+  nombreInicial?: string;
+  emailInicial?: string;
+  hizoDiagnosticoInicial?: 'si' | 'no' | 'no_seguro' | '';
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -22,12 +25,17 @@ const HORARIOS = [
   { value: 'cualquiera', label: 'Cualquier horario' },
 ];
 
-export default function AgendarModal({ onClose }: AgendarModalProps) {
+export default function AgendarModal({
+  onClose,
+  nombreInicial = '',
+  emailInicial = '',
+  hizoDiagnosticoInicial = '',
+}: AgendarModalProps) {
   useBodyScrollLock();
-  const [nombre, setNombre] = useState('');
-  const [email, setEmail] = useState('');
+  const [nombre, setNombre] = useState(nombreInicial);
+  const [email, setEmail] = useState(emailInicial);
   const [telefono, setTelefono] = useState('');
-  const [hizoDiagnostico, setHizoDiagnostico] = useState('');
+  const [hizoDiagnostico, setHizoDiagnostico] = useState<string>(hizoDiagnosticoInicial);
   const [horario, setHorario] = useState('');
   const [contexto, setContexto] = useState('');
 

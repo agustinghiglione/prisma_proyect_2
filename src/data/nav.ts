@@ -4,7 +4,6 @@ export interface NavItem {
 }
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: 'Inicio', href: '#inicio' },
   { label: 'Diagnóstico Prisma®', href: '#diagnostico' },
   { label: 'Método Prisma®', href: '#metodo' },
   { label: 'Soluciones', href: '#soluciones' },

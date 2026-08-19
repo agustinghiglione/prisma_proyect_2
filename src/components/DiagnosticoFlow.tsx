@@ -6,6 +6,7 @@ import {
   DIMENSIONES_PARTE2,
   RECOMENDACIONES,
   RECOMENDACIONES_TODAS,
+  AREA_PRISMA,
   QUE_INCLUYE_COMPLETO,
   nivelDe,
   PRECIO_DIAGNOSTICO_COMPLETO,
@@ -14,6 +15,7 @@ import {
 } from '../lib/diagnostico';
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 import { SCROLL_PANEL, SCROLL_PANEL_STYLE } from '../lib/ui';
+import AgendarModal from './AgendarModal';
 
 type Paso =
   | 'preguntas'
@@ -67,6 +69,7 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
   const [respuestas2, setRespuestas2] = useState<number[]>([]);
   const [enviandoParte2, setEnviandoParte2] = useState(false);
   const [resultadoCompleto, setResultadoCompleto] = useState<ResultadoCompleto | null>(null);
+  const [agendarAbierto, setAgendarAbierto] = useState(false);
 
   const elegirOpcion = (valor: number) => {
     const nuevas = [...respuestas, valor];
@@ -126,6 +129,12 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
         throw new Error(data.error ?? 'No se pudo iniciar el pago.');
       }
       const data = await res.json();
+      if (data.omitido) {
+        // Modo de prueba (SKIP_PAYMENT=true): sin Mercado Pago, directo a la Parte 2.
+        setPagado(true);
+        setPaso('preguntas-2');
+        return;
+      }
       setQr(data);
       setPaso('pago');
     } catch (err) {
@@ -485,23 +494,45 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
               <div className="mt-6 flex flex-col gap-3">
                 {resultadoCompleto.todos.map((s) => (
                   <div key={s.dimension} className="rounded-2xl border border-border bg-white p-4">
-                    <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center justify-between gap-3 text-sm">
                       <span className="font-semibold text-ink">{s.dimension}</span>
                       <span className="text-ink-soft">{Math.round((s.valor / 4) * 100)}%</span>
                     </div>
-                    <p className="mt-2 text-sm text-ink-soft">
+                    <span className="mt-1.5 inline-block rounded-full bg-gold/15 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-primary-dark">
+                      Área Prisma: {AREA_PRISMA[s.dimension]}
+                    </span>
+                    <p className="mt-2.5 text-sm leading-relaxed text-ink-soft">
                       {RECOMENDACIONES_TODAS[s.dimension][nivelDe(s.valor)]}
                     </p>
                   </div>
                 ))}
               </div>
-              <p className="mt-6 text-center text-sm text-ink-soft">
-                También te lo mandamos por mail. El siguiente paso es conversar sobre cómo implementarlo.
-              </p>
+
+              <div className="mt-7 rounded-2xl border border-gold/40 bg-gold/10 p-6 text-center">
+                <p className="text-sm text-ink">
+                  Ya te mandamos este informe a tu mail. El siguiente paso es una conversación con
+                  nuestro equipo para ver cómo lo llevamos a la práctica.
+                </p>
+                <button
+                  onClick={() => setAgendarAbierto(true)}
+                  className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5"
+                >
+                  Agendar mi primera conversación <ArrowRight size={16} />
+                </button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
       </motion.div>
+
+      {agendarAbierto && (
+        <AgendarModal
+          onClose={() => setAgendarAbierto(false)}
+          nombreInicial={nombre}
+          emailInicial={emailPago}
+          hizoDiagnosticoInicial="si"
+        />
+      )}
     </div>
   );
 }
