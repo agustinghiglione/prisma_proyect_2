@@ -3,9 +3,6 @@ import { Linkedin, Instagram, Mail, MessageCircle } from 'lucide-react';
 import LegalModal from './LegalModal';
 
 export default function Footer() {
-  const AÑO_FUNDACION = 2025;
-  const year = new Date().getFullYear();
-  const copyrightYear = year === AÑO_FUNDACION ? `${AÑO_FUNDACION}` : `${AÑO_FUNDACION}–${year}`;
   const [legalAbierto, setLegalAbierto] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const toastTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -45,7 +42,7 @@ export default function Footer() {
       </div>
 
       <div className="mx-auto mt-8 flex max-w-6xl flex-col items-center gap-4 border-t border-white/10 pt-6 text-xs sm:flex-row sm:justify-between">
-        <p className="text-white/40">© {copyrightYear} Prisma Consultora. Todos los derechos reservados.</p>
+        <p className="text-white/40">© 2025 Prisma Consultora. Todos los derechos reservados.</p>
         <button onClick={() => setLegalAbierto(true)} className="hover:text-white">
           Privacidad y Términos
         </button>
