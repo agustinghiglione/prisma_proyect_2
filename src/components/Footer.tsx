@@ -3,7 +3,9 @@ import { Linkedin, Instagram, Mail, MessageCircle } from 'lucide-react';
 import LegalModal from './LegalModal';
 
 export default function Footer() {
+  const AÑO_FUNDACION = 2025;
   const year = new Date().getFullYear();
+  const copyrightYear = year === AÑO_FUNDACION ? `${AÑO_FUNDACION}` : `${AÑO_FUNDACION}–${year}`;
   const [legalAbierto, setLegalAbierto] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const toastTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -25,8 +27,8 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col items-center gap-2 text-sm sm:items-end">
-          <a href="mailto:contacto@prismaconsultora.com" className="flex items-center gap-2 hover:text-white">
-            <Mail size={15} /> contacto@prismaconsultora.com
+          <a href="mailto:consultoraprismadigital@gmail.com" className="flex items-center gap-2 hover:text-white">
+            <Mail size={15} /> consultoraprismadigital@gmail.com
           </a>
           <div className="flex gap-4">
             <button onClick={() => avisarProximamente('WhatsApp')} aria-label="WhatsApp" className="hover:text-white">
@@ -43,7 +45,7 @@ export default function Footer() {
       </div>
 
       <div className="mx-auto mt-8 flex max-w-6xl flex-col items-center gap-4 border-t border-white/10 pt-6 text-xs sm:flex-row sm:justify-between">
-        <p className="text-white/40">© {year} Prisma Consultora. Todos los derechos reservados.</p>
+        <p className="text-white/40">© {copyrightYear} Prisma Consultora. Todos los derechos reservados.</p>
         <button onClick={() => setLegalAbierto(true)} className="hover:text-white">
           Privacidad y Términos
         </button>

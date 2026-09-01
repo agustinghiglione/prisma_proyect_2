@@ -189,12 +189,12 @@ export const DIMENSIONES_PARTE2: Dimension[] = [
   {
     id: 'administracion-2',
     nombre: 'Administración',
-    pregunta: '¿Cómo se maneja hoy la parte administrativa del día a día (facturas, pagos, papeles)?',
+    pregunta: 'Si te tomaras una semana sin mirar el negocio, ¿la parte administrativa seguiría funcionando sola?',
     opciones: [
-      { texto: 'A los ponchazos, cuando no queda otra', valor: 1 },
-      { texto: 'Lo hago yo mismo, a mano, cada vez', valor: 2 },
-      { texto: 'Tengo un método, pero depende de mí', valor: 3 },
-      { texto: 'Está ordenado y no depende de una sola persona', valor: 4 },
+      { texto: 'No, se frena o se acumula todo hasta que vuelva', valor: 1 },
+      { texto: 'Sobrevive, pero con algún problema que después hay que destrabar', valor: 2 },
+      { texto: 'Sigue funcionando, aunque yo tenga que poner algunos parches al volver', valor: 3 },
+      { texto: 'Sigue funcionando igual, no se nota que no estuve', valor: 4 },
     ],
   },
   {
@@ -222,12 +222,12 @@ export const DIMENSIONES_PARTE2: Dimension[] = [
   {
     id: 'tecnologia-2',
     nombre: 'Tecnología',
-    pregunta: '¿Qué herramientas digitales usás hoy para gestionar tu negocio, más allá de WhatsApp y Excel?',
+    pregunta: 'Si necesitaras ahora mismo un dato clave de tu negocio (ventas del mes, stock, margen), ¿en cuánto tiempo lo tendrías?',
     opciones: [
-      { texto: 'Ninguna, es todo manual', valor: 1 },
-      { texto: 'Alguna suelta, sin conectar con el resto', valor: 2 },
-      { texto: 'Tengo varias, pero no hablan entre sí', valor: 3 },
-      { texto: 'Están integradas y me ahorran tiempo real', valor: 4 },
+      { texto: 'Tendría que armarlo de cero, juntando de varios lados', valor: 1 },
+      { texto: 'Lo tengo, pero tardo bastante en encontrarlo o calcularlo', valor: 2 },
+      { texto: 'Lo tengo a mano, aunque no siempre 100% actualizado', valor: 3 },
+      { texto: 'Lo tengo al instante, actualizado y confiable', valor: 4 },
     ],
   },
 ];

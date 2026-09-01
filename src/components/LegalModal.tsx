@@ -31,7 +31,7 @@ export default function LegalModal({ onClose }: LegalModalProps) {
         <h2 className="mt-2 font-heading text-2xl font-bold text-ink">
           Términos y Condiciones de Uso y Política de Privacidad
         </h2>
-        <p className="mt-1 text-xs text-ink-soft">Última actualización: agosto de 2026</p>
+        <p className="mt-1 text-xs text-ink-soft">Última actualización: septiembre de 2026</p>
 
         <div className="mt-7 flex flex-col gap-6 text-sm leading-relaxed text-ink-soft">
           <section>
@@ -51,8 +51,8 @@ export default function LegalModal({ onClose }: LegalModalProps) {
             <p>
               El responsable del Sitio y del tratamiento de los datos personales que en él se recaban es
               Prisma Consultora, con domicilio de contacto electrónico en{' '}
-              <a href="mailto:contacto@prismaconsultora.com" className="text-primary underline">
-                contacto@prismaconsultora.com
+              <a href="mailto:consultoraprismadigital@gmail.com" className="text-primary underline">
+                consultoraprismadigital@gmail.com
               </a>
               , dirección que el Usuario podrá utilizar para efectuar cualquier consulta, reclamo o
               ejercicio de derechos vinculado a estos Términos.
@@ -127,8 +127,8 @@ export default function LegalModal({ onClose }: LegalModalProps) {
               Argentina, el Usuario tiene derecho a acceder, rectificar, actualizar y solicitar la
               supresión de sus datos personales, así como a oponerse a su tratamiento, dirigiendo su
               solicitud a{' '}
-              <a href="mailto:contacto@prismaconsultora.com" className="text-primary underline">
-                contacto@prismaconsultora.com
+              <a href="mailto:consultoraprismadigital@gmail.com" className="text-primary underline">
+                consultoraprismadigital@gmail.com
               </a>
               . La Agencia de Acceso a la Información Pública (AAIP), en su carácter de Órgano de
               Control de la Ley N.º 25.326, es la autoridad ante la cual el titular de los datos puede
@@ -223,8 +223,8 @@ export default function LegalModal({ onClose }: LegalModalProps) {
             <p>
               Ante cualquier consulta sobre estos Términos o sobre el tratamiento de sus datos
               personales, el Usuario puede escribir a{' '}
-              <a href="mailto:contacto@prismaconsultora.com" className="text-primary underline">
-                contacto@prismaconsultora.com
+              <a href="mailto:consultoraprismadigital@gmail.com" className="text-primary underline">
+                consultoraprismadigital@gmail.com
               </a>
               .
             </p>

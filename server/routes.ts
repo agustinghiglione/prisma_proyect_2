@@ -20,6 +20,7 @@ import {
 import { crearPreferenciaDePago, consultarPago } from './mercadopago';
 import { enviarInformeCompleto, enviarNotificacionAgendamiento } from './email';
 import { generarSintesis } from './ia';
+import { enviarASheet } from './sheets';
 
 const HORARIOS_VALIDOS = ['manana', 'mediodia', 'tarde', 'cualquiera'];
 const DIAGNOSTICO_VALIDOS = ['si', 'no', 'no_seguro'];
@@ -47,6 +48,15 @@ router.post('/diagnostico', async (req, res) => {
   crearDiagnostico({ id, nombre, negocio, respuestas });
 
   const resultado = calcularResultado(respuestas);
+
+  void enviarASheet({
+    tipo: 'diagnostico_parte1',
+    id,
+    nombre,
+    negocio: negocio ?? '',
+    overallPercent: resultado.overallPercent,
+  });
+
   res.json({ id, resultado });
 });
 
@@ -144,6 +154,18 @@ router.post('/diagnostico/:id/parte-2', async (req, res) => {
   const sintesis = await generarSintesis(resultadoCompleto, diagnostico.nombre ?? '', diagnostico.negocio);
   guardarSintesis(diagnostico.id, sintesis);
 
+  void enviarASheet({
+    tipo: 'diagnostico_completo',
+    id: diagnostico.id,
+    nombre: diagnostico.nombre ?? '',
+    negocio: diagnostico.negocio ?? '',
+    email: diagnostico.email ?? '',
+    overallPercent: resultadoCompleto.overallPercent,
+    fortalezas: resultadoCompleto.fortalezas.map((f) => f.dimension).join(', '),
+    oportunidades: resultadoCompleto.oportunidades.map((o) => o.dimension).join(', '),
+    sintesis,
+  });
+
   try {
     if (diagnostico.email) {
       await enviarInformeCompleto({
@@ -217,6 +239,17 @@ router.post('/agendar', async (req, res) => {
 
   const id = randomUUID();
   crearAgendamiento({ id, nombre, email, telefono, hizoDiagnostico, horario, contexto });
+
+  void enviarASheet({
+    tipo: 'agendamiento',
+    id,
+    nombre,
+    email,
+    telefono: telefono ?? '',
+    hizoDiagnostico,
+    horario,
+    contexto: contexto ?? '',
+  });
 
   try {
     await enviarNotificacionAgendamiento({ nombre, email, telefono, hizoDiagnostico, horario, contexto });

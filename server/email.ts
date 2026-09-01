@@ -114,7 +114,7 @@ export async function enviarInformeCompleto(params: {
   </div>`;
 
   await transportador().sendMail({
-    from: process.env.MAIL_FROM ?? '"Prisma Consultora" <contacto@prismaconsultora.com>',
+    from: process.env.MAIL_FROM ?? '"Prisma Consultora" <consultoraprismadigital@gmail.com>',
     to: email,
     subject: 'Tu Diagnóstico Prisma® completo',
     html,
@@ -147,7 +147,7 @@ export async function enviarNotificacionAgendamiento(datos: {
   horario: string;
   contexto?: string;
 }) {
-  const destino = process.env.TEAM_EMAIL ?? 'contacto@prismaconsultora.com';
+  const destino = process.env.TEAM_EMAIL ?? 'consultoraprismadigital@gmail.com';
 
   const filas = [
     ['Nombre', datos.nombre],
@@ -164,7 +164,7 @@ export async function enviarNotificacionAgendamiento(datos: {
     .join('');
 
   await transportador().sendMail({
-    from: process.env.MAIL_FROM ?? '"Prisma Consultora" <contacto@prismaconsultora.com>',
+    from: process.env.MAIL_FROM ?? '"Prisma Consultora" <consultoraprismadigital@gmail.com>',
     to: destino,
     replyTo: datos.email,
     subject: `Nuevo pedido de conversación — ${datos.nombre}`,
