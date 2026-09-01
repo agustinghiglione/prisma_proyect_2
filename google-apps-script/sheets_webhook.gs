@@ -28,9 +28,17 @@
  * 7. Copiá la URL que te da ("URL de la aplicación web", termina en /exec).
  * 8. Esa URL va en el .env.local del servidor, como SHEETS_WEBHOOK_URL.
  *
- * Si en algún momento cambiás este código, tenés que "Implementar → Gestionar
- * implementaciones → editar (lápiz) → Nueva versión" para que el cambio
- * quede activo en la URL que ya está en uso.
+ * Si en algún momento cambiás este código (como ahora, que se agregaron las
+ * columnas de cada pregunta), tenés que volver a pegarlo acá y hacer
+ * "Implementar → Gestionar implementaciones → editar (lápiz) → Nueva
+ * versión" para que el cambio quede activo en la URL que ya está en uso —
+ * la URL no cambia, así que no hay que tocar nada en el servidor.
+ *
+ * Nota: si las pestañas "Diagnósticos (parte 1)" y "Diagnósticos completos"
+ * ya existen de pruebas anteriores, sus encabezados quedaron con las
+ * columnas viejas (no se actualizan solas). Para que salgan con todas las
+ * columnas nuevas, borrá esas dos pestañas una vez — se vuelven a crear
+ * solas, completas, con el próximo evento.
  */
 
 var ID_PLANILLA = '1yApaepiSSHntAwYu8a-9bqld1jkLYMSJ-qOpYr6aF7w';
@@ -48,10 +56,48 @@ function doPost(e) {
   }
 }
 
+// Claves tal cual las manda el servidor (server/sheets.ts) — no tocar sin
+// tocar también el backend.
 var COLUMNAS = {
-  diagnostico_parte1: ['fecha', 'id', 'nombre', 'negocio', 'overallPercent'],
-  diagnostico_completo: ['fecha', 'id', 'nombre', 'negocio', 'email', 'overallPercent', 'fortalezas', 'oportunidades', 'sintesis'],
+  diagnostico_parte1: [
+    'fecha', 'id', 'nombre', 'negocio', 'overallPercent',
+    'p1_administracion', 'p1_finanzas', 'p1_contabilidad_impuestos', 'p1_estrategia', 'p1_tecnologia',
+  ],
+  diagnostico_completo: [
+    'fecha', 'id', 'nombre', 'negocio', 'email', 'overallPercent', 'fortalezas', 'oportunidades', 'sintesis',
+    'p1_administracion', 'p1_finanzas', 'p1_contabilidad_impuestos', 'p1_estrategia', 'p1_tecnologia',
+    'p2_estrategia', 'p2_finanzas', 'p2_administracion', 'p2_personas', 'p2_contabilidad_impuestos', 'p2_tecnologia',
+  ],
   agendamiento: ['fecha', 'id', 'nombre', 'email', 'telefono', 'hizoDiagnostico', 'horario', 'contexto'],
+};
+
+// Encabezados legibles para cada columna — si una clave no está acá, se usa
+// la clave tal cual como respaldo.
+var ENCABEZADOS = {
+  fecha: 'Fecha',
+  id: 'ID',
+  nombre: 'Nombre',
+  negocio: 'Negocio',
+  email: 'Email',
+  telefono: 'Teléfono',
+  overallPercent: '% general',
+  fortalezas: 'Fortalezas',
+  oportunidades: 'Oportunidades',
+  sintesis: 'Síntesis',
+  hizoDiagnostico: 'Hizo el diagnóstico',
+  horario: 'Horario preferido',
+  contexto: 'Contexto',
+  p1_administracion: 'Administración (parte 1, gratis)',
+  p1_finanzas: 'Finanzas (parte 1, gratis)',
+  p1_contabilidad_impuestos: 'Contabilidad e Impuestos (parte 1, gratis)',
+  p1_estrategia: 'Estrategia (parte 1, gratis)',
+  p1_tecnologia: 'Tecnología (parte 1, gratis)',
+  p2_estrategia: 'Estrategia (parte 2, paga)',
+  p2_finanzas: 'Finanzas (parte 2, paga)',
+  p2_administracion: 'Administración (parte 2, paga)',
+  p2_personas: 'Personas (parte 2, paga)',
+  p2_contabilidad_impuestos: 'Contabilidad e Impuestos (parte 2, paga)',
+  p2_tecnologia: 'Tecnología (parte 2, paga)',
 };
 
 var NOMBRES_HOJA = {
@@ -67,7 +113,8 @@ function obtenerOCrearHoja_(tipo) {
   if (!hoja) {
     hoja = libro.insertSheet(nombreHoja);
     var columnas = COLUMNAS[tipo] || ['fecha', 'datos'];
-    hoja.appendRow(columnas);
+    var encabezados = columnas.map(function (c) { return ENCABEZADOS[c] || c; });
+    hoja.appendRow(encabezados);
     hoja.setFrozenRows(1);
   }
   return hoja;

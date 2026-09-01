@@ -5,6 +5,7 @@ import {
   calcularResultadoCompleto,
   DIMENSIONES,
   DIMENSIONES_PARTE2,
+  respuestasParaSheet,
 } from '../src/lib/diagnostico';
 import {
   crearDiagnostico,
@@ -55,6 +56,7 @@ router.post('/diagnostico', async (req, res) => {
     nombre,
     negocio: negocio ?? '',
     overallPercent: resultado.overallPercent,
+    ...respuestasParaSheet(DIMENSIONES, respuestas, 'p1'),
   });
 
   res.json({ id, resultado });
@@ -164,6 +166,8 @@ router.post('/diagnostico/:id/parte-2', async (req, res) => {
     fortalezas: resultadoCompleto.fortalezas.map((f) => f.dimension).join(', '),
     oportunidades: resultadoCompleto.oportunidades.map((o) => o.dimension).join(', '),
     sintesis,
+    ...respuestasParaSheet(DIMENSIONES, respuestasParte1, 'p1'),
+    ...respuestasParaSheet(DIMENSIONES_PARTE2, respuestas, 'p2'),
   });
 
   try {

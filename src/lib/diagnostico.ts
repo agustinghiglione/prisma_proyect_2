@@ -155,6 +155,54 @@ export function nivelDe(valor: number): 'bajo' | 'medio' | 'alto' {
   return valor < 2.5 ? 'bajo' : valor < 3.5 ? 'medio' : 'alto';
 }
 
+/** Igual que nivelDe pero sobre un porcentaje (0-100) en vez de un valor 1-4. */
+export function nivelDePercent(pct: number): 'bajo' | 'medio' | 'alto' {
+  return pct < 37.5 ? 'bajo' : pct < 62.5 ? 'medio' : 'alto';
+}
+
+/**
+ * Lo que ve el cliente en vez de un número frío de porcentaje. A propósito
+ * no decimos "bajo/medio/alto" tal cual — "Inicial" y "En desarrollo" no
+ * suenan a nota escolar, y de paso evitan que alguien con 100% sienta que ya
+ * no tiene nada para trabajar con nosotros.
+ */
+export const ETIQUETA_NIVEL: Record<'bajo' | 'medio' | 'alto', string> = {
+  bajo: 'Inicial',
+  medio: 'En desarrollo',
+  alto: 'Sólido',
+};
+
+/** Slug ASCII estable por área, para usar como clave de columna (ej. en Sheets). */
+export const AREA_SLUG: Record<string, string> = {
+  Administración: 'administracion',
+  Finanzas: 'finanzas',
+  'Contabilidad e Impuestos': 'contabilidad_impuestos',
+  Estrategia: 'estrategia',
+  Tecnología: 'tecnologia',
+  Personas: 'personas',
+};
+
+/**
+ * Arma, para un set de dimensiones + sus respuestas (mismo orden), un objeto
+ * plano {prefijo_slugArea: textoDeLaOpciónElegida} — pensado para mandar a
+ * Google Sheets, donde cada pregunta individual queda en su propia columna
+ * en vez de solo el promedio por área.
+ */
+export function respuestasParaSheet(
+  dimensiones: Dimension[],
+  respuestas: number[],
+  prefijo: string,
+): Record<string, string> {
+  const out: Record<string, string> = {};
+  dimensiones.forEach((d, i) => {
+    const valor = respuestas[i];
+    const opcion = d.opciones.find((o) => o.valor === valor);
+    const slug = AREA_SLUG[d.nombre] ?? d.nombre.toLowerCase();
+    out[`${prefijo}_${slug}`] = opcion?.texto ?? '';
+  });
+  return out;
+}
+
 export const PRECIO_DIAGNOSTICO_COMPLETO = 20000; // ARS, definido por Prisma
 
 /**

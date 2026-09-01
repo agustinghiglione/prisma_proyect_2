@@ -7,6 +7,8 @@ import {
   RECOMENDACIONES,
   QUE_INCLUYE_COMPLETO,
   nivelDe,
+  nivelDePercent,
+  ETIQUETA_NIVEL,
   PRECIO_DIAGNOSTICO_COMPLETO,
   type ResultadoDiagnostico,
   type ResultadoCompleto,
@@ -290,7 +292,7 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
                 Tu Diagnóstico Prisma®
               </p>
               <h3 className="mt-2 font-heading text-2xl font-bold text-ink">
-                Nivel general de claridad: {resultado.overallPercent}%
+                Nivel general de claridad: {ETIQUETA_NIVEL[nivelDePercent(resultado.overallPercent)]}
               </h3>
 
               <div className="mt-6 flex flex-col gap-3">
@@ -490,7 +492,7 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
                 Tu Diagnóstico Prisma® completo
               </p>
               <h3 className="mt-2 font-heading text-2xl font-bold text-ink">
-                Nivel general de claridad: {resultadoCompleto.overallPercent}%
+                Nivel general de claridad: {ETIQUETA_NIVEL[nivelDePercent(resultadoCompleto.overallPercent)]}
               </h3>
 
               <div className="mt-6 flex flex-col gap-3">
@@ -500,7 +502,7 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
                     <div key={s.dimension} className="rounded-xl border border-border bg-white p-3.5">
                       <div className="flex items-center justify-between gap-3 text-sm">
                         <span className="font-medium text-ink">{s.dimension}</span>
-                        <span className="text-ink-soft">{pct}%</span>
+                        <span className="text-ink-soft">{ETIQUETA_NIVEL[nivelDe(s.valor)]}</span>
                       </div>
                       <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface">
                         <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
