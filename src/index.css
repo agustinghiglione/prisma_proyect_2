@@ -53,10 +53,20 @@
   scroll-margin-top: 88px;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  letter-spacing: -0.01em;
-  color: var(--color-ink);
+/*
+ * En @layer base para que las clases de color de Tailwind (text-white,
+ * text-primary, etc. — viven en la capa "utilities") puedan pisar este
+ * default. Sin el @layer, esta regla queda fuera de las capas de Tailwind y
+ * las capas ganan siempre, sin importar especificidad — por eso títulos con
+ * text-white (el h1 del Hero, el h2 de la sección de diagnóstico) se veían
+ * en este azul oscuro en vez de blanco.
+ */
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+  }
 }
 
 ::selection {
@@ -66,6 +76,27 @@ h1, h2, h3, h4, h5, h6 {
 
 .bg-gradient-prisma {
   background: var(--gradient-prisma);
+}
+
+/* Barra de scroll de la página en sí (no la de los modales, esa vive en
+   src/lib/ui.ts) — fina, y con el track transparente para que se siga
+   viendo el fondo de la página detrás. */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in srgb, var(--color-ink-soft) 50%, transparent);
+}
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
 }
 
 @media (prefers-reduced-motion: reduce) {

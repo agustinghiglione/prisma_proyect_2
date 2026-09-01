@@ -27,7 +27,7 @@ export default function LegalModal({ onClose }: LegalModalProps) {
           <X size={18} />
         </button>
 
-        <p className="text-xs font-semibold uppercase tracking-wide text-primary">Prisma Consultora</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-primary">Consultora Prisma</p>
         <h2 className="mt-2 font-heading text-2xl font-bold text-ink">
           Términos y Condiciones de Uso y Política de Privacidad
         </h2>

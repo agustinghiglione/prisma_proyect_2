@@ -58,7 +58,7 @@ export default function Navbar() {
             scrolled ? 'text-primary' : 'text-white [text-shadow:0_1px_3px_rgb(0_0_0_/_45%)]'
           }`}
         >
-          PRISMA <span className={`font-medium ${scrolled ? 'text-primary' : 'text-white/90'}`}>CONSULTORA</span>
+          CONSULTORA <span className={`font-medium ${scrolled ? 'text-primary' : 'text-white/90'}`}>PRISMA</span>
         </a>
 
         <div className="hidden items-center gap-8 lg:flex">

@@ -31,7 +31,7 @@ export default function DiagnosticIntro({ onStartDiagnostic }: DiagnosticIntroPr
           viewport={{ once: true }}
           className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gold"
         >
-          <Globe size={12} /> Nuestro método, ahora también online
+          <Globe size={12} /> Nuestro diagnóstico, ahora también online
         </motion.span>
 
         <motion.h2

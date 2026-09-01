@@ -9,7 +9,7 @@ export default function Footer() {
 
   const avisarProximamente = (nombre: string) => {
     if (toastTimeout.current) clearTimeout(toastTimeout.current);
-    setToast(`${nombre} no está disponible todavía — estamos trabajando en ella.`);
+    setToast(`${nombre} no está disponible por el momento — estamos trabajando en ella.`);
     toastTimeout.current = setTimeout(() => setToast(null), 3500);
   };
 
@@ -18,7 +18,7 @@ export default function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 text-center sm:flex-row sm:justify-between sm:text-left">
         <div>
           <p className="font-heading text-lg font-extrabold text-white">
-            PRISMA <span className="font-medium text-white/70">CONSULTORA</span>
+            CONSULTORA <span className="font-medium text-white/70">PRISMA</span>
           </p>
           <p className="mt-1 text-sm">Claridad para crecer.</p>
         </div>
@@ -42,7 +42,7 @@ export default function Footer() {
       </div>
 
       <div className="mx-auto mt-8 flex max-w-6xl flex-col items-center gap-4 border-t border-white/10 pt-6 text-xs sm:flex-row sm:justify-between">
-        <p className="text-white/40">© 2025 Prisma Consultora. Todos los derechos reservados.</p>
+        <p className="text-white/40">© 2025 Consultora Prisma. Todos los derechos reservados.</p>
         <button onClick={() => setLegalAbierto(true)} className="hover:text-white">
           Privacidad y Términos
         </button>
