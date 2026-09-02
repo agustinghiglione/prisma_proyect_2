@@ -24,8 +24,8 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col items-center gap-2 text-sm sm:items-end">
-          <a href="mailto:consultoraprismadigital@gmail.com" className="flex items-center gap-2 hover:text-white">
-            <Mail size={15} /> consultoraprismadigital@gmail.com
+          <a href="mailto:contacto@consultoraprisma.digital" className="flex items-center gap-2 hover:text-white">
+            <Mail size={15} /> contacto@consultoraprisma.digital
           </a>
           <div className="flex gap-4">
             <button onClick={() => avisarProximamente('WhatsApp')} aria-label="WhatsApp" className="hover:text-white">

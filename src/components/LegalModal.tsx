@@ -51,8 +51,8 @@ export default function LegalModal({ onClose }: LegalModalProps) {
             <p>
               El responsable del Sitio y del tratamiento de los datos personales que en él se recaban es
               Prisma Consultora, con domicilio de contacto electrónico en{' '}
-              <a href="mailto:consultoraprismadigital@gmail.com" className="text-primary underline">
-                consultoraprismadigital@gmail.com
+              <a href="mailto:contacto@consultoraprisma.digital" className="text-primary underline">
+                contacto@consultoraprisma.digital
               </a>
               , dirección que el Usuario podrá utilizar para efectuar cualquier consulta, reclamo o
               ejercicio de derechos vinculado a estos Términos.
@@ -127,8 +127,8 @@ export default function LegalModal({ onClose }: LegalModalProps) {
               Argentina, el Usuario tiene derecho a acceder, rectificar, actualizar y solicitar la
               supresión de sus datos personales, así como a oponerse a su tratamiento, dirigiendo su
               solicitud a{' '}
-              <a href="mailto:consultoraprismadigital@gmail.com" className="text-primary underline">
-                consultoraprismadigital@gmail.com
+              <a href="mailto:contacto@consultoraprisma.digital" className="text-primary underline">
+                contacto@consultoraprisma.digital
               </a>
               . La Agencia de Acceso a la Información Pública (AAIP), en su carácter de Órgano de
               Control de la Ley N.º 25.326, es la autoridad ante la cual el titular de los datos puede
@@ -223,8 +223,8 @@ export default function LegalModal({ onClose }: LegalModalProps) {
             <p>
               Ante cualquier consulta sobre estos Términos o sobre el tratamiento de sus datos
               personales, el Usuario puede escribir a{' '}
-              <a href="mailto:consultoraprismadigital@gmail.com" className="text-primary underline">
-                consultoraprismadigital@gmail.com
+              <a href="mailto:contacto@consultoraprisma.digital" className="text-primary underline">
+                contacto@consultoraprisma.digital
               </a>
               .
             </p>
