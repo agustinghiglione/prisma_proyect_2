@@ -17,8 +17,8 @@ export default function Footer() {
     <footer className="bg-gradient-prisma px-6 py-12 text-white/70 lg:px-10">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 text-center sm:flex-row sm:justify-between sm:text-left">
         <div>
-          <p className="font-heading text-lg font-extrabold text-white">
-            CONSULTORA <span className="font-medium text-white/70">PRISMA</span>
+          <p className="font-heading text-lg font-medium text-white/70">
+            CONSULTORA <span className="font-extrabold text-white">PRISMA</span>
           </p>
           <p className="mt-1 text-sm">Claridad para crecer.</p>
         </div>
