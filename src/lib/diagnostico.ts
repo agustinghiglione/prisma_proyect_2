@@ -43,7 +43,7 @@ export const DIMENSIONES: Dimension[] = [
   {
     id: 'finanzas',
     nombre: 'Finanzas',
-    pregunta: 'Cuando tenés que tomar una decisión importante, ¿de dónde sacás la información?',
+    pregunta: 'Cuando tenés que tomar una decisión importante, ¿de dónde obtenés la información que necesitás?',
     opciones: [
       { texto: 'La tengo en la cabeza o hay que juntarla a mano', valor: 1 },
       { texto: 'Está repartida en varios lugares (Excel, WhatsApp, papeles)', valor: 2 },
@@ -226,7 +226,7 @@ export const DIMENSIONES_PARTE2: Dimension[] = [
   {
     id: 'finanzas-2',
     nombre: 'Finanzas',
-    pregunta: '¿Con qué frecuencia revisás la rentabilidad real de tu negocio (no solo cuánto entra)?',
+    pregunta: '¿Con qué frecuencia revisás la rentabilidad real de tu negocio, más allá de los ingresos?',
     opciones: [
       { texto: 'Nunca la calculé en serio', valor: 1 },
       { texto: 'La reviso una vez al año, si acaso', valor: 2 },
@@ -248,7 +248,7 @@ export const DIMENSIONES_PARTE2: Dimension[] = [
   {
     id: 'personas',
     nombre: 'Personas',
-    pregunta: '¿Cómo está organizado tu equipo hoy (aunque seas solo vos)?',
+    pregunta: '¿Cómo está organizado tu equipo hoy?',
     opciones: [
       { texto: 'No hay roles claros, cada uno hace lo que puede', valor: 1 },
       { texto: 'Hay roles, pero se superponen seguido', valor: 2 },
@@ -259,7 +259,7 @@ export const DIMENSIONES_PARTE2: Dimension[] = [
   {
     id: 'contabilidad-2',
     nombre: 'Contabilidad e Impuestos',
-    pregunta: '¿Qué tan preparado estás si mañana te piden algo tu contador o la AFIP?',
+    pregunta: '¿Qué tan preparado estás si mañana te piden algo tu contador o ARCA?',
     opciones: [
       { texto: 'Tendría que salir a buscar todo de cero', valor: 1 },
       { texto: 'Lo tengo, pero desordenado', valor: 2 },
