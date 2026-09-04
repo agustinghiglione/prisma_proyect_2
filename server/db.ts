@@ -142,6 +142,22 @@ export function actualizarEstadoCliente(id: string, estado: string) {
   db.prepare('UPDATE diagnosticos SET estado_cliente = ? WHERE id = ?').run(estado, id);
 }
 
+/**
+ * Para el panel de administración: todos los diagnósticos cuyo estado_cliente
+ * esté entre los pedidos (o todos, si no se pasa ninguno), del más nuevo al
+ * más viejo. Se usa tanto para listar/filtrar como para armar la lista de
+ * destinatarios al mandar un mail masivo desde el panel.
+ */
+export function listarDiagnosticosPorEstados(estados: string[]): DiagnosticoRow[] {
+  if (estados.length === 0) {
+    return db.prepare('SELECT * FROM diagnosticos ORDER BY creado_en DESC').all() as DiagnosticoRow[];
+  }
+  const placeholders = estados.map(() => '?').join(', ');
+  return db
+    .prepare(`SELECT * FROM diagnosticos WHERE estado_cliente IN (${placeholders}) ORDER BY creado_en DESC`)
+    .all(...estados) as DiagnosticoRow[];
+}
+
 export function obtenerDiagnostico(id: string): DiagnosticoRow | undefined {
   return db.prepare('SELECT * FROM diagnosticos WHERE id = ?').get(id) as DiagnosticoRow | undefined;
 }

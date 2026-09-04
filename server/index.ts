@@ -4,12 +4,17 @@ import cors from 'cors';
 import path from 'node:path';
 import fs from 'node:fs';
 import { router } from './routes';
+import { adminRouter } from './admin';
 import './db'; // se asegura de que la base y sus tablas existan al arrancar
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+// Límite subido de 100kb (default) a 20mb: el panel de admin manda el
+// adjunto del mail como base64 dentro del JSON, y un PDF/imagen normal ya
+// pesa más que el default. El resto de los endpoints nunca se acerca a eso.
+app.use(express.json({ limit: '20mb' }));
 app.use('/api', router);
+app.use('/api/admin', adminRouter);
 
 app.get('/api/salud', (_req, res) => res.json({ ok: true }));
 

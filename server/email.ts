@@ -9,7 +9,7 @@ const MARFIL = '#FAF8F5';
 const TEXTO = '#2D3748';
 const TEXTO_SUAVE = '#5B6672';
 
-function transportador() {
+export function transportador() {
   // Pensado para usar el mail con dominio propio (Titan Email de Hostinger,
   // u otro) por SMTP — así no hace falta un tercer proveedor de mail.
   return nodemailer.createTransport({
@@ -179,6 +179,38 @@ export async function enviarInformeCompleto(params: {
     to: email,
     subject: 'Tu Diagnóstico Prisma® completo',
     html,
+  });
+}
+
+/**
+ * Mail "a mano" desde el panel de administración: asunto y cuerpo (HTML o
+ * texto plano, lo que Damian haya escrito en el composer) libres, con un
+ * adjunto opcional. A diferencia de los mails automáticos de arriba, acá el
+ * contenido lo arma una persona, no una plantilla — así que no se le agrega
+ * ningún diseño propio, se manda tal cual se redactó.
+ */
+export async function enviarMailPersonalizado(params: {
+  to: string;
+  asunto: string;
+  cuerpoHtml: string;
+  adjunto?: { filename: string; contentType?: string; contentBase64: string } | null;
+}) {
+  const { to, asunto, cuerpoHtml, adjunto } = params;
+
+  await transportador().sendMail({
+    from: process.env.MAIL_FROM ?? '"Consultora Prisma" <contacto@consultoraprisma.digital>',
+    to,
+    subject: asunto,
+    html: cuerpoHtml,
+    attachments: adjunto
+      ? [
+          {
+            filename: adjunto.filename,
+            content: Buffer.from(adjunto.contentBase64, 'base64'),
+            contentType: adjunto.contentType,
+          },
+        ]
+      : undefined,
   });
 }
 
