@@ -17,9 +17,13 @@ import {
   guardarSintesis,
   contarDiagnosticos,
   crearAgendamiento,
+  marcarEmailParte1Enviado,
+  marcarEmailCompletoEnviado,
+  buscarDiagnosticoPorEmail,
+  actualizarEstadoCliente,
 } from './db';
 import { crearPreferenciaDePago, consultarPago } from './mercadopago';
-import { enviarInformeCompleto, enviarNotificacionAgendamiento } from './email';
+import { enviarInformeCompleto, enviarInformeParte1, enviarNotificacionAgendamiento } from './email';
 import { generarSintesis } from './ia';
 import { enviarASheet } from './sheets';
 
@@ -32,21 +36,33 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
  * Guarda las respuestas del diagnóstico gratis y devuelve el resultado
- * completo (el frontend decide qué mostrar y qué tapar). Todavía no pide
- * mail — eso es opcional acá y recién se vuelve obligatorio al pagar.
+ * completo (el frontend decide qué mostrar y qué tapar). El mail, el
+ * negocio y la aceptación de Términos y Política de Privacidad son
+ * obligatorios ya en este primer paso — no recién al pagar — porque el
+ * resultado de esta Parte 1 se manda por mail aunque el cliente nunca pague
+ * el diagnóstico completo.
  */
 router.post('/diagnostico', async (req, res) => {
-  const { nombre, negocio, respuestas } = req.body ?? {};
+  const { nombre, negocio, email, aceptaTerminos, respuestas } = req.body ?? {};
 
   if (!nombre || typeof nombre !== 'string' || !nombre.trim()) {
     return res.status(400).json({ error: 'Falta el nombre.' });
+  }
+  if (!negocio || typeof negocio !== 'string' || !negocio.trim()) {
+    return res.status(400).json({ error: 'Falta el nombre de tu negocio.' });
+  }
+  if (!email || !EMAIL_RE.test(email)) {
+    return res.status(400).json({ error: 'Ingresá un email válido.' });
+  }
+  if (aceptaTerminos !== true) {
+    return res.status(400).json({ error: 'Tenés que aceptar los Términos y la Política de Privacidad.' });
   }
   if (!Array.isArray(respuestas) || respuestas.length !== DIMENSIONES.length) {
     return res.status(400).json({ error: `Se esperan ${DIMENSIONES.length} respuestas.` });
   }
 
   const id = randomUUID();
-  crearDiagnostico({ id, nombre, negocio, respuestas });
+  crearDiagnostico({ id, nombre, negocio, email, respuestas });
 
   const resultado = calcularResultado(respuestas);
 
@@ -54,10 +70,21 @@ router.post('/diagnostico', async (req, res) => {
     tipo: 'diagnostico_parte1',
     id,
     nombre,
-    negocio: negocio ?? '',
+    negocio,
+    email,
     overallPercent: resultado.overallPercent,
     ...respuestasParaSheet(DIMENSIONES, respuestas, 'p1'),
   });
+
+  try {
+    await enviarInformeParte1({ email, nombre, resultado });
+    marcarEmailParte1Enviado(id);
+  } catch (err) {
+    // No bloquea la respuesta: el resultado ya se ve en pantalla aunque el
+    // mail falle — igual que en la Parte 2, no queremos que un problema de
+    // SMTP le tape a alguien su propio diagnóstico.
+    console.error('[diagnostico] no se pudo enviar el mail de la Parte 1:', err);
+  }
 
   res.json({ id, resultado });
 });
@@ -71,9 +98,9 @@ router.get('/estadisticas', (_req, res) => {
 });
 
 /**
- * Crea la preferencia de pago de Mercado Pago. Acá sí es obligatorio el
- * mail (es donde llega el diagnóstico completo cuando se confirme el pago),
- * y se guarda el link de la web si lo dejó, para mirarla más adelante.
+ * Crea la preferencia de pago de Mercado Pago. El mail ya quedó guardado
+ * desde la Parte 1 — acá solo se permite corregirlo si hace falta, y se
+ * guarda el link de la web si lo dejó, para mirarla más adelante.
  *
  * Modo de prueba: con SKIP_PAYMENT=true en el entorno, se salta Mercado Pago
  * por completo y el diagnóstico se marca pagado directo — pensado para
@@ -88,10 +115,11 @@ router.post('/diagnostico/:id/pagar', async (req, res) => {
   }
 
   const { email, webUrl } = req.body ?? {};
-  if (!email || !EMAIL_RE.test(email)) {
+  const emailFinal = email || diagnostico.email;
+  if (!emailFinal || !EMAIL_RE.test(emailFinal)) {
     return res.status(400).json({ error: 'Ingresá un email válido para recibir el diagnóstico completo.' });
   }
-  actualizarContacto(diagnostico.id, { email, webUrl });
+  actualizarContacto(diagnostico.id, { email: emailFinal, webUrl });
 
   if (process.env.SKIP_PAYMENT === 'true') {
     marcarComoPagado(diagnostico.id, 'modo-prueba');
@@ -178,6 +206,7 @@ router.post('/diagnostico/:id/parte-2', async (req, res) => {
         resultado: resultadoCompleto,
         sintesis,
       });
+      marcarEmailCompletoEnviado(diagnostico.id);
     }
   } catch (err) {
     // No bloquea la respuesta: el informe ya se puede ver en pantalla aunque
@@ -243,6 +272,15 @@ router.post('/agendar', async (req, res) => {
 
   const id = randomUUID();
   crearAgendamiento({ id, nombre, email, telefono, hizoDiagnostico, horario, contexto });
+
+  // Si ese mail ya tiene un diagnóstico (misma persona), pedir agendar es el
+  // siguiente escalón de su ciclo de vida — pero solo si todavía no llegó
+  // más lejos que el diagnóstico (para no pisar un estado más avanzado que
+  // ya se haya seteado a mano, ej. desde el panel de admin).
+  const diagnosticoDelMismoMail = buscarDiagnosticoPorEmail(email);
+  if (diagnosticoDelMismoMail && ['DiagnosticoA', 'DiagnosticoFull'].includes(diagnosticoDelMismoMail.estado_cliente ?? '')) {
+    actualizarEstadoCliente(diagnosticoDelMismoMail.id, 'EnContacto');
+  }
 
   void enviarASheet({
     tipo: 'agendamiento',

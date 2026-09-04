@@ -12,7 +12,7 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS diagnosticos (
     id TEXT PRIMARY KEY,
     nombre TEXT NOT NULL,
-    email TEXT,                       -- se pide recién si el usuario quiere el mail, o al pasar a pagar
+    email TEXT,                       -- obligatorio desde la Parte 1 (ver migración más abajo)
     negocio TEXT,
     respuestas TEXT NOT NULL,        -- JSON: número[] (1-4 por dimensión) — Parte 1, gratis
     respuestas_2 TEXT,                -- JSON: número[] — Parte 2, se completa recién tras pagar
@@ -22,13 +22,24 @@ db.exec(`
     mp_preference_id TEXT,
     mp_payment_id TEXT,
     creado_en TEXT NOT NULL DEFAULT (datetime('now')),
-    pagado_en TEXT
+    pagado_en TEXT,
+    estado_cliente TEXT,               -- ciclo de vida del cliente: DiagnosticoA | DiagnosticoFull | EnContacto | Contactado | Agendado | Trabajando | FinTrabajo
+    acepta_terminos_en TEXT,           -- cuándo aceptó Términos y Condiciones / Política de Privacidad (evidencia del consentimiento)
+    email_parte1_enviado_en TEXT,      -- cuándo se le mandó el mail con el resultado de la Parte 1 (gratis)
+    email_completo_enviado_en TEXT     -- cuándo se le mandó el mail con el informe completo (pago)
   );
 `);
 
 // Migraciones livianas: si la tabla ya existía de una versión anterior sin
 // estas columnas, se agregan ahora. No pasa nada si ya están (se ignora el error).
-for (const alter of ['ALTER TABLE diagnosticos ADD COLUMN respuestas_2 TEXT', 'ALTER TABLE diagnosticos ADD COLUMN sintesis TEXT']) {
+for (const alter of [
+  'ALTER TABLE diagnosticos ADD COLUMN respuestas_2 TEXT',
+  'ALTER TABLE diagnosticos ADD COLUMN sintesis TEXT',
+  'ALTER TABLE diagnosticos ADD COLUMN estado_cliente TEXT',
+  'ALTER TABLE diagnosticos ADD COLUMN acepta_terminos_en TEXT',
+  'ALTER TABLE diagnosticos ADD COLUMN email_parte1_enviado_en TEXT',
+  'ALTER TABLE diagnosticos ADD COLUMN email_completo_enviado_en TEXT',
+]) {
   try {
     db.exec(alter);
   } catch {
@@ -63,32 +74,72 @@ export interface DiagnosticoRow {
   mp_payment_id: string | null;
   creado_en: string;
   pagado_en: string | null;
+  estado_cliente: string | null;
+  acepta_terminos_en: string | null;
+  email_parte1_enviado_en: string | null;
+  email_completo_enviado_en: string | null;
 }
 
+/**
+ * Alta del diagnóstico — desde ahora el mail (y la aceptación de Términos y
+ * Política de Privacidad) son obligatorios ya en la Parte 1, no recién al
+ * pagar: así se le puede mandar por mail el resultado gratis aunque nunca
+ * pague el completo. `estado_cliente` arranca en 'DiagnosticoA' — el primer
+ * escalón del ciclo de vida del cliente.
+ */
 export function crearDiagnostico(data: {
   id: string;
   nombre: string;
-  negocio?: string;
+  negocio: string;
+  email: string;
   respuestas: number[];
 }) {
   db.prepare(
-    `INSERT INTO diagnosticos (id, nombre, negocio, respuestas)
-     VALUES (@id, @nombre, @negocio, @respuestas)`,
+    `INSERT INTO diagnosticos (id, nombre, negocio, email, respuestas, estado_cliente, acepta_terminos_en)
+     VALUES (@id, @nombre, @negocio, @email, @respuestas, 'DiagnosticoA', datetime('now'))`,
   ).run({
     id: data.id,
     nombre: data.nombre,
-    negocio: data.negocio ?? null,
+    negocio: data.negocio,
+    email: data.email,
     respuestas: JSON.stringify(data.respuestas),
   });
 }
 
-/** Se llama al pedir el mail gratis, o al pasar a pagar — ambos casos completan el contacto. */
+/** Se llama al pasar a pagar — el mail ya está seteado desde la Parte 1, esto permite corregirlo y sumar la web opcional. */
 export function actualizarContacto(id: string, data: { email: string; webUrl?: string }) {
   db.prepare('UPDATE diagnosticos SET email = ?, web_url = COALESCE(?, web_url) WHERE id = ?').run(
     data.email,
     data.webUrl ?? null,
     id,
   );
+}
+
+/** Se llama justo después de mandar el mail de la Parte 1 (gratis) — deja registro de cuándo se mandó. */
+export function marcarEmailParte1Enviado(id: string) {
+  db.prepare(`UPDATE diagnosticos SET email_parte1_enviado_en = datetime('now') WHERE id = ?`).run(id);
+}
+
+/** Se llama justo después de mandar el informe completo (pago) — deja registro de cuándo se mandó y avanza el estado del cliente. */
+export function marcarEmailCompletoEnviado(id: string) {
+  db.prepare(
+    `UPDATE diagnosticos SET email_completo_enviado_en = datetime('now'), estado_cliente = 'DiagnosticoFull' WHERE id = ?`,
+  ).run(id);
+}
+
+/**
+ * Busca el diagnóstico más reciente de un mail — se usa para, al llegar un
+ * pedido de agendar, encontrar "al mismo cliente" y avanzar su estado a
+ * EnContacto (si todavía no llegó más lejos que eso).
+ */
+export function buscarDiagnosticoPorEmail(email: string): DiagnosticoRow | undefined {
+  return db
+    .prepare('SELECT * FROM diagnosticos WHERE email = ? ORDER BY creado_en DESC LIMIT 1')
+    .get(email) as DiagnosticoRow | undefined;
+}
+
+export function actualizarEstadoCliente(id: string, estado: string) {
+  db.prepare('UPDATE diagnosticos SET estado_cliente = ? WHERE id = ?').run(estado, id);
 }
 
 export function obtenerDiagnostico(id: string): DiagnosticoRow | undefined {

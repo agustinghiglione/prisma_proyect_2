@@ -16,6 +16,7 @@ import {
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 import { SCROLL_PANEL, SCROLL_PANEL_STYLE } from '../lib/ui';
 import AgendarModal from './AgendarModal';
+import LegalModal from './LegalModal';
 
 type Paso =
   | 'preguntas'
@@ -50,14 +51,17 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
 
   const [nombre, setNombre] = useState('');
   const [negocio, setNegocio] = useState('');
+  const [email, setEmail] = useState('');
+  const [aceptaTerminos, setAceptaTerminos] = useState(false);
+  const [legalAbierto, setLegalAbierto] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState('');
 
   const [diagnosticoId, setDiagnosticoId] = useState<string | null>(null);
   const [resultado, setResultado] = useState<ResultadoDiagnostico | null>(null);
 
-  // Contacto para el diagnóstico completo (mail obligatorio, web opcional)
-  const [emailPago, setEmailPago] = useState('');
+  // Al pasar a pagar el mail ya está guardado desde la Parte 1 (arriba) —
+  // esto solo deja corregirlo si hizo falta, y sumar la web (opcional).
   const [webUrl, setWebUrl] = useState('');
 
   const [qr, setQr] = useState<{ qrDataUrl: string; initPoint: string } | null>(null);
@@ -87,21 +91,36 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
       setError('Necesitamos tu nombre para el informe.');
       return;
     }
+    if (!negocio.trim()) {
+      setError('Necesitamos el nombre de tu negocio.');
+      return;
+    }
+    if (!EMAIL_RE.test(email)) {
+      setError('Ingresá un email válido — ahí te mandamos este resultado.');
+      return;
+    }
+    if (!aceptaTerminos) {
+      setError('Tenés que aceptar los Términos y la Política de Privacidad para continuar.');
+      return;
+    }
     setEnviando(true);
     setError('');
     try {
       const res = await fetch('/api/diagnostico', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre, negocio, respuestas }),
+        body: JSON.stringify({ nombre, negocio, email, aceptaTerminos, respuestas }),
       });
-      if (!res.ok) throw new Error('No se pudo guardar el diagnóstico.');
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error ?? 'No se pudo guardar el diagnóstico.');
+      }
       const data = await res.json();
       setDiagnosticoId(data.id);
       setResultado(data.resultado);
       setPaso('resultado');
-    } catch {
-      setError('Algo falló al guardar tu diagnóstico. Probá de nuevo en un momento.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Algo falló al guardar tu diagnóstico. Probá de nuevo en un momento.');
     } finally {
       setEnviando(false);
     }
@@ -113,7 +132,7 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
 
   const confirmarYPagar = async () => {
     if (!diagnosticoId) return;
-    if (!EMAIL_RE.test(emailPago)) {
+    if (!EMAIL_RE.test(email)) {
       setError('Ingresá un email válido para recibir el diagnóstico completo.');
       return;
     }
@@ -123,7 +142,7 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
       const res = await fetch(`/api/diagnostico/${diagnosticoId}/pagar`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: emailPago, webUrl: webUrl || undefined }),
+        body: JSON.stringify({ email, webUrl: webUrl || undefined }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -259,7 +278,9 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
           {paso === 'contacto' && (
             <motion.div key="contacto" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <h3 className="font-heading text-2xl font-bold text-ink">Ya casi está.</h3>
-              <p className="mt-2 text-sm text-ink-soft">Un último paso antes de ver tu resultado.</p>
+              <p className="mt-2 text-sm text-ink-soft">
+                Un último paso antes de ver tu resultado — también te lo mandamos a este mail.
+              </p>
               <div className="mt-6 flex flex-col gap-4">
                 <input
                   value={nombre}
@@ -270,13 +291,39 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
                 <input
                   value={negocio}
                   onChange={(e) => setNegocio(e.target.value)}
-                  placeholder="Tu negocio (opcional)"
+                  placeholder="Tu negocio"
                   className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-ink outline-none focus:border-primary"
                 />
+                <input
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  type="email"
+                  placeholder="Tu email"
+                  className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-ink outline-none focus:border-primary"
+                />
+                <label className="flex items-start gap-2.5 text-xs text-ink-soft">
+                  <input
+                    type="checkbox"
+                    checked={aceptaTerminos}
+                    onChange={(e) => setAceptaTerminos(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 shrink-0 rounded border-border text-primary focus:ring-primary"
+                  />
+                  <span>
+                    Acepto los{' '}
+                    <button
+                      type="button"
+                      onClick={() => setLegalAbierto(true)}
+                      className="font-semibold text-primary underline underline-offset-2"
+                    >
+                      Términos y Condiciones y la Política de Privacidad
+                    </button>
+                    , y autorizo a Consultora Prisma a mandarme este diagnóstico y novedades por email.
+                  </span>
+                </label>
                 {error && <p className="text-sm text-red-600">{error}</p>}
                 <button
                   onClick={verResultado}
-                  disabled={enviando}
+                  disabled={enviando || !aceptaTerminos}
                   className="mt-2 flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5 disabled:opacity-60"
                 >
                   {enviando ? <Loader2 size={16} className="animate-spin" /> : null}
@@ -335,17 +382,13 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
                 )}
               </div>
 
-              {/* El envío por mail es parte del diagnóstico completo — esto solo llama la atención hacia eso */}
-              <button
-                onClick={pedirDiagnosticoCompleto}
-                className="mt-5 flex w-full items-center gap-2 rounded-2xl border border-border bg-white p-4 text-left transition-colors hover:border-primary hover:bg-surface/40"
-              >
-                <Mail size={18} className="shrink-0 text-primary" />
+              {/* El mail ya salió solo, apenas se calculó este resultado — esto es una confirmación, no una acción. */}
+              <div className="mt-5 flex w-full items-center gap-2 rounded-2xl border border-green/30 bg-green/10 p-4">
+                <Mail size={18} className="shrink-0 text-green" />
                 <span className="text-sm text-ink-soft">
-                  <span className="font-semibold text-ink">Mandarme este resultado por mail</span> — es parte
-                  del diagnóstico completo.
+                  <span className="font-semibold text-ink">Ya te mandamos este resultado</span> a {email}.
                 </span>
-              </button>
+              </div>
 
               {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
 
@@ -394,8 +437,8 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
               </p>
               <div className="mt-6 flex flex-col gap-4">
                 <input
-                  value={emailPago}
-                  onChange={(e) => setEmailPago(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   type="email"
                   placeholder="Tu email"
                   className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-ink outline-none focus:border-primary"
@@ -540,10 +583,11 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
         <AgendarModal
           onClose={() => setAgendarAbierto(false)}
           nombreInicial={nombre}
-          emailInicial={emailPago}
+          emailInicial={email}
           hizoDiagnosticoInicial="si"
         />
       )}
+      {legalAbierto && <LegalModal onClose={() => setLegalAbierto(false)} />}
     </div>
   );
 }

@@ -66,14 +66,17 @@ export default function LegalModal({ onClose }: LegalModalProps) {
             <p>Según la instancia del Servicio en la que el Usuario participe, Prisma Consultora recaba:</p>
             <ul className="mt-2 flex flex-col gap-2">
               <li>
-                <strong className="text-ink">Diagnóstico Prisma® gratuito:</strong> nombre, y — de manera
-                opcional — el nombre del negocio del Usuario, junto con las respuestas provistas al
-                cuestionario. El correo electrónico no es un dato obligatorio en esta instancia.
+                <strong className="text-ink">Diagnóstico Prisma® gratuito (Parte 1):</strong> nombre, el
+                nombre del negocio del Usuario y su correo electrónico — los tres datos son obligatorios
+                para participar, dado que el resultado de esta Parte 1 se remite por correo electrónico
+                aunque el Usuario no continúe con el diagnóstico completo — junto con las respuestas
+                provistas al cuestionario.
               </li>
               <li>
-                <strong className="text-ink">Diagnóstico Prisma® completo:</strong> correo electrónico,
-                necesario para la remisión del informe, y — de manera opcional — la dirección web del
-                negocio del Usuario, junto con las respuestas al cuestionario ampliado.
+                <strong className="text-ink">Diagnóstico Prisma® completo (Parte 2):</strong> el correo
+                electrónico ya provisto en la Parte 1 (que el Usuario puede corregir en este paso si lo
+                necesita), y — de manera opcional — la dirección web del negocio del Usuario, junto con
+                las respuestas al cuestionario ampliado.
               </li>
               <li>
                 <strong className="text-ink">Procesamiento de pagos:</strong> los datos de la tarjeta o
@@ -86,12 +89,20 @@ export default function LegalModal({ onClose }: LegalModalProps) {
           <section>
             <h3 className="mb-2 font-heading text-base font-bold text-ink">4. Finalidad del tratamiento</h3>
             <p>
-              Los datos recabados se utilizan exclusivamente para: (i) elaborar y remitir al Usuario el
-              resultado del diagnóstico solicitado; (ii) gestionar el pago del diagnóstico completo,
-              cuando corresponda; (iii) responder a solicitudes de contacto o de una primera
-              conversación; y (iv) mejorar la calidad y precisión del Servicio. Prisma Consultora no
-              utiliza los datos del Usuario con fines publicitarios ni los somete a decisiones
-              automatizadas que produzcan efectos jurídicos sobre él.
+              Los datos recabados se utilizan para: (i) elaborar y remitir al Usuario el resultado del
+              diagnóstico solicitado (Parte 1 y, cuando corresponda, el informe completo); (ii) gestionar
+              el pago del diagnóstico completo, cuando corresponda; (iii) responder a solicitudes de
+              contacto o de una primera conversación; (iv) mejorar la calidad y precisión del Servicio; y
+              (v) siempre que el Usuario haya aceptado estos Términos, enviarle por correo electrónico
+              información y novedades sobre los servicios de Prisma Consultora. Esta última finalidad es
+              la única con fines informativos/publicitarios, y el Usuario puede solicitar en cualquier
+              momento que se discontinúe, escribiendo a{' '}
+              <a href="mailto:contacto@consultoraprisma.digital" className="text-primary underline">
+                contacto@consultoraprisma.digital
+              </a>
+              , sin que ello afecte la remisión del resultado del diagnóstico ya solicitado. Prisma
+              Consultora no somete los datos del Usuario a decisiones automatizadas que produzcan efectos
+              jurídicos sobre él.
             </p>
           </section>
 

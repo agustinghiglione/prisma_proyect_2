@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import type { ResultadoCompleto } from '../src/lib/diagnostico';
+import type { ResultadoCompleto, ResultadoDiagnostico } from '../src/lib/diagnostico';
 
 const AZUL_OCEANO = '#223C54';
 const AZUL_HORIZONTE = '#345B78';
@@ -51,6 +51,67 @@ function seccionOpcional(titulo: string, contenidoHtml: string) {
   return contenidoHtml
     ? `<p style="margin:24px 0 8px;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:${AZUL_OCEANO};">${titulo}</p>${contenidoHtml}`
     : '';
+}
+
+/**
+ * El resultado de la Parte 1 (gratis) — se manda apenas el cliente completa
+ * el cuestionario corto y deja su mail, la pague o no el diagnóstico
+ * completo después. Sin síntesis de IA (esa es parte de la Parte 2 paga) y
+ * con las cinco áreas que toca la Parte 1, no las seis.
+ */
+export async function enviarInformeParte1(params: { email: string; nombre: string; resultado: ResultadoDiagnostico }) {
+  const { email, nombre, resultado } = params;
+
+  const agendarUrl = process.env.AGENDAR_URL ?? `${process.env.SITE_URL}/#contacto`;
+
+  const html = `
+  <div style="background:${MARFIL};padding:32px 16px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #E7DDC9;">
+      <tr>
+        <td style="background:${AZUL_OCEANO};padding:28px 32px;">
+          <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${ARENA};">Diagnóstico Prisma&reg; — primera parte</p>
+          <p style="margin:10px 0 0;font-family:Arial,sans-serif;font-size:14px;color:#ffffff;opacity:0.85;">Preparado para ${nombre || 'vos'}</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:28px 32px;">
+          <p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:13px;color:${TEXTO_SUAVE};">Nivel general de claridad</p>
+          <p style="margin:0 0 24px;font-family:Arial,sans-serif;font-size:36px;font-weight:bold;color:${AZUL_HORIZONTE};">${resultado.overallPercent}%</p>
+
+          <p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:${AZUL_OCEANO};">Las áreas que ya medimos</p>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${resultado.scores.map(filaBarra).join('')}</table>
+
+          ${seccionOpcional('Fortalezas', resultado.fortalezas.length ? `<div>${listaChips(resultado.fortalezas, ARENA)}</div>` : '')}
+          ${seccionOpcional('Dónde te podemos ayudar', resultado.oportunidades.length ? `<div>${listaChips(resultado.oportunidades, ARENA_CLARA)}</div>` : '')}
+
+          <p style="margin:28px 0 0;font-family:Arial,sans-serif;font-size:14px;color:${TEXTO};line-height:1.6;">
+            Esto es solo el primer vistazo. El diagnóstico completo profundiza en cada una de estas áreas, suma
+            Personas, y te deja una síntesis puntual de dónde conviene empezar.
+          </p>
+
+          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:20px auto 4px;">
+            <tr>
+              <td align="center" bgcolor="${AZUL_HORIZONTE}" style="border-radius:999px;">
+                <a href="${agendarUrl}" style="display:inline-block;padding:14px 28px;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;text-decoration:none;">Ver mi diagnóstico completo</a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:18px 32px;background:${MARFIL};border-top:1px solid #E7DDC9;">
+          <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;color:${TEXTO_SUAVE};text-align:center;">Prisma Consultora</p>
+        </td>
+      </tr>
+    </table>
+  </div>`;
+
+  await transportador().sendMail({
+    from: process.env.MAIL_FROM ?? '"Consultora Prisma" <contacto@consultoraprisma.digital>',
+    to: email,
+    subject: 'Tu Diagnóstico Prisma® — primera parte',
+    html,
+  });
 }
 
 /**
