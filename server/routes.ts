@@ -36,11 +36,11 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
  * Guarda las respuestas del diagnóstico gratis y devuelve el resultado
- * completo (el frontend decide qué mostrar y qué tapar). El mail, el
- * negocio y la aceptación de Términos y Política de Privacidad son
- * obligatorios ya en este primer paso — no recién al pagar — porque el
- * resultado de esta Parte 1 se manda por mail aunque el cliente nunca pague
- * el diagnóstico completo.
+ * completo (el frontend decide qué mostrar y qué tapar). El mail y la
+ * aceptación de Términos y Política de Privacidad son obligatorios ya en
+ * este primer paso — no recién al pagar — porque el resultado de esta
+ * Parte 1 se manda por mail aunque el cliente nunca pague el diagnóstico
+ * completo. El nombre del negocio es opcional.
  */
 router.post('/diagnostico', async (req, res) => {
   const { nombre, negocio, email, aceptaTerminos, respuestas } = req.body ?? {};
@@ -48,9 +48,7 @@ router.post('/diagnostico', async (req, res) => {
   if (!nombre || typeof nombre !== 'string' || !nombre.trim()) {
     return res.status(400).json({ error: 'Falta el nombre.' });
   }
-  if (!negocio || typeof negocio !== 'string' || !negocio.trim()) {
-    return res.status(400).json({ error: 'Falta el nombre de tu negocio.' });
-  }
+  const negocioLimpio = typeof negocio === 'string' && negocio.trim() ? negocio.trim() : null;
   if (!email || !EMAIL_RE.test(email)) {
     return res.status(400).json({ error: 'Ingresá un email válido.' });
   }
@@ -62,7 +60,7 @@ router.post('/diagnostico', async (req, res) => {
   }
 
   const id = randomUUID();
-  crearDiagnostico({ id, nombre, negocio, email, respuestas });
+  crearDiagnostico({ id, nombre, negocio: negocioLimpio, email, respuestas });
 
   const resultado = calcularResultado(respuestas);
 
@@ -70,7 +68,7 @@ router.post('/diagnostico', async (req, res) => {
     tipo: 'diagnostico_parte1',
     id,
     nombre,
-    negocio,
+    negocio: negocioLimpio,
     email,
     overallPercent: resultado.overallPercent,
     ...respuestasParaSheet(DIMENSIONES, respuestas, 'p1'),

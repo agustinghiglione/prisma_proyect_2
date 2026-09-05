@@ -66,11 +66,11 @@ export default function LegalModal({ onClose }: LegalModalProps) {
             <p>Según la instancia del Servicio en la que el Usuario participe, Prisma Consultora recaba:</p>
             <ul className="mt-2 flex flex-col gap-2">
               <li>
-                <strong className="text-ink">Diagnóstico Prisma® gratuito (Parte 1):</strong> nombre, el
-                nombre del negocio del Usuario y su correo electrónico — los tres datos son obligatorios
-                para participar, dado que el resultado de esta Parte 1 se remite por correo electrónico
-                aunque el Usuario no continúe con el diagnóstico completo — junto con las respuestas
-                provistas al cuestionario.
+                <strong className="text-ink">Diagnóstico Prisma® gratuito (Parte 1):</strong> nombre y
+                correo electrónico del Usuario — ambos datos son obligatorios para participar, dado que
+                el resultado de esta Parte 1 se remite por correo electrónico aunque el Usuario no
+                continúe con el diagnóstico completo — junto con las respuestas provistas al
+                cuestionario. El nombre del negocio del Usuario es un dato opcional.
               </li>
               <li>
                 <strong className="text-ink">Diagnóstico Prisma® completo (Parte 2):</strong> el correo

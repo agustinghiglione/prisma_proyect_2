@@ -91,10 +91,6 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
       setError('Necesitamos tu nombre para el informe.');
       return;
     }
-    if (!negocio.trim()) {
-      setError('Necesitamos el nombre de tu negocio.');
-      return;
-    }
     if (!EMAIL_RE.test(email)) {
       setError('Ingresá un email válido — ahí te mandamos este resultado.');
       return;
@@ -291,7 +287,7 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
                 <input
                   value={negocio}
                   onChange={(e) => setNegocio(e.target.value)}
-                  placeholder="Tu negocio"
+                  placeholder="Tu negocio (opcional)"
                   className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-ink outline-none focus:border-primary"
                 />
                 <input

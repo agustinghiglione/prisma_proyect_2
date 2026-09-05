@@ -84,13 +84,15 @@ export interface DiagnosticoRow {
  * Alta del diagnóstico — desde ahora el mail (y la aceptación de Términos y
  * Política de Privacidad) son obligatorios ya en la Parte 1, no recién al
  * pagar: así se le puede mandar por mail el resultado gratis aunque nunca
- * pague el completo. `estado_cliente` arranca en 'DiagnosticoA' — el primer
- * escalón del ciclo de vida del cliente.
+ * pague el completo. El nombre del negocio queda como dato opcional — solo
+ * nombre, mail y la aceptación de términos son obligatorios.
+ * `estado_cliente` arranca en 'DiagnosticoA' — el primer escalón del ciclo
+ * de vida del cliente.
  */
 export function crearDiagnostico(data: {
   id: string;
   nombre: string;
-  negocio: string;
+  negocio?: string | null;
   email: string;
   respuestas: number[];
 }) {
@@ -100,7 +102,7 @@ export function crearDiagnostico(data: {
   ).run({
     id: data.id,
     nombre: data.nombre,
-    negocio: data.negocio,
+    negocio: data.negocio ?? null,
     email: data.email,
     respuestas: JSON.stringify(data.respuestas),
   });
