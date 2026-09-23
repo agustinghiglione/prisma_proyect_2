@@ -5,6 +5,7 @@ import ProblemsSection from './components/ProblemsSection';
 import AudienciaSection from './components/AudienciaSection';
 import DiagnosticIntro from './components/DiagnosticIntro';
 import SolucionesSection from './components/SolucionesSection';
+import PlanesSection from './components/PlanesSection';
 import TransitionQuote from './components/TransitionQuote';
 import MetodoSection from './components/MetodoSection';
 import PorQueSection from './components/PorQueSection';
@@ -29,6 +30,7 @@ function App() {
         <TransitionQuote text="Antes de proponer soluciones, entendemos tu negocio." />
         <MetodoSection />
         <PorQueSection />
+        <PlanesSection />
         <TransitionQuote
           text="Toda gran decisión empieza con una conversación clara."
           variant="horizon-light"

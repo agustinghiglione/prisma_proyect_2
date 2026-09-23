@@ -1,13 +1,50 @@
-import { sintesisRespaldo, type ResultadoCompleto } from '../src/lib/diagnostico';
+import { FRASE_PUENTE, sintesisRespaldo, type ResultadoCompleto } from '../src/lib/diagnostico';
 
 const MODELO = 'gemini-2.0-flash';
 
 /**
+ * Filtro de seguridad sobre el texto que devuelve Gemini, antes de
+ * mostrárselo al cliente. No es un chequeo de gramática: busca patrones
+ * puntuales que no queremos que salgan nunca, aunque el prompt ya pida
+ * evitarlos — el prompt es una instrucción, esto es la red de seguridad.
+ * Si algo de esto aparece, se descarta el texto entero y se usa el
+ * respaldo local en su lugar (nunca se "arregla" el texto de la IA a
+ * mano, porque no hay forma confiable de saber qué más se le escapó).
+ */
+const PATRONES_RIESGOSOS: RegExp[] = [
+  // Promesas de resultado garantizado
+  /garantiz|100\s*%\s*seguro|sin dudas vas a|te aseguramos|nunca vas a (tener|fallar)|libre de errores|sin ning[uú]n riesgo/i,
+  // Afirmaciones legales o impositivas tajantes que no deberíamos hacer nosotros
+  /es\s*100\s*%\s*legal|no vas a pagar impuestos|evad|sin que (arca|afip) se entere|no lo declar/i,
+  // Nombres de competidores relevados (no deberían aparecer en una síntesis sobre el negocio del cliente)
+  /contablix|contadordigitalpro|contadora digital pro|bertora\s*brown|tributo simple|xubio|contabilium|tango gesti[oó]n|colppy|yofacturo/i,
+];
+
+function contienePatronRiesgoso(texto: string): boolean {
+  return PATRONES_RIESGOSOS.some((patron) => patron.test(texto));
+}
+
+/**
+ * Deja el texto como el resto del sitio lo necesita: una sola línea de
+ * prosa, sin markdown ni comillas que a veces Gemini agrega aunque se le
+ * pida que no lo haga.
+ */
+function limpiarTexto(texto: string): string {
+  return texto
+    .replace(/[*_`#]/g, '')
+    .replace(/^[-•]\s*/gm, '')
+    .replace(/^["\u201c]|["\u201d]$/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
  * Arma la síntesis final que ve el cliente en el diagnóstico completo. Si hay
  * GEMINI_API_KEY configurada se la pide a Gemini (free tier, vía REST — sin
- * agregar el SDK completo por una sola llamada); si no hay clave, o si la
- * llamada falla por lo que sea, se usa el respaldo local. El cliente nunca
- * se queda sin síntesis.
+ * agregar el SDK completo por una sola llamada); si no hay clave, si la
+ * llamada falla, o si la respuesta no pasa el filtro de seguridad, se usa el
+ * respaldo local. El cliente nunca se queda sin síntesis, y nunca ve un
+ * texto de IA sin filtrar.
  */
 export async function generarSintesis(
   resultado: ResultadoCompleto,
@@ -38,8 +75,14 @@ export async function generarSintesis(
   const instruccionCaso =
     oportunidades.length === 0
       ? `Las seis áreas están en un nivel alto — no hay una debilidad real que señalar. No inventes una. En vez de eso, encuadrá la ayuda de Prisma como profesionalizar y sostener lo que ya funciona bien, para que aguante el próximo salto de tamaño del negocio.`
-      : `Las áreas con más oportunidad de mejora, en orden, son: ${oportunidades.join(', ')}. ${fortalezas.length > 0 ? `Como fortaleza real podés nombrar, como mucho una: ${fortalezas[0]}.` : `No hay ninguna área realmente fuerte todavía — no inventes una fortaleza que no está.`} Nombrá como máximo dos de las áreas de oportunidad, nunca las ${oportunidades.length} completas por más que existan. Sé directo pero constructivo: el objetivo es que agende la conversación motivado, no que sienta que todo está mal.`;
+      : `Las áreas con más oportunidad de mejora, en orden, son: ${oportunidades.join(', ')}. ${fortalezas.length > 0 ? `Como fortaleza real podés nombrar, como mucho una: ${fortalezas[0]}.` : `No hay ninguna área realmente fuerte todavía — no inventes una fortaleza que no está.`} Nombrá como máximo dos de las áreas de oportunidad, nunca las ${oportunidades.length} completas por más que existan. Sé directo pero constructivo: el objetivo es que sienta que hay un camino claro, no que sienta que todo está mal.`;
 
+  // El pedido es deliberadamente más angosto que antes: solo la lectura de
+  // fortaleza/oportunidad. La invitación a agendar y el "esto es una
+  // primera lectura automática" NO se le piden a la IA — se agregan
+  // siempre en código (FRASE_PUENTE), así ese mensaje queda garantizado tal
+  // cual sin depender de que el modelo lo redacte bien, y la IA tiene menos
+  // superficie donde equivocarse.
   const prompt = `Sos un consultor de negocios de Prisma Consultora (Argentina). Un cliente completó un autodiagnóstico de su negocio en seis áreas (Estrategia, Finanzas, Administración, Personas, Contabilidad e Impuestos, Tecnología). Estos son sus puntajes, de 0 a 100%:
 ${resumenAreas}
 
@@ -48,10 +91,12 @@ ${instruccionCaso}
 Nombre del cliente: ${nombre || 'sin nombre'}
 Negocio: ${negocio || 'no especificado'}
 
-Escribí una síntesis breve (máximo 3 frases, en español rioplatense, tono cercano y directo, sin sonar a IA genérica) que:
-- No explique ni justifique cada respuesta una por una — el cliente ya ve sus puntajes en pantalla.
-- Siga la instrucción de arriba sobre qué áreas nombrar (y cuáles no).
-- Termine invitando a agendar una conversación, sin sonar a venta forzada.
+Escribí solo la lectura de fortaleza/oportunidad (máximo 2 frases, en español rioplatense, tono cercano y directo, sin sonar a IA genérica):
+- No expliques ni justifiques cada respuesta una por una — el cliente ya ve sus puntajes en pantalla.
+- Seguí la instrucción de arriba sobre qué áreas nombrar (y cuáles no).
+- No invites a agendar ni cierres con una llamada a la acción — eso se agrega aparte, no lo escribas vos.
+- No prometas resultados garantizados ni hagas afirmaciones legales o impositivas categóricas (por ejemplo sobre qué es o no es legal). Si no estás seguro, no lo afirmes.
+- No menciones a ningún competidor ni a otras empresas del rubro.
 Devolvé solo el texto corrido, sin markdown, sin viñetas, sin comillas.`;
 
   try {
@@ -62,15 +107,25 @@ Devolvé solo el texto corrido, sin markdown, sin viñetas, sin comillas.`;
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.7, maxOutputTokens: 220 },
+          generationConfig: { temperature: 0.7, maxOutputTokens: 160 },
         }),
       },
     );
     if (!res.ok) throw new Error(`Gemini respondió ${res.status}`);
     const data = await res.json();
-    const texto = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-    if (!texto) throw new Error('Respuesta de Gemini sin texto utilizable');
-    return texto;
+    const textoCrudo = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+    if (!textoCrudo) throw new Error('Respuesta de Gemini sin texto utilizable');
+
+    const texto = limpiarTexto(textoCrudo);
+    if (!texto || texto.length > 400 || contienePatronRiesgoso(texto)) {
+      console.warn(
+        '[ia] la síntesis de Gemini no pasó el filtro de seguridad, uso el respaldo local. Texto descartado:',
+        texto,
+      );
+      return sintesisRespaldo(resultado, nombre);
+    }
+
+    return `${texto} ${FRASE_PUENTE}`;
   } catch (err) {
     console.error('[ia] no se pudo generar la síntesis con Gemini, uso el respaldo local:', err);
     return sintesisRespaldo(resultado, nombre);

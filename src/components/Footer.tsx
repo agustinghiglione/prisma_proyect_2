@@ -34,9 +34,15 @@ export default function Footer() {
             <button onClick={() => avisarProximamente('LinkedIn')} aria-label="LinkedIn" className="hover:text-white">
               <Linkedin size={18} />
             </button>
-            <button onClick={() => avisarProximamente('Instagram')} aria-label="Instagram" className="hover:text-white">
+            <a
+              href="https://www.instagram.com/consultoraprismadigital"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="hover:text-white"
+            >
               <Instagram size={18} />
-            </button>
+            </a>
           </div>
         </div>
       </div>

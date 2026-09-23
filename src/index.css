@@ -99,6 +99,17 @@ html {
   scrollbar-color: var(--color-border) transparent;
 }
 
+/* Oculta la scrollbar nativa en el carrusel de Planes: los dots y las
+   flechas ya indican la posición, y una scrollbar horizontal ahí abajo
+   compite visualmente con ellos. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root {
     scroll-behavior: auto;

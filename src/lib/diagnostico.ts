@@ -322,17 +322,30 @@ export function calcularResultadoCompleto(
 }
 
 /**
- * Síntesis de respaldo si no hay clave de IA configurada (o si falla la
- * llamada) — sin justificar cada respuesta, solo señala 1-2 oportunidades
- * concretas y punto. Cuando GEMINI_API_KEY está configurada, el backend usa
- * en su lugar una síntesis generada por IA sobre este mismo resultado.
+ * Frase de cierre fija para toda síntesis que ve el cliente (generada por IA
+ * o de respaldo). No la escribe la IA — se agrega siempre en código, así el
+ * mensaje de "esto es una primera lectura" queda garantizado sin depender
+ * de que el modelo lo redacte bien cada vez. El botón de agendar ya está
+ * aparte en la UI y en el mail, así que esta frase no repite esa llamada a
+ * la acción — solo baja expectativas y tiende el puente hacia la charla.
+ */
+export const FRASE_PUENTE =
+  'Esta es una primera lectura automática — la afinamos juntos en la conversación.';
+
+/**
+ * Síntesis de respaldo si no hay clave de IA configurada, si falla la
+ * llamada, o si la respuesta de la IA no pasa el filtro de seguridad (ver
+ * server/ia.ts) — sin justificar cada respuesta, solo señala 1-2
+ * oportunidades concretas y punto. Cuando GEMINI_API_KEY está configurada y
+ * la respuesta pasa el filtro, el backend usa en su lugar una síntesis
+ * generada por IA sobre este mismo resultado, con la misma frase de cierre.
  */
 export function sintesisRespaldo(resultado: ResultadoCompleto, nombre: string): string {
   const { oportunidades, fortalezas } = resultado;
   const saludo = nombre ? `${nombre}, ` : '';
 
   if (oportunidades.length === 0) {
-    return `${saludo}tu negocio muestra señales sólidas en las seis áreas que medimos. El siguiente paso natural no es arreglar algo roto, sino profesionalizar lo que ya funciona para que aguante el próximo salto de tamaño.`;
+    return `${saludo}tu negocio muestra señales sólidas en las seis áreas que medimos. El siguiente paso natural no es arreglar algo roto, sino profesionalizar lo que ya funciona para que aguante el próximo salto de tamaño. ${FRASE_PUENTE}`;
   }
 
   const principal = oportunidades[0].dimension;
@@ -343,7 +356,7 @@ export function sintesisRespaldo(resultado: ResultadoCompleto, nombre: string): 
   if (fuerte) {
     texto += ` ${fuerte} está bien encaminado — no es ahí donde hace falta poner el foco.`;
   }
-  texto += ' Con una conversación de 15 minutos te mostramos exactamente por dónde empezar.';
+  texto += ` ${FRASE_PUENTE}`;
   return texto;
 }
 
