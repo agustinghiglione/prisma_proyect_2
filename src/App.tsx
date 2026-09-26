@@ -1,44 +1,44 @@
 import { useState } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import ProblemsSection from './components/ProblemsSection';
+import AreasSection from './components/AreasSection';
+import ComoTrabajamosSection from './components/ComoTrabajamosSection';
 import AudienciaSection from './components/AudienciaSection';
-import DiagnosticIntro from './components/DiagnosticIntro';
-import SolucionesSection from './components/SolucionesSection';
 import PlanesSection from './components/PlanesSection';
-import TransitionQuote from './components/TransitionQuote';
-import MetodoSection from './components/MetodoSection';
-import PorQueSection from './components/PorQueSection';
+import HerramientasSection from './components/HerramientasSection';
 import ContactoSection from './components/ContactoSection';
 import Footer from './components/Footer';
 import DiagnosticoFlow from './components/DiagnosticoFlow';
+import AgendarModal from './components/AgendarModal';
 
+// Rediseño v2 (rama rediseno-v2): home más corta, centrada en la esencia —
+// "una sola puerta, un profesional por área". Las secciones que salieron
+// (ProblemsSection, DiagnosticIntro, SolucionesSection, TransitionQuote,
+// MetodoSection, PorQueSection) siguen en src/components por si se quieren
+// recuperar.
 function App() {
   const [diagnosticoAbierto, setDiagnosticoAbierto] = useState(false);
+  const [consulta, setConsulta] = useState<string | null>(null);
   const openDiagnostic = () => setDiagnosticoAbierto(true);
+  const openConsulta = (contexto = '') => setConsulta(contexto);
 
   return (
     <div className="min-h-screen bg-background font-sans text-ink antialiased">
       <Navbar />
       <main>
-        <Hero onStartDiagnostic={openDiagnostic} />
-        <ProblemsSection />
+        <Hero onStartDiagnostic={openDiagnostic} onConsultar={() => openConsulta()} />
+        <AreasSection onConsultar={openConsulta} />
+        <ComoTrabajamosSection onStartDiagnostic={openDiagnostic} />
         <AudienciaSection />
-        <TransitionQuote text="Cada momento necesita una mirada diferente." variant="horizon-light" />
-        <DiagnosticIntro onStartDiagnostic={openDiagnostic} />
-        <SolucionesSection />
-        <TransitionQuote text="Antes de proponer soluciones, entendemos tu negocio." />
-        <MetodoSection />
-        <PorQueSection />
         <PlanesSection />
-        <TransitionQuote
-          text="Toda gran decisión empieza con una conversación clara."
-          variant="horizon-light"
-        />
+        <HerramientasSection onStartDiagnostic={openDiagnostic} onConsultar={openConsulta} />
         <ContactoSection onStartDiagnostic={openDiagnostic} />
       </main>
       <Footer />
       {diagnosticoAbierto && <DiagnosticoFlow onClose={() => setDiagnosticoAbierto(false)} />}
+      {consulta !== null && (
+        <AgendarModal contextoInicial={consulta} onClose={() => setConsulta(null)} />
+      )}
     </div>
   );
 }

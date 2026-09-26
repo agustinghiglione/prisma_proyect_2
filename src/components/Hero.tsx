@@ -1,19 +1,17 @@
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
+import { AREAS, irAArea } from '../data/areas';
 
 interface HeroProps {
   onStartDiagnostic: () => void;
+  onConsultar: () => void;
 }
 
-const CHECKS = ['Gratuito', 'Menos de un minuto', 'Informe personalizado'];
+const CHECKS = ['Primera conversación sin costo', '100% virtual', 'Seis áreas, un solo equipo'];
 
-export default function Hero({ onStartDiagnostic }: HeroProps) {
-  const scrollToMetodo = () => {
-    document.querySelector('#metodo')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
+export default function Hero({ onStartDiagnostic, onConsultar }: HeroProps) {
   return (
-    <section id="inicio" className="relative flex min-h-screen items-center overflow-hidden">
+    <section id="inicio" className="relative flex min-h-[92vh] items-center overflow-hidden">
       <motion.img
         initial={{ opacity: 0, scale: 1.04 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -22,38 +20,57 @@ export default function Hero({ onStartDiagnostic }: HeroProps) {
         alt="Amanecer sobre el mar"
         className="absolute inset-0 h-full w-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-primary-dark/75 via-primary-dark/35 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-b from-transparent to-surface sm:h-72" />
+      <div className="absolute inset-0 bg-gradient-to-r from-primary-dark/85 via-primary-dark/55 to-primary-dark/10" />
+      <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-background" />
 
-      <div className="relative mx-auto grid w-full max-w-7xl gap-10 px-6 pt-28 pb-16 lg:px-10">
+      <div className="relative mx-auto grid w-full max-w-7xl gap-10 px-6 pt-28 pb-20 lg:px-10">
         <motion.div
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-xl"
+          className="max-w-2xl"
         >
-          <h1 className="font-heading text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-6xl">
-            Descubrí qué necesita hoy tu negocio.
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">
+            Consultora Prisma · Consultoría integral para negocios
+          </p>
+          <h1 className="mt-4 font-heading text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-6xl">
+            Consultá lo que sea de tu negocio. Te responde quien sabe.
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-white/85">
-            Antes de proponer soluciones, te escuchamos. El Diagnóstico Prisma® te muestra, en
-            minutos, una primera mirada clara sobre dónde está tu negocio hoy y hacia dónde puede
-            crecer.
+            Reunimos profesionales de estrategia, finanzas, administración, personas, contabilidad e
+            impuestos y tecnología. Nos contás qué te preocupa y trabajamos con el especialista que tu
+            caso necesita.
           </p>
 
-          <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
+          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+            <button
+              onClick={onConsultar}
+              className="rounded-full bg-gold px-7 py-3.5 text-sm font-semibold text-primary-dark shadow-soft transition-transform hover:-translate-y-0.5"
+            >
+              Contanos tu consulta
+            </button>
             <button
               onClick={onStartDiagnostic}
-              className="rounded-full bg-background px-7 py-3.5 text-sm font-semibold text-primary shadow-soft transition-transform hover:-translate-y-0.5"
-            >
-              Realizar Diagnóstico Gratuito
-            </button>
-            <button
-              onClick={scrollToMetodo}
               className="rounded-full border border-white/40 px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/10"
             >
-              Conocer el Método Prisma®
+              Diagnóstico gratis en 1 minuto
             </button>
+          </div>
+
+          <div className="mt-8">
+            <p className="text-sm text-white/70">¿Sobre qué es tu consulta?</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {AREAS.map((a) => (
+                <button
+                  key={a.slug}
+                  onClick={() => irAArea(a.slug)}
+                  className="flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-sm text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+                >
+                  <a.icon size={14} strokeWidth={2} />
+                  {a.nombre}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="mt-7 flex flex-wrap gap-x-6 gap-y-2">
@@ -65,10 +82,6 @@ export default function Hero({ onStartDiagnostic }: HeroProps) {
             ))}
           </div>
         </motion.div>
-      </div>
-
-      <div className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 sm:flex">
-        <span className="h-10 w-px animate-fade-in bg-primary-dark/30" />
       </div>
     </section>
   );

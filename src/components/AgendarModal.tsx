@@ -8,6 +8,8 @@ interface AgendarModalProps {
   nombreInicial?: string;
   emailInicial?: string;
   hizoDiagnosticoInicial?: 'si' | 'no' | 'no_seguro' | '';
+  /** Texto con el que arranca el campo de contexto (p. ej. el área elegida). */
+  contextoInicial?: string;
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -30,6 +32,7 @@ export default function AgendarModal({
   nombreInicial = '',
   emailInicial = '',
   hizoDiagnosticoInicial = '',
+  contextoInicial = '',
 }: AgendarModalProps) {
   useBodyScrollLock();
   const [nombre, setNombre] = useState(nombreInicial);
@@ -37,7 +40,7 @@ export default function AgendarModal({
   const [telefono, setTelefono] = useState('');
   const [hizoDiagnostico, setHizoDiagnostico] = useState<string>(hizoDiagnosticoInicial);
   const [horario, setHorario] = useState('');
-  const [contexto, setContexto] = useState('');
+  const [contexto, setContexto] = useState(contextoInicial);
 
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState('');

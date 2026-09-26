@@ -5,6 +5,10 @@ export interface FaqItem {
 
 export const FAQ: FaqItem[] = [
   {
+    question: '¿Tengo que contratar las seis áreas?',
+    answer: 'No. Podés consultar por un solo tema. Sumamos otras áreas solo si tu caso lo necesita.',
+  },
+  {
     question: '¿La primera conversación tiene costo?',
     answer: 'No. La primera conversación es sin costo y sin compromiso. Es un espacio para conocernos.',
   },

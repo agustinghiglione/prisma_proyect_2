@@ -21,6 +21,14 @@ export default function Footer() {
             CONSULTORA <span className="font-extrabold text-white">PRISMA</span>
           </p>
           <p className="mt-1 text-sm">Claridad para crecer.</p>
+          <a
+            href="https://tucvonline.com/?utm_source=consultoraprisma&utm_medium=web&utm_campaign=footer"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-block text-xs hover:text-white"
+          >
+            Herramientas: tucvonline.com
+          </a>
         </div>
 
         <div className="flex flex-col items-center gap-2 text-sm sm:items-end">
@@ -48,7 +56,7 @@ export default function Footer() {
       </div>
 
       <div className="mx-auto mt-8 flex max-w-6xl flex-col items-center gap-4 border-t border-white/10 pt-6 text-xs sm:flex-row sm:justify-between">
-        <p className="text-white/40">© 2025 Consultora Prisma. Todos los derechos reservados.</p>
+        <p className="text-white/40">© {new Date().getFullYear()} Consultora Prisma. Todos los derechos reservados.</p>
         <button onClick={() => setLegalAbierto(true)} className="hover:text-white">
           Privacidad y Términos
         </button>
