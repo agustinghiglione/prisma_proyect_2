@@ -9,7 +9,14 @@ import {
   type MotionValue,
 } from 'framer-motion';
 import { ArrowRight, Check, ChevronLeft, ChevronRight, Info } from 'lucide-react';
-import { PLANES, type Plan } from '../data/planes';
+import {
+  PLANES,
+  DESCUENTO_LANZAMIENTO,
+  VIGENCIA_PROMO,
+  formatoPesos,
+  precioConDescuento,
+  type Plan,
+} from '../data/planes';
 
 // Tamaño fijo — ancho Y alto — para que las 4 tarjetas sean siempre
 // idénticas entre sí, con independencia de cuánto texto tenga cada una (la
@@ -18,8 +25,8 @@ import { PLANES, type Plan } from '../data/planes';
 // tarjeta seleccionada tenga margen de sobra para agrandarse sin
 // recortarse contra el borde de la fila, y más alto para darle lugar al
 // texto de "para quién es" sin apretar.
-const CARD_WIDTH = 200;
-const CARD_HEIGHT = 320;
+const CARD_WIDTH = 230;
+const CARD_HEIGHT = 480;
 
 // Distancia de arrastre (en px) a partir de la cual un swipe con mouse
 // cuenta como "cambiar de tarjeta seleccionada" — las posiciones de las
@@ -77,7 +84,19 @@ function PlanCard({ plan, isActive, beamY, beamOpacity }: PlanCardProps) {
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
           <Icon size={18} strokeWidth={1.75} />
         </span>
+        <span className="absolute top-5 right-5 rounded-full bg-gold px-2.5 py-1 text-[11px] font-bold text-primary-dark">
+          -{Math.round(DESCUENTO_LANZAMIENTO * 100)}%
+        </span>
         <p className="mt-4 font-heading text-base font-semibold text-ink">{plan.title}</p>
+        <div className="mt-3">
+          <p className="text-xs text-ink-soft">
+            Desde <span className="line-through">{formatoPesos(plan.precioLista)}</span>
+          </p>
+          <p className="font-heading text-2xl font-extrabold text-primary">
+            {formatoPesos(precioConDescuento(plan.precioLista))}
+            <span className="ml-1 text-xs font-medium text-ink-soft">{plan.unidad}</span>
+          </p>
+        </div>
         <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{plan.paraQuien}</p>
         <ul className="mt-3 flex-1 space-y-2 text-sm leading-relaxed text-ink-soft">
           {plan.incluye.map((item) => (
@@ -199,8 +218,9 @@ export default function PlanesSection() {
             transition={{ delay: 0.1 }}
             className="mt-5 leading-relaxed text-ink-soft"
           >
-            Cuatro estructuras que ya tenemos armadas — el punto de partida se ajusta siempre en
-            la primera conversación, sin costo.
+            Cuatro estructuras que ya tenemos armadas, con {Math.round(DESCUENTO_LANZAMIENTO * 100)}%
+            de descuento de lanzamiento. Son precios “desde”: el valor final lo cerramos juntos en la
+            primera conversación, sin costo.
           </motion.p>
         </div>
 
@@ -308,6 +328,10 @@ export default function PlanesSection() {
           >
             Conversemos sobre tu plan <ArrowRight size={16} />
           </button>
+          <p className="mx-auto mt-4 max-w-xl text-xs leading-relaxed text-ink-soft">
+            Precios de lanzamiento en pesos argentinos, válidos hasta el {VIGENCIA_PROMO}. Los valores
+            son de referencia: el alcance y el precio final se acuerdan por escrito antes de empezar.
+          </p>
         </motion.div>
       </div>
     </section>

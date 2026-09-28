@@ -34,12 +34,12 @@ export default function Hero({ onStartDiagnostic, onConsultar }: HeroProps) {
             Consultora Prisma · Consultoría integral para negocios
           </p>
           <h1 className="mt-4 font-heading text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-6xl">
-            Consultá lo que sea de tu negocio. Te responde quien sabe.
+            Un solo equipo para todo lo que tu negocio necesita.
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-white/85">
             Reunimos profesionales de estrategia, finanzas, administración, personas, contabilidad e
-            impuestos y tecnología. Nos contás qué te preocupa y trabajamos con el especialista que tu
-            caso necesita.
+            impuestos y tecnología. Contanos qué necesitás y sumamos al especialista indicado para tu
+            caso.
           </p>
 
           <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">

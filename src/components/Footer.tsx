@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { Linkedin, Instagram, Mail, MessageCircle } from 'lucide-react';
 import LegalModal from './LegalModal';
+import { whatsappUrl } from '../data/contacto';
 
 export default function Footer() {
   const [legalAbierto, setLegalAbierto] = useState(false);
@@ -27,7 +28,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             className="mt-2 inline-block text-xs hover:text-white"
           >
-            Herramientas: tucvonline.com
+            tucvonline.com · una herramienta de Consultora Prisma
           </a>
         </div>
 
@@ -36,9 +37,15 @@ export default function Footer() {
             <Mail size={15} /> contacto@consultoraprisma.digital
           </a>
           <div className="flex gap-4">
-            <button onClick={() => avisarProximamente('WhatsApp')} aria-label="WhatsApp" className="hover:text-white">
-              <MessageCircle size={18} />
-            </button>
+            {whatsappUrl() ? (
+              <a href={whatsappUrl()!} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="hover:text-white">
+                <MessageCircle size={18} />
+              </a>
+            ) : (
+              <button onClick={() => avisarProximamente('WhatsApp')} aria-label="WhatsApp" className="hover:text-white">
+                <MessageCircle size={18} />
+              </button>
+            )}
             <button onClick={() => avisarProximamente('LinkedIn')} aria-label="LinkedIn" className="hover:text-white">
               <Linkedin size={18} />
             </button>

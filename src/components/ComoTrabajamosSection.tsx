@@ -28,16 +28,27 @@ const PASOS = [
 
 export default function ComoTrabajamosSection({ onStartDiagnostic }: ComoTrabajamosProps) {
   return (
-    <section id="como-trabajamos" className="relative overflow-hidden bg-gradient-prisma px-6 py-24 lg:px-10">
+    <section id="como-trabajamos" className="relative overflow-hidden bg-gradient-prisma px-6 pt-40 pb-24 lg:px-10">
       <div className="pointer-events-none absolute -top-32 -right-24 h-96 w-96 rounded-full bg-gold/10 blur-3xl" />
       <div className="relative mx-auto max-w-6xl">
         <h2 className="max-w-2xl font-heading text-3xl font-bold text-white [text-shadow:0_1px_3px_rgb(15_23_32_/_45%)] sm:text-4xl">
           Cómo trabajamos: simple y en tres pasos.
         </h2>
         <p className="mt-4 max-w-2xl text-white/80">
-          Detrás está el Método Prisma®: observar, interpretar, diseñar y acompañar. Primero
-          entendemos tu negocio; después proponemos.
+          Cada paso se apoya en el Método Prisma®: primero entendemos tu negocio, después
+          proponemos.
         </p>
+
+        <div className="mt-6 flex flex-wrap items-center gap-2">
+          {['Observar', 'Interpretar', 'Diseñar', 'Acompañar'].map((etapa, i) => (
+            <span key={etapa} className="flex items-center gap-2 text-sm text-white/85">
+              <span className="rounded-full border border-gold/50 bg-gold/10 px-3 py-1 font-semibold text-gold">
+                {etapa}
+              </span>
+              {i < 3 && <span className="text-white/40">→</span>}
+            </span>
+          ))}
+        </div>
 
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {PASOS.map(({ icon: Icon, titulo, texto }, i) => (

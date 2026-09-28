@@ -49,7 +49,6 @@ export default function AgendarModal({
   const enviar = async () => {
     if (!nombre.trim()) return setError('Falta tu nombre.');
     if (!EMAIL_RE.test(email)) return setError('Ingresá un email válido.');
-    if (!hizoDiagnostico) return setError('Indicá si ya hiciste el diagnóstico.');
     if (!horario) return setError('Elegí un horario que te quede mejor.');
 
     setEnviando(true);
@@ -58,7 +57,7 @@ export default function AgendarModal({
       const res = await fetch('/api/agendar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre, email, telefono, hizoDiagnostico, horario, contexto }),
+        body: JSON.stringify({ nombre, email, telefono, hizoDiagnostico: hizoDiagnostico || 'no_indicado', horario, contexto }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -117,7 +116,7 @@ export default function AgendarModal({
               />
 
               <div>
-                <p className="mb-2 text-sm font-semibold text-ink">¿Ya completaste el Diagnóstico Prisma®?</p>
+                <p className="mb-2 text-sm font-semibold text-ink">¿Ya completaste el Diagnóstico Prisma®? <span className="font-normal text-ink-soft">(opcional)</span></p>
                 <div className="flex flex-wrap gap-2">
                   {HIZO_DIAGNOSTICO.map((op) => (
                     <button

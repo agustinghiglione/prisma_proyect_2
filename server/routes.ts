@@ -28,7 +28,7 @@ import { generarSintesis } from './ia';
 import { enviarASheet } from './sheets';
 
 const HORARIOS_VALIDOS = ['manana', 'mediodia', 'tarde', 'cualquiera'];
-const DIAGNOSTICO_VALIDOS = ['si', 'no', 'no_seguro'];
+const DIAGNOSTICO_VALIDOS = ['si', 'no', 'no_seguro', 'no_indicado']; // no_indicado: la pregunta es opcional
 
 export const router = Router();
 
