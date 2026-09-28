@@ -8,8 +8,10 @@ export interface Plan {
   paraQuien: string;
   /** Lo mínimo que Prisma se compromete a cumplir en este plan. */
   incluye: string[];
-  /** Precio de referencia en ARS, antes del descuento de lanzamiento. */
-  precioLista: number;
+  /** Áreas de Prisma que trabajan en este plan (se ven con la tarjeta cerrada). */
+  areas: string[];
+  /** Precio de referencia en ARS, antes del descuento. null = a convenir (sin precio). */
+  precioLista: number | null;
   /** '/mes' para abonos, 'por proyecto' para trabajos puntuales. */
   unidad: string;
 }
@@ -40,6 +42,7 @@ export const PLANES: Plan[] = [
       'Orden de ventas, cobros y pagos',
       'Consultas por mail',
     ],
+    areas: ['Contabilidad e Impuestos', 'Administración'],
     precioLista: 75000,
     unidad: '/mes',
   },
@@ -53,6 +56,7 @@ export const PLANES: Plan[] = [
       'Objetivos y plan de acción trimestral',
       'Una reunión mensual de seguimiento',
     ],
+    areas: ['Contabilidad e Impuestos', 'Administración', 'Finanzas', 'Estrategia'],
     precioLista: 180000,
     unidad: '/mes',
   },
@@ -66,6 +70,7 @@ export const PLANES: Plan[] = [
       'Dos reuniones de seguimiento por mes',
       'Asistencia continua',
     ],
+    areas: ['Estrategia', 'Finanzas', 'Administración', 'Personas', 'Contabilidad e Impuestos', 'Tecnología'],
     precioLista: 300000,
     unidad: '/mes',
   },
@@ -78,7 +83,8 @@ export const PLANES: Plan[] = [
       'Ej.: plan de negocio, web, búsqueda de personal',
       'Se define en la primera conversación',
     ],
-    precioLista: 100000,
-    unidad: 'por proyecto',
+    areas: ['Las que tu proyecto necesite'],
+    precioLista: null,
+    unidad: '',
   },
 ];

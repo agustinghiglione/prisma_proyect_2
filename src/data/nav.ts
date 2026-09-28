@@ -4,13 +4,10 @@ export interface NavItem {
 }
 
 export const NAV_ITEMS: NavItem[] = [
+  { label: 'Quiénes somos', href: '#quienes-somos' },
   { label: 'Áreas', href: '#areas' },
-  { label: 'Cómo trabajamos', href: '#como-trabajamos' },
+  { label: 'Cómo empezar', href: '#contacto' },
   { label: 'Planes', href: '#planes' },
-  { label: 'Herramientas', href: '#herramientas' },
 ];
 
 export const NAV_CTA: NavItem = { label: 'Contanos tu consulta', href: '#contacto' };
-
-// El diagnóstico y el agendamiento son nativos (ver
-// src/components/DiagnosticoFlow.tsx y src/components/AgendarModal.tsx).

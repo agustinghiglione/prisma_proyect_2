@@ -1,25 +1,73 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-AR">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/img/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Consultora Prisma — La claridad transforma decisiones</title>
+    <title>Consultora Prisma · Consultoría integral para pymes, emprendedores y monotributistas</title>
     <meta
       name="description"
-      content="Descubrí qué necesita hoy tu negocio. Diagnóstico Prisma® gratuito y personalizado para empresas que quieren crecer con claridad."
+      content="Un solo equipo para todo tu negocio: estrategia, finanzas, administración, personas, contabilidad e impuestos y tecnología. Diagnóstico gratis y primera conversación sin costo. 100% virtual en Argentina."
     />
-  </head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-5F7Q3B2E3K"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <link rel="canonical" href="https://consultoraprisma.digital/" />
+    <meta name="theme-color" content="#223c54" />
 
-  gtag('config', 'G-5F7Q3B2E3K');
-</script>
+    <!-- Redes sociales (WhatsApp, LinkedIn, Facebook, X) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:site_name" content="Consultora Prisma" />
+    <meta property="og:url" content="https://consultoraprisma.digital/" />
+    <meta property="og:title" content="Consultora Prisma · Un solo equipo para todo tu negocio" />
+    <meta
+      property="og:description"
+      content="Estrategia, finanzas, administración, personas, contabilidad e impuestos y tecnología. Diagnóstico gratis en 1 minuto."
+    />
+    <meta property="og:image" content="https://consultoraprisma.digital/img/foto_main.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Copias de prueba (Render, etc.): que Google no las indexe y no compitan con el dominio real -->
+    <script>
+      if (!/(^|\.)consultoraprisma\.digital$/.test(location.hostname)) {
+        var m = document.createElement('meta');
+        m.name = 'robots';
+        m.content = 'noindex, nofollow';
+        document.head.appendChild(m);
+      }
+    </script>
+
+    <!-- Datos estructurados para Google -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "Consultora Prisma",
+        "url": "https://consultoraprisma.digital/",
+        "logo": "https://consultoraprisma.digital/img/favicon.png",
+        "image": "https://consultoraprisma.digital/img/foto_main.png",
+        "email": "contacto@consultoraprisma.digital",
+        "description": "Consultoría integral para negocios: estrategia, finanzas, administración, personas, contabilidad e impuestos y tecnología.",
+        "areaServed": { "@type": "Country", "name": "Argentina" },
+        "availableLanguage": "es",
+        "sameAs": ["https://www.instagram.com/consultoraprismadigital"],
+        "knowsAbout": ["Monotributo", "Contabilidad", "Impuestos", "Finanzas para pymes", "Administración", "Estrategia de negocios", "Recursos humanos", "Transformación digital"]
+      }
+    </script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5F7Q3B2E3K"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5F7Q3B2E3K');
+    </script>
+  </head>
   <body>
+    <noscript>
+      Consultora Prisma: consultoría integral para pymes, emprendedores y monotributistas. Estrategia,
+      finanzas, administración, personas, contabilidad e impuestos y tecnología. Escribinos a
+      contacto@consultoraprisma.digital.
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

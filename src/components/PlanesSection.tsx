@@ -1,14 +1,6 @@
-import { useEffect, useRef, useState, type MouseEvent } from 'react';
-import {
-  AnimatePresence,
-  animate,
-  motion,
-  useMotionValue,
-  useScroll,
-  useTransform,
-  type MotionValue,
-} from 'framer-motion';
-import { ArrowRight, Check, ChevronLeft, ChevronRight, Info } from 'lucide-react';
+import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowRight, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import {
   PLANES,
   DESCUENTO_LANZAMIENTO,
@@ -18,321 +10,190 @@ import {
   type Plan,
 } from '../data/planes';
 
-// Tamaño fijo — ancho Y alto — para que las 4 tarjetas sean siempre
-// idénticas entre sí, con independencia de cuánto texto tenga cada una (la
-// que tiene menos contenido simplemente deja espacio en blanco abajo). Un
-// poco más angostas y más altas que antes: menos ancho para que la
-// tarjeta seleccionada tenga margen de sobra para agrandarse sin
-// recortarse contra el borde de la fila, y más alto para darle lugar al
-// texto de "para quién es" sin apretar.
-const CARD_WIDTH = 230;
-const CARD_HEIGHT = 480;
-
-// Distancia de arrastre (en px) a partir de la cual un swipe con mouse
-// cuenta como "cambiar de tarjeta seleccionada" — las posiciones de las
-// tarjetas son fijas, así que arrastrar no mueve nada, solo decide si vas
-// una tarjeta para adelante o para atrás.
-const SWIPE_THRESHOLD = 40;
-
-// Patrón vertical del "destello" que recorre el borde cuando hay scroll o
-// se elige una tarjeta: azul, banda blanca al medio (el reflejo), azul de
-// nuevo — se repite cada 160px para que nunca "saltee" al hacer loop.
-const BEAM_GRADIENT =
-  'linear-gradient(180deg, #345b78 0%, #345b78 30%, #eaf6ff 50%, #345b78 70%, #345b78 100%)';
-const BEAM_TILE = '160px';
-
-interface PlanCardProps {
-  plan: Plan;
-  isActive: boolean;
-  beamY: MotionValue<string>;
-  beamOpacity: MotionValue<number>;
+/**
+ * Planes v3: cajas fijas, sin arrastre ni scroll horizontal.
+ * - Escritorio: las cuatro en fila, mismo tamaño de base. La seleccionada
+ *   (flechas o clic) se agranda y muestra lo que incluye.
+ * - Celular: una debajo de la otra; al tocar una se despliega.
+ * - "A Medida" no muestra precio: se pacta en la primera conversación.
+ */
+interface PlanesSectionProps {
+  onConsultar: (contexto: string) => void;
 }
 
-function PlanCard({ plan, isActive, beamY, beamOpacity }: PlanCardProps) {
-  const Icon = plan.icon;
+const PORCENTAJE = Math.round(DESCUENTO_LANZAMIENTO * 100);
 
+function Precio({ plan, grande }: { plan: Plan; grande: boolean }) {
+  if (plan.precioLista === null) {
+    return (
+      <div>
+        <p className="text-xs text-ink-soft">Precio</p>
+        <p className={`font-heading font-extrabold text-primary ${grande ? 'text-2xl' : 'text-xl'}`}>A convenir</p>
+      </div>
+    );
+  }
+  return (
+    <div>
+      <p className="flex items-center gap-2 text-xs text-ink-soft">
+        <span className="line-through">{formatoPesos(plan.precioLista)}</span>
+        <span className="rounded-full bg-gold px-2 py-0.5 text-[11px] font-bold text-primary-dark">-{PORCENTAJE}%</span>
+      </p>
+      <p className={`font-heading font-extrabold text-primary ${grande ? 'text-3xl' : 'text-2xl'}`}>
+        <span className="mr-1 text-xs font-medium text-ink-soft">desde</span>
+        {formatoPesos(precioConDescuento(plan.precioLista))}
+        <span className="ml-1 text-xs font-medium text-ink-soft">{plan.unidad}</span>
+      </p>
+    </div>
+  );
+}
+
+function Tarjeta({
+  plan,
+  activa,
+  onSelect,
+  onConsultar,
+}: {
+  plan: Plan;
+  activa: boolean;
+  onSelect: () => void;
+  onConsultar: () => void;
+}) {
+  const Icon = plan.icon;
   return (
     <motion.div
-      animate={{ scale: isActive ? 1.05 : 1 }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
-      style={{ width: CARD_WIDTH, height: CARD_HEIGHT, zIndex: isActive ? 10 : 1 }}
-      className={`relative shrink-0 rounded-2xl bg-primary p-[2px] transition-shadow duration-300 ${
-        isActive
-          ? 'shadow-[0_0_24px_-8px_rgba(52,91,120,0.45)]'
-          : 'shadow-[0_0_12px_-8px_rgba(52,91,120,0.18)]'
+      layout
+      transition={{ layout: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
+      onClick={onSelect}
+      role="button"
+      tabIndex={0}
+      aria-expanded={activa}
+      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ' ? onSelect() : undefined)}
+      className={`relative flex cursor-pointer flex-col rounded-2xl border-2 bg-white p-6 text-left transition-shadow ${
+        activa
+          ? 'border-primary shadow-[0_24px_50px_-20px_rgba(34,60,84,0.45)] lg:flex-[1.75]'
+          : 'border-border shadow-soft hover:border-primary/40 lg:h-[400px] lg:flex-1'
       }`}
     >
-      {/*
-        El borde en reposo es 100% azul (el bg-primary del wrapper). Esta
-        capa es el "destello": el mismo patrón pero con una banda blanca,
-        que solo se hace visible (opacity) mientras hay scroll o se elige
-        una tarjeta, y se apaga sola a los pocos milisegundos de quedar
-        quieto. Queda detrás del contenido blanco, así que solo se asoma en
-        el aro de 2px del borde.
-      */}
-      <motion.div
-        className="pointer-events-none absolute inset-0 rounded-2xl"
-        style={{
-          backgroundImage: BEAM_GRADIENT,
-          backgroundSize: `100% ${BEAM_TILE}`,
-          backgroundRepeat: 'repeat',
-          backgroundPositionY: beamY,
-          opacity: beamOpacity,
-        }}
-      />
-      <div className="relative flex h-full flex-col overflow-hidden rounded-2xl bg-white p-6">
+      <motion.div layout="position" className="flex items-center gap-3">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
           <Icon size={18} strokeWidth={1.75} />
         </span>
-        <span className="absolute top-5 right-5 rounded-full bg-gold px-2.5 py-1 text-[11px] font-bold text-primary-dark">
-          -{Math.round(DESCUENTO_LANZAMIENTO * 100)}%
-        </span>
-        <p className="mt-4 font-heading text-base font-semibold text-ink">{plan.title}</p>
-        <div className="mt-3">
-          <p className="text-xs text-ink-soft">
-            Desde <span className="line-through">{formatoPesos(plan.precioLista)}</span>
-          </p>
-          <p className="font-heading text-2xl font-extrabold text-primary">
-            {formatoPesos(precioConDescuento(plan.precioLista))}
-            <span className="ml-1 text-xs font-medium text-ink-soft">{plan.unidad}</span>
-          </p>
-        </div>
-        <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{plan.paraQuien}</p>
-        <ul className="mt-3 flex-1 space-y-2 text-sm leading-relaxed text-ink-soft">
-          {plan.incluye.map((item) => (
-            <li key={item} className="flex items-start gap-2">
-              <Check size={14} strokeWidth={2.5} className="mt-0.5 shrink-0 text-primary" />
-              <span>{item}</span>
-            </li>
+        <p className="font-heading text-base font-bold text-ink">{plan.title}</p>
+      </motion.div>
+
+      <motion.div layout="position" className="mt-4">
+        <Precio plan={plan} grande={activa} />
+      </motion.div>
+
+      <motion.div layout="position" className="mt-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-primary">Áreas</p>
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {plan.areas.map((a) => (
+            <span key={a} className="rounded-full bg-surface/60 px-2.5 py-1 text-xs text-ink">
+              {a}
+            </span>
           ))}
-        </ul>
-      </div>
+        </div>
+      </motion.div>
+
+      <AnimatePresence initial={false}>
+        {activa && (
+          <motion.div
+            key="detalle"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <p className="mt-5 text-sm leading-relaxed text-ink-soft">{plan.paraQuien}</p>
+            <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-primary">Incluye como mínimo</p>
+            <ul className="mt-2 space-y-2">
+              {plan.incluye.map((item) => (
+                <li key={item} className="flex items-start gap-2 text-sm leading-relaxed text-ink">
+                  <Check size={15} strokeWidth={2.5} className="mt-0.5 shrink-0 text-green" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onConsultar();
+              }}
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5"
+            >
+              Consultar por este plan <ArrowRight size={15} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {!activa && (
+        <p className="mt-auto pt-5 text-xs font-semibold text-primary underline decoration-gold decoration-2 underline-offset-4">
+          Ver qué incluye
+        </p>
+      )}
     </motion.div>
   );
 }
 
-export default function PlanesSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const rowRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const draggingRef = useRef(false);
-  const dragStartXRef = useRef(0);
-  const idleTimerRef = useRef<number | undefined>(undefined);
-
-  // Posición del destello: atada al scroll vertical de la página, recorre
-  // toda la sección de punta a punta.
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start'],
-  });
-  const beamY = useTransform(scrollYProgress, [0, 1], ['0px', '400px']);
-
-  // Visibilidad del destello: 0 en reposo (borde 100% azul — el estado en
-  // el que debe quedar mientras el usuario está viendo la sección
-  // tranquilo). Sube a 1 apenas hay scroll de la página o se elige una
-  // tarjeta, y se apaga sola con un fundido si no pasa nada más.
-  const beamOpacity = useMotionValue(0);
-
-  const triggerFlash = () => {
-    animate(beamOpacity, 1, { duration: 0.15, ease: 'easeOut' });
-    if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
-    idleTimerRef.current = window.setTimeout(() => {
-      animate(beamOpacity, 0, { duration: 0.6, ease: 'easeOut' });
-    }, 300);
-  };
-
-  useEffect(() => {
-    const unsubscribe = scrollYProgress.on('change', triggerFlash);
-    return () => {
-      unsubscribe();
-      if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrollYProgress]);
-
-  const clampIndex = (i: number) => Math.max(0, Math.min(PLANES.length - 1, i));
-
-  // Las posiciones de las 4 tarjetas son fijas — "desplazarse" no mueve
-  // nada, solo cambia cuál está agrandada. Si en una pantalla angosta el
-  // fondo tuvo que scrollear para acomodarlas, esto además la trae a la
-  // vista — pero eso es un respaldo para mobile, no el mecanismo principal.
-  const selectIndex = (index: number) => {
-    const clamped = clampIndex(index);
-    setActiveIndex(clamped);
-    triggerFlash();
-    cardRefs.current[clamped]?.scrollIntoView({
-      behavior: 'smooth',
-      inline: 'center',
-      block: 'nearest',
-    });
-  };
-
-  // Swipe con mouse: no arrastra nada (las tarjetas no se mueven), solo
-  // mide la dirección al soltar y avanza o retrocede una tarjeta. El touch
-  // nativo sigue scrolleando la fila si en mobile no entran las 4.
-  const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
-    draggingRef.current = true;
-    dragStartXRef.current = e.pageX;
-  };
-
-  const handleMouseUp = (e: MouseEvent<HTMLDivElement>) => {
-    if (!draggingRef.current) return;
-    draggingRef.current = false;
-    const delta = e.pageX - dragStartXRef.current;
-    if (delta <= -SWIPE_THRESHOLD) {
-      selectIndex(activeIndex + 1);
-    } else if (delta >= SWIPE_THRESHOLD) {
-      selectIndex(activeIndex - 1);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    draggingRef.current = false;
-  };
-
-  const scrollToContacto = () => {
-    document.querySelector('#contacto')?.scrollIntoView({ behavior: 'smooth' });
-  };
+export default function PlanesSection({ onConsultar }: PlanesSectionProps) {
+  const [activa, setActiva] = useState(0);
+  const mover = (d: number) => setActiva((i) => Math.max(0, Math.min(PLANES.length - 1, i + d)));
 
   return (
-    <section
-      ref={sectionRef}
-      id="planes"
-      className="overflow-hidden bg-surface px-6 py-28 lg:px-10"
-    >
+    <section id="planes" className="bg-background px-6 py-24 lg:px-10">
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-2xl text-center">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="font-heading text-3xl font-bold text-primary sm:text-4xl"
-          >
+          <h2 className="font-heading text-3xl font-bold text-primary sm:text-4xl">
             Un plan para cada momento del negocio.
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="mt-5 leading-relaxed text-ink-soft"
-          >
-            Cuatro estructuras que ya tenemos armadas, con {Math.round(DESCUENTO_LANZAMIENTO * 100)}%
-            de descuento de lanzamiento. Son precios “desde”: el valor final lo cerramos juntos en la
-            primera conversación, sin costo.
-          </motion.p>
+          </h2>
+          <p className="mt-5 leading-relaxed text-ink-soft">
+            Una idea de cómo trabajamos, con {PORCENTAJE}% de descuento de lanzamiento. Son precios
+            “desde”: el alcance y el valor final los cerramos juntos en la primera conversación.
+          </p>
         </div>
 
-        {/*
-          Fila centrada, con las flechas como hermanas (no superpuestas) a
-          los costados — el gap entre ellas y las tarjetas es el margen que
-          pidió Damian. El padding horizontal de la fila (px-4) es lo que le
-          da lugar a la tarjeta de la punta para agrandarse un 5% y tirar
-          sombra sin que el borde del contenedor se lo corte.
-        */}
-        <div className="mt-14 flex items-center justify-center gap-4">
+        <div className="mt-12 flex items-center gap-3">
           <button
             type="button"
-            onClick={() => selectIndex(activeIndex - 1)}
-            disabled={activeIndex === 0}
+            onClick={() => mover(-1)}
+            disabled={activa === 0}
             aria-label="Plan anterior"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white text-ink shadow-soft transition hover:bg-surface disabled:opacity-30"
+            className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white text-ink shadow-soft transition hover:bg-surface disabled:opacity-30 lg:flex"
           >
             <ChevronLeft size={20} />
           </button>
 
-          <div
-            ref={rowRef}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseLeave}
-            className="no-scrollbar flex max-w-full cursor-grab items-start gap-5 overflow-x-auto px-4 py-2 active:cursor-grabbing"
-          >
+          <div className="flex w-full flex-col gap-4 lg:flex-row lg:items-center">
             {PLANES.map((plan, i) => (
-              <div
+              <Tarjeta
                 key={plan.title}
-                ref={(el) => {
-                  cardRefs.current[i] = el;
-                }}
-              >
-                <PlanCard
-                  plan={plan}
-                  isActive={i === activeIndex}
-                  beamY={beamY}
-                  beamOpacity={beamOpacity}
-                />
-              </div>
+                plan={plan}
+                activa={i === activa}
+                onSelect={() => setActiva(i)}
+                onConsultar={() => onConsultar(`Me interesa el plan ${plan.title}: `)}
+              />
             ))}
           </div>
 
           <button
             type="button"
-            onClick={() => selectIndex(activeIndex + 1)}
-            disabled={activeIndex === PLANES.length - 1}
+            onClick={() => mover(1)}
+            disabled={activa === PLANES.length - 1}
             aria-label="Plan siguiente"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white text-ink shadow-soft transition hover:bg-surface disabled:opacity-30"
+            className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white text-ink shadow-soft transition hover:bg-surface disabled:opacity-30 lg:flex"
           >
             <ChevronRight size={20} />
           </button>
         </div>
 
-        <div className="mt-6 flex items-center justify-center gap-2">
-          {PLANES.map((plan, i) => (
-            <button
-              key={plan.title}
-              type="button"
-              onClick={() => selectIndex(i)}
-              aria-label={`Ir al plan ${plan.title}`}
-              className={`h-2 rounded-full transition-all ${
-                i === activeIndex ? 'w-6 bg-primary' : 'w-2 bg-white'
-              }`}
-            />
-          ))}
-        </div>
-
-        {/*
-          Recordatorio ligado a la tarjeta seleccionada: los módulos de
-          cualquier plan se pueden sumar o sacar, y el esqueleto real se
-          define en la primera conversación — para que no se lea como una
-          lista de precios cerrada.
-        */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeIndex}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="mx-auto mt-6 flex max-w-xl items-start gap-2.5 rounded-xl border border-border bg-white px-4 py-3 text-left"
-          >
-            <Info size={16} className="mt-0.5 shrink-0 text-primary" />
-            <p className="text-sm leading-relaxed text-ink-soft">
-              <span className="font-semibold text-ink">{PLANES[activeIndex].title}</span> es un
-              punto de partida: los módulos se suman o se sacan según tu negocio. En la primera
-              conversación definimos juntos el esqueleto con el que vamos a trabajar.
-            </p>
-          </motion.div>
-        </AnimatePresence>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-          className="mt-10 text-center"
-        >
-          <button
-            onClick={scrollToContacto}
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5"
-          >
-            Conversemos sobre tu plan <ArrowRight size={16} />
-          </button>
-          <p className="mx-auto mt-4 max-w-xl text-xs leading-relaxed text-ink-soft">
-            Precios de lanzamiento en pesos argentinos, válidos hasta el {VIGENCIA_PROMO}. Los valores
-            son de referencia: el alcance y el precio final se acuerdan por escrito antes de empezar.
-          </p>
-        </motion.div>
+        <p className="mx-auto mt-8 max-w-2xl text-center text-xs leading-relaxed text-ink-soft">
+          Precios de lanzamiento en pesos argentinos, válidos hasta el {VIGENCIA_PROMO}. Los módulos
+          de cada plan se suman o se sacan según tu negocio; el alcance y el precio final se acuerdan
+          por escrito antes de empezar.
+        </p>
       </div>
     </section>
   );

@@ -1,10 +1,6 @@
 import { motion } from 'framer-motion';
 import { MessageSquareText, UserCheck, Handshake } from 'lucide-react';
 
-interface ComoTrabajamosProps {
-  onStartDiagnostic: () => void;
-}
-
 const PASOS = [
   {
     icon: MessageSquareText,
@@ -26,7 +22,7 @@ const PASOS = [
   },
 ];
 
-export default function ComoTrabajamosSection({ onStartDiagnostic }: ComoTrabajamosProps) {
+export default function ComoTrabajamosSection() {
   return (
     <section id="como-trabajamos" className="relative overflow-hidden bg-gradient-prisma px-6 pt-40 pb-24 lg:px-10">
       <div className="pointer-events-none absolute -top-32 -right-24 h-96 w-96 rounded-full bg-gold/10 blur-3xl" />
@@ -71,10 +67,10 @@ export default function ComoTrabajamosSection({ onStartDiagnostic }: ComoTrabaja
         </div>
 
         <button
-          onClick={onStartDiagnostic}
+          onClick={() => document.querySelector('#contacto')?.scrollIntoView({ behavior: 'smooth' })}
           className="mt-10 rounded-full bg-background px-7 py-3.5 text-sm font-semibold text-primary shadow-soft transition-transform hover:-translate-y-0.5"
         >
-          Empezar con el diagnóstico gratuito
+          Ver cómo empezar sin costo
         </button>
       </div>
     </section>

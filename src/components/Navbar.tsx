@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { NAV_ITEMS, NAV_CTA } from '../data/nav';
 
+const HERO_CLARO = true;
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -41,6 +43,10 @@ export default function Navbar() {
     el?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // El hero v3 es claro (fondo marfil con el prisma): el texto del menú va
+  // siempre en azul. Si se vuelve a un hero con foto oscura, poner false.
+  const textoOscuro = scrolled || HERO_CLARO;
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
@@ -55,10 +61,10 @@ export default function Navbar() {
             handleNavClick('#inicio');
           }}
           className={`font-heading text-lg font-medium tracking-tight transition-colors ${
-            scrolled ? 'text-primary' : 'text-white [text-shadow:0_1px_3px_rgb(0_0_0_/_45%)]'
+            textoOscuro ? 'text-primary' : 'text-white [text-shadow:0_1px_3px_rgb(0_0_0_/_45%)]'
           }`}
         >
-          CONSULTORA <span className={`font-extrabold ${scrolled ? 'text-primary' : 'text-white/90'}`}>PRISMA</span>
+          CONSULTORA <span className={`font-extrabold ${textoOscuro ? 'text-primary' : 'text-white/90'}`}>PRISMA</span>
         </a>
 
         <div className="hidden items-center gap-8 lg:flex">
@@ -71,7 +77,7 @@ export default function Navbar() {
                 handleNavClick(item.href);
               }}
               className={`text-sm font-medium transition-colors ${
-                scrolled
+                textoOscuro
                   ? active === item.href
                     ? 'text-primary'
                     : 'text-ink-soft hover:text-primary'
@@ -93,7 +99,7 @@ export default function Navbar() {
 
         <button
           className={`lg:hidden ${
-            scrolled ? 'text-primary' : 'text-white [filter:drop-shadow(0_1px_3px_rgb(0_0_0_/_45%))]'
+            textoOscuro ? 'text-primary' : 'text-white [filter:drop-shadow(0_1px_3px_rgb(0_0_0_/_45%))]'
           }`}
           onClick={() => setMobileOpen((v) => !v)}
           aria-label="Abrir menú"
