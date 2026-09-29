@@ -23,7 +23,7 @@ export default function AreasSection({ onConsultar }: AreasSectionProps) {
   const Icon = area.icon;
 
   return (
-    <section id="areas" className="bg-background px-6 py-24 lg:px-10">
+    <section id="areas" className="bg-sand px-6 pt-8 pb-24 lg:px-10">
       <div className="mx-auto max-w-6xl">
         <div className="max-w-2xl">
           <h2 className="font-heading text-3xl font-bold text-primary sm:text-4xl">
@@ -84,7 +84,7 @@ export default function AreasSection({ onConsultar }: AreasSectionProps) {
               </div>
 
               <p className="mt-7 text-xs font-semibold uppercase tracking-wide text-primary">
-                Te ayudamos con
+                Algunos temas en los que te ayudamos
               </p>
               <ul className="mt-3 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
                 {area.temas.map((t) => (
@@ -94,9 +94,13 @@ export default function AreasSection({ onConsultar }: AreasSectionProps) {
                   </li>
                 ))}
               </ul>
+              <p className="mt-3 text-sm text-ink-soft">
+                …y cualquier otra necesidad del área: si tu consulta no está en la lista, también la
+                resolvemos.
+              </p>
 
               <p className="mt-7 text-xs font-semibold uppercase tracking-wide text-primary">
-                Consultas que nos podés traer
+                Consultas frecuentes del área
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {area.preguntas.map((q) => (

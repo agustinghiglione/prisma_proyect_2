@@ -26,7 +26,7 @@ export interface Dimension {
 }
 
 /** Las seis áreas reales de Prisma, en el orden en que se presentan siempre. */
-export const AREAS = ['Estrategia', 'Finanzas', 'Administración', 'Personas', 'Contabilidad e Impuestos', 'Tecnología'] as const;
+export const AREAS = ['Estrategia', 'Finanzas', 'Administración', 'Capital Humano', 'Contabilidad e Impuestos', 'Tecnología'] as const;
 
 export const DIMENSIONES: Dimension[] = [
   {
@@ -179,7 +179,7 @@ export const AREA_SLUG: Record<string, string> = {
   'Contabilidad e Impuestos': 'contabilidad_impuestos',
   Estrategia: 'estrategia',
   Tecnología: 'tecnologia',
-  Personas: 'personas',
+  'Capital Humano': 'personas', // slug histórico: no cambiar (columnas de Sheets)
 };
 
 /**
@@ -247,7 +247,7 @@ export const DIMENSIONES_PARTE2: Dimension[] = [
   },
   {
     id: 'personas',
-    nombre: 'Personas',
+    nombre: 'Capital Humano',
     pregunta: '¿Cómo está organizado tu equipo hoy?',
     opciones: [
       { texto: 'No hay roles claros, cada uno hace lo que puede', valor: 1 },
@@ -362,7 +362,7 @@ export function sintesisRespaldo(resultado: ResultadoCompleto, nombre: string): 
 
 /** Lo que explícitamente se le dice al cliente que va a recibir, antes de pagar. */
 export const QUE_INCLUYE_COMPLETO = [
-  'Una mirada más profunda a las mismas seis áreas en las que te podemos ayudar: Estrategia, Finanzas, Administración, Personas, Contabilidad e Impuestos y Tecnología.',
+  'Una mirada más profunda a las mismas seis áreas en las que te podemos ayudar: Estrategia, Finanzas, Administración, Capital Humano, Contabilidad e Impuestos y Tecnología.',
   'Un análisis armado especialmente para tu negocio, no una respuesta genérica.',
   'Si nos dejás el link de tu web, la revisamos antes de la conversación.',
   'El informe completo por mail, y la posibilidad de mandarte el resultado cuando quieras.',

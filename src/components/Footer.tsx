@@ -22,14 +22,6 @@ export default function Footer() {
             CONSULTORA <span className="font-extrabold text-white">PRISMA</span>
           </p>
           <p className="mt-1 text-sm">Claridad para crecer.</p>
-          <a
-            href="https://tucvonline.com/?utm_source=consultoraprisma&utm_medium=web&utm_campaign=footer"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-2 inline-block text-xs hover:text-white"
-          >
-            tucvonline.com · una herramienta de Consultora Prisma
-          </a>
         </div>
 
         <div className="flex flex-col items-center gap-2 text-sm sm:items-end">

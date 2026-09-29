@@ -2,6 +2,10 @@ import { motion } from 'framer-motion';
 import { DoorOpen, UserCheck, Layers } from 'lucide-react';
 import { AUDIENCIAS } from '../data/audiencias';
 
+// Foto: Unsplash (licencia libre de Unsplash). Se sirve desde su CDN.
+const FOTO_EQUIPO =
+  'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=70';
+
 const IDEAS = [
   { icon: DoorOpen, titulo: 'Una sola puerta', texto: 'No tenés que saber a quién llamar: nos escribís a nosotros.' },
   { icon: UserCheck, titulo: 'Un especialista por tema', texto: 'Cada consulta la ve el profesional que sabe de eso.' },
@@ -10,7 +14,7 @@ const IDEAS = [
 
 export default function QuienesSomosSection() {
   return (
-    <section id="quienes-somos" className="bg-surface/30 px-6 py-20 lg:px-10">
+    <section id="quienes-somos" className="bg-sand px-6 pt-20 pb-16 lg:px-10">
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -25,15 +29,15 @@ export default function QuienesSomosSection() {
           <p className="mt-5 leading-relaxed text-ink-soft">
             Los problemas de un negocio no llegan separados por especialidad: una duda de impuestos
             termina siendo de precios, y una de precios, de personal. Por eso nos juntamos
-            profesionales de estrategia, finanzas, administración, personas, contabilidad e impuestos
-            y tecnología para trabajar con un mismo método y una sola puerta de entrada.
+            profesionales de estrategia, finanzas, administración, capital humano, contabilidad e
+            impuestos y tecnología para trabajar con un mismo método y una sola puerta de entrada.
           </p>
           <p className="mt-4 leading-relaxed text-ink-soft">
             Vos traés la consulta. Nosotros nos ponemos de acuerdo para darte la ayuda que tu negocio
             necesita, sin que tengas que coordinar a nadie.
           </p>
 
-          <p className="mt-8 text-sm font-semibold text-ink">Trabajamos con</p>
+          <p className="mt-8 font-heading text-base font-semibold text-ink">¿Prisma también es para vos?</p>
           <div className="mt-3 flex flex-wrap gap-2">
             {AUDIENCIAS.map(({ icon: Icon, title }) => (
               <span
@@ -48,6 +52,16 @@ export default function QuienesSomosSection() {
         </motion.div>
 
         <div className="grid gap-4">
+          <motion.img
+            initial={{ opacity: 0, scale: 0.97 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            src={FOTO_EQUIPO}
+            alt="Equipo de trabajo reunido planificando frente a una pizarra"
+            loading="lazy"
+            className="h-56 w-full rounded-2xl object-cover shadow-soft sm:h-64"
+          />
           {IDEAS.map(({ icon: Icon, titulo, texto }, i) => (
             <motion.div
               key={titulo}

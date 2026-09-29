@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, Check, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, CalendarClock, ChevronLeft, ChevronRight } from 'lucide-react';
 import {
   PLANES,
   DESCUENTO_LANZAMIENTO,
@@ -62,16 +62,16 @@ function Tarjeta({
   return (
     <motion.div
       layout
-      transition={{ layout: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
+      transition={{ layout: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } }}
       onClick={onSelect}
       role="button"
       tabIndex={0}
       aria-expanded={activa}
       onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ' ? onSelect() : undefined)}
-      className={`relative flex cursor-pointer flex-col rounded-2xl border-2 bg-white p-6 text-left transition-shadow ${
+      className={`relative flex cursor-pointer flex-col rounded-2xl border-2 bg-white p-6 text-left transition-[box-shadow,border-color] duration-500 ${
         activa
-          ? 'border-primary shadow-[0_24px_50px_-20px_rgba(34,60,84,0.45)] lg:flex-[1.75]'
-          : 'border-border shadow-soft hover:border-primary/40 lg:h-[400px] lg:flex-1'
+          ? 'border-primary shadow-[0_24px_50px_-20px_rgba(34,60,84,0.45)] lg:flex-[1.6]'
+          : 'border-border shadow-soft hover:border-primary/40 lg:h-[410px] lg:flex-1'
       }`}
     >
       <motion.div layout="position" className="flex items-center gap-3">
@@ -94,6 +94,7 @@ function Tarjeta({
             </span>
           ))}
         </div>
+        {plan.notaAreas && <p className="mt-2 text-xs text-ink-soft">{plan.notaAreas}</p>}
       </motion.div>
 
       <AnimatePresence initial={false}>
@@ -103,19 +104,17 @@ function Tarjeta({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{
+              height: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+              opacity: { duration: 0.45, delay: 0.2 },
+            }}
             className="overflow-hidden"
           >
-            <p className="mt-5 text-sm leading-relaxed text-ink-soft">{plan.paraQuien}</p>
-            <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-primary">Incluye como mínimo</p>
-            <ul className="mt-2 space-y-2">
-              {plan.incluye.map((item) => (
-                <li key={item} className="flex items-start gap-2 text-sm leading-relaxed text-ink">
-                  <Check size={15} strokeWidth={2.5} className="mt-0.5 shrink-0 text-green" />
-                  {item}
-                </li>
-              ))}
-            </ul>
+            <p className="mt-5 text-sm leading-relaxed text-ink">{plan.paraQuien}</p>
+            <p className="mt-4 flex items-start gap-2 rounded-xl bg-sand px-3.5 py-3 text-sm leading-relaxed text-ink-soft">
+              <CalendarClock size={16} className="mt-0.5 shrink-0 text-primary" />
+              {plan.seguimiento}
+            </p>
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -131,7 +130,7 @@ function Tarjeta({
 
       {!activa && (
         <p className="mt-auto pt-5 text-xs font-semibold text-primary underline decoration-gold decoration-2 underline-offset-4">
-          Ver qué incluye
+          Ver más
         </p>
       )}
     </motion.div>
@@ -143,17 +142,11 @@ export default function PlanesSection({ onConsultar }: PlanesSectionProps) {
   const mover = (d: number) => setActiva((i) => Math.max(0, Math.min(PLANES.length - 1, i + d)));
 
   return (
-    <section id="planes" className="bg-background px-6 py-24 lg:px-10">
+    <section id="planes" className="bg-sand px-6 pt-10 pb-24 lg:px-10">
       <div className="mx-auto max-w-6xl">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="font-heading text-3xl font-bold text-primary sm:text-4xl">
-            Un plan para cada momento del negocio.
-          </h2>
-          <p className="mt-5 leading-relaxed text-ink-soft">
-            Una idea de cómo trabajamos, con {PORCENTAJE}% de descuento de lanzamiento. Son precios
-            “desde”: el alcance y el valor final los cerramos juntos en la primera conversación.
-          </p>
-        </div>
+        <h2 className="text-center font-heading text-3xl font-bold text-primary sm:text-4xl">
+          Un plan para cada momento del negocio.
+        </h2>
 
         <div className="mt-12 flex items-center gap-3">
           <button
@@ -190,9 +183,8 @@ export default function PlanesSection({ onConsultar }: PlanesSectionProps) {
         </div>
 
         <p className="mx-auto mt-8 max-w-2xl text-center text-xs leading-relaxed text-ink-soft">
-          Precios de lanzamiento en pesos argentinos, válidos hasta el {VIGENCIA_PROMO}. Los módulos
-          de cada plan se suman o se sacan según tu negocio; el alcance y el precio final se acuerdan
-          por escrito antes de empezar.
+          Precios de lanzamiento en pesos argentinos, válidos hasta el {VIGENCIA_PROMO}. Valores de
+          referencia: el alcance y el precio final se acuerdan en la primera conversación.
         </p>
       </div>
     </section>

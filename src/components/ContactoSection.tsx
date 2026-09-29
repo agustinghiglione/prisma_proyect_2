@@ -15,7 +15,7 @@ export default function ContactoSection({ onStartDiagnostic }: ContactoSectionPr
   const [agendarAbierto, setAgendarAbierto] = useState(false);
 
   return (
-    <section id="contacto" className="relative overflow-hidden bg-surface px-6 py-24 lg:px-10">
+    <section id="contacto" className="relative overflow-hidden bg-sand px-6 pt-12 pb-16 lg:px-10">
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Cómo empezar</p>

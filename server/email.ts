@@ -96,7 +96,7 @@ export async function enviarInformeParte1(params: { email: string; nombre: strin
 
           <p style="margin:28px 0 0;font-family:Arial,sans-serif;font-size:14px;color:${TEXTO};line-height:1.6;">
             Esto es solo el primer vistazo. El diagnóstico completo profundiza en cada una de estas áreas, suma
-            Personas, y te deja una síntesis puntual de dónde conviene empezar.
+            Capital Humano, y te deja una síntesis puntual de dónde conviene empezar.
           </p>
 
           <table role="presentation" cellpadding="0" cellspacing="0" style="margin:20px auto 4px;">

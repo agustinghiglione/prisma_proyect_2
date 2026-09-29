@@ -6,8 +6,10 @@ export interface Plan {
   title: string;
   /** A quién está pensada esta estructura. */
   paraQuien: string;
-  /** Lo mínimo que Prisma se compromete a cumplir en este plan. */
-  incluye: string[];
+  /** Cómo se hace el seguimiento (se muestra al seleccionar la tarjeta). */
+  seguimiento: string;
+  /** Aclaración opcional debajo de las áreas. */
+  notaAreas?: string;
   /** Áreas de Prisma que trabajan en este plan (se ven con la tarjeta cerrada). */
   areas: string[];
   /** Precio de referencia en ARS, antes del descuento. null = a convenir (sin precio). */
@@ -36,12 +38,8 @@ export const PLANES: Plan[] = [
     icon: ShieldCheck,
     title: 'Base / Cumplimiento',
     paraQuien: 'Para tener el día a día contable y administrativo resuelto.',
-    incluye: [
-      'Monotributo: vencimientos y control de categoría',
-      'Facturación electrónica en regla',
-      'Orden de ventas, cobros y pagos',
-      'Consultas por mail',
-    ],
+    seguimiento:
+      'Podemos pactar reuniones periódicas de seguimiento según el alcance que acordemos.',
     areas: ['Contabilidad e Impuestos', 'Administración'],
     precioLista: 75000,
     unidad: '/mes',
@@ -50,12 +48,8 @@ export const PLANES: Plan[] = [
     icon: LineChart,
     title: 'Integral / Crecimiento',
     paraQuien: 'Para negocios en crecimiento que necesitan más que lo contable.',
-    incluye: [
-      'Todo lo del plan Base',
-      'Reporte mensual de caja y rentabilidad',
-      'Objetivos y plan de acción trimestral',
-      'Una reunión mensual de seguimiento',
-    ],
+    seguimiento:
+      'Incluye reuniones periódicas de seguimiento, con la frecuencia que pactemos según la extensión del plan.',
     areas: ['Contabilidad e Impuestos', 'Administración', 'Finanzas', 'Estrategia'],
     precioLista: 180000,
     unidad: '/mes',
@@ -64,26 +58,19 @@ export const PLANES: Plan[] = [
     icon: Clock,
     title: 'Prisma Full',
     paraQuien: 'Para tener a Prisma disponible todo el tiempo, en las seis áreas.',
-    incluye: [
-      'Las seis áreas trabajando juntas',
-      'Tablero de indicadores del negocio',
-      'Dos reuniones de seguimiento por mes',
-      'Asistencia continua',
-    ],
-    areas: ['Estrategia', 'Finanzas', 'Administración', 'Personas', 'Contabilidad e Impuestos', 'Tecnología'],
+    seguimiento:
+      'Reuniones de seguimiento con la frecuencia que tu negocio necesite, con las seis áreas en la mesa.',
+    areas: ['Estrategia', 'Finanzas', 'Administración', 'Capital Humano', 'Contabilidad e Impuestos', 'Tecnología'],
     precioLista: 300000,
     unidad: '/mes',
   },
   {
     icon: Handshake,
     title: 'Prisma A Medida',
-    paraQuien: 'Para un proyecto puntual que no entra en un plan estándar.',
-    incluye: [
-      'Alcance cerrado y por escrito antes de empezar',
-      'Ej.: plan de negocio, web, búsqueda de personal',
-      'Se define en la primera conversación',
-    ],
-    areas: ['Las que tu proyecto necesite'],
+    paraQuien: 'Para proyectos puntuales o necesidades que no entran en un plan estándar.',
+    seguimiento: 'Definimos juntos el alcance, los hitos y las reuniones de avance del proyecto.',
+    areas: ['Estrategia', 'Finanzas', 'Administración', 'Capital Humano', 'Contabilidad e Impuestos', 'Tecnología'],
+    notaAreas: 'Se combinan según el alcance del proyecto.',
     precioLista: null,
     unidad: '',
   },

@@ -15,6 +15,7 @@
   --color-ink: #223c54; /* Títulos */
   --color-ink-soft: #5b6672; /* Párrafos */
   --color-border: #e7ddc9;
+  --color-sand: #f4ecdf; /* Arena suave — fondo continuo de Quiénes somos, Áreas y Planes */
 
   --gradient-prisma: linear-gradient(135deg, #223c54 0%, #345b78 45%, #e4b15e 100%);
   --shadow-soft: 0 12px 32px rgba(34, 60, 84, 0.08);

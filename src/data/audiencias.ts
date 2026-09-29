@@ -39,6 +39,6 @@ export const AUDIENCIAS: Audiencia[] = [
     icon: Building2,
     title: 'Dirijo una empresa',
     detail:
-      'Acompañamos la gestión con una mirada integral, combinando estrategia, administración, finanzas, personas, contabilidad y tecnología.',
+      'Acompañamos la gestión con una mirada integral, combinando estrategia, administración, finanzas, capital humano, contabilidad y tecnología.',
   },
 ];

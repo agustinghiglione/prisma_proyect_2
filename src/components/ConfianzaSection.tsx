@@ -1,5 +1,5 @@
-import { ArrowUpRight, BadgeCheck, Check, FileSignature, Gauge, Lock, MessagesSquare, Wallet } from 'lucide-react';
-import { PROYECTOS } from '../data/proyectos';
+import { BadgeCheck, FileSignature, Gauge, Lock, MessagesSquare, Wallet } from 'lucide-react';
+import CvTransicion from './CvTransicion';
 
 /**
  * Confianza sin caras (mientras el equipo decide si se muestra): solo
@@ -42,7 +42,7 @@ const ITEMS = [
 
 export default function ConfianzaSection() {
   return (
-    <section id="confianza" className="bg-surface/30 px-6 py-20 lg:px-10">
+    <section id="confianza" className="bg-gradient-to-b from-sand to-background px-6 pt-4 pb-20 lg:px-10">
       <div className="mx-auto max-w-6xl">
         <h2 className="max-w-2xl font-heading text-3xl font-bold text-primary sm:text-4xl">
           Confianza que podés comprobar.
@@ -61,40 +61,8 @@ export default function ConfianzaSection() {
           ))}
         </div>
 
-        <div className="mt-16">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Lo que ya construimos</p>
-          <h3 className="mt-2 font-heading text-2xl font-bold text-primary">
-            No solo lo decimos: lo hacemos.
-          </h3>
-          <div className="mt-6 grid gap-5 md:grid-cols-2">
-            {PROYECTOS.map((p) => (
-              <div key={p.nombre} className="flex flex-col rounded-2xl border border-border bg-white p-6 shadow-soft">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">{p.tipo}</span>
-                  <span className="rounded-full bg-gold/15 px-2.5 py-1 text-xs font-semibold text-primary-dark">Área {p.area}</span>
-                </div>
-                <p className="mt-4 font-heading text-lg font-bold text-ink">{p.nombre}</p>
-                <p className="mt-2 text-sm leading-relaxed text-ink-soft">{p.resumen}</p>
-                <ul className="mt-4 flex-1 space-y-1.5">
-                  {p.hicimos.map((h) => (
-                    <li key={h} className="flex items-start gap-2 text-sm text-ink">
-                      <Check size={14} strokeWidth={2.5} className="mt-0.5 shrink-0 text-green" />
-                      {h}
-                    </li>
-                  ))}
-                </ul>
-                <a
-                  href={p.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-5 inline-flex items-center gap-1.5 self-start text-sm font-semibold text-primary underline decoration-gold decoration-2 underline-offset-4"
-                >
-                  Ver el proyecto <ArrowUpRight size={15} />
-                </a>
-              </div>
-            ))}
-          </div>
-        </div>
+
+        <CvTransicion />
       </div>
     </section>
   );

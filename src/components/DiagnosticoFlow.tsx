@@ -372,7 +372,7 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
                     <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-green" />
                     <p className="text-sm text-ink-soft">
                       Las áreas que medimos hoy están sólidas. El diagnóstico completo profundiza en cada
-                      una y suma Personas, para tener el panorama entero.
+                      una y suma Capital Humano, para tener el panorama entero.
                     </p>
                   </div>
                 )}

@@ -24,7 +24,15 @@ const PASOS = [
 
 export default function ComoTrabajamosSection() {
   return (
-    <section id="como-trabajamos" className="relative overflow-hidden bg-gradient-prisma px-6 pt-40 pb-24 lg:px-10">
+    <section id="como-trabajamos" className="relative overflow-hidden bg-gradient-to-b from-primary-dark to-primary px-6 py-20 lg:px-10">
+      {/* Foto de fondo muy sutil (Unsplash, licencia libre) */}
+      <img
+        src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=60"
+        alt=""
+        aria-hidden
+        loading="lazy"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-[0.12] mix-blend-luminosity"
+      />
       <div className="pointer-events-none absolute -top-32 -right-24 h-96 w-96 rounded-full bg-gold/10 blur-3xl" />
       <div className="relative mx-auto max-w-6xl">
         <h2 className="max-w-2xl font-heading text-3xl font-bold text-white [text-shadow:0_1px_3px_rgb(15_23_32_/_45%)] sm:text-4xl">
@@ -67,10 +75,10 @@ export default function ComoTrabajamosSection() {
         </div>
 
         <button
-          onClick={() => document.querySelector('#contacto')?.scrollIntoView({ behavior: 'smooth' })}
+          onClick={() => document.querySelector('#planes')?.scrollIntoView({ behavior: 'smooth' })}
           className="mt-10 rounded-full bg-background px-7 py-3.5 text-sm font-semibold text-primary shadow-soft transition-transform hover:-translate-y-0.5"
         >
-          Ver cómo empezar sin costo
+          Ver los planes
         </button>
       </div>
     </section>

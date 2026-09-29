@@ -20,6 +20,26 @@ export interface Area {
 
 export const AREAS: Area[] = [
   {
+    slug: 'contabilidad',
+    icon: Receipt,
+    nombre: 'Contabilidad e Impuestos',
+    promesa: 'Cumplir con tus obligaciones sin estrés.',
+    temas: [
+      'Alta, categoría y recategorización del monotributo',
+      'Facturación electrónica en ARCA',
+      'Cobros del exterior y exportación de servicios',
+      'Pasar de monotributo a responsable inscripto',
+      'Ingresos brutos y convenio multilateral',
+      'Ganancias, bienes personales y balances',
+    ],
+    preguntas: [
+      'Me pasé de categoría, ¿qué hago?',
+      'Cobro en dólares por plataformas, ¿cómo facturo?',
+      '¿Me conviene seguir en el monotributo?',
+    ],
+    nota: 'Los temas contables e impositivos los lleva un contador público matriculado.',
+  },
+  {
     slug: 'estrategia',
     icon: Compass,
     nombre: 'Estrategia',
@@ -77,9 +97,9 @@ export const AREAS: Area[] = [
     ],
   },
   {
-    slug: 'personas',
+    slug: 'capital-humano',
     icon: Users,
-    nombre: 'Personas',
+    nombre: 'Capital Humano',
     promesa: 'Un equipo que acompañe el crecimiento.',
     temas: [
       'Búsqueda y selección de personal',
@@ -94,26 +114,6 @@ export const AREAS: Area[] = [
       'La gente dura poco en el puesto.',
       '¿Cómo armo un esquema de comisiones justo?',
     ],
-  },
-  {
-    slug: 'contabilidad',
-    icon: Receipt,
-    nombre: 'Contabilidad e Impuestos',
-    promesa: 'Cumplir con tus obligaciones sin estrés.',
-    temas: [
-      'Alta, categoría y recategorización del monotributo',
-      'Facturación electrónica en ARCA',
-      'Cobros del exterior y exportación de servicios',
-      'Pasar de monotributo a responsable inscripto',
-      'Ingresos brutos y convenio multilateral',
-      'Ganancias, bienes personales y balances',
-    ],
-    preguntas: [
-      'Me pasé de categoría, ¿qué hago?',
-      'Cobro en dólares por plataformas, ¿cómo facturo?',
-      '¿Me conviene seguir en el monotributo?',
-    ],
-    nota: 'Los temas contables e impositivos los lleva un contador público matriculado.',
   },
   {
     slug: 'tecnologia',
@@ -133,7 +133,6 @@ export const AREAS: Area[] = [
       'Necesito una web, pero no sé de qué tipo.',
       '¿Cómo puedo usar IA en mi negocio?',
     ],
-    nota: 'Lo aplicamos también en casa: el Diagnóstico Prisma® y tucvonline.com son desarrollos propios.',
   },
 ];
 

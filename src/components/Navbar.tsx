@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { NAV_ITEMS, NAV_CTA } from '../data/nav';
 
-const HERO_CLARO = true;
+const HERO_CLARO = false;
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -43,8 +43,8 @@ export default function Navbar() {
     el?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // El hero v3 es claro (fondo marfil con el prisma): el texto del menú va
-  // siempre en azul. Si se vuelve a un hero con foto oscura, poner false.
+  // Con el hero de foto (playa) el menú arranca en blanco y pasa a azul al
+  // hacer scroll. Si algún día el hero es claro, poner HERO_CLARO = true.
   const textoOscuro = scrolled || HERO_CLARO;
 
   return (
