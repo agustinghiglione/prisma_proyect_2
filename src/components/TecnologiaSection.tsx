@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
+  Bot,
+  CalendarCheck,
   Check,
   CheckCircle2,
-  FileSpreadsheet,
+  Instagram,
   Loader2,
-  Mail,
-  Receipt,
   ScanSearch,
   Workflow,
 } from 'lucide-react';
@@ -24,14 +24,41 @@ const INCLUYE_WEB = [
   'Diseño a medida, con tu marca',
   'Pensada para verse bien en el celular',
   'Botón de WhatsApp y formulario de contacto',
-  'Nos ocupamos del hosting y de tu dominio',
+  'Hosting incluido en nuestro servidor',
 ];
 
-/** Ejemplo de automatización: tres pasos que hoy alguien hace a mano. */
-const EJEMPLO_FLUJO = [
-  { icon: FileSpreadsheet, texto: 'Entra un pedido' },
-  { icon: Receipt, texto: 'Se factura' },
-  { icon: Mail, texto: 'Le llega al cliente' },
+/** Opciones de dominio para la web nueva. */
+const DOMINIOS = [
+  { ejemplo: 'tunegocio.consultoraprisma.digital', detalle: 'Incluido con la web' },
+  { ejemplo: 'tunegocio.com', detalle: 'Tu dominio propio, en combo con la web' },
+];
+
+/** Lo que recibe por mail quien pide el análisis de su web. */
+const INFORME = [
+  'Los 5 puntos de tu web que hoy te hacen perder clientes, explicados sin tecnicismos',
+  'Cómo resolvemos cada uno',
+  'Una vista previa de tu web renovada, con tu logo y tus colores',
+];
+
+/** Automatizaciones concretas (con n8n o desarrollos a medida). */
+const AUTOMATIZACIONES = [
+  {
+    icon: Bot,
+    titulo: 'Asistente de chat para tu negocio',
+    texto: 'Responde las consultas de siempre en tu web, WhatsApp o Instagram, a cualquier hora, y te pasa las que necesitan una persona.',
+  },
+  {
+    icon: CalendarCheck,
+    titulo: 'Turnos y reservas solos',
+    texto: 'Tus clientes piden turno desde la web o por Instagram y queda agendado y confirmado, sin que tengas que contestar uno por uno.',
+  },
+];
+
+/** Caso real: web + turnos automáticos para una peluquería. */
+const CASO_PELUQUERIA = [
+  { icon: Instagram, texto: 'Pide turno por Instagram o la web' },
+  { icon: Bot, texto: 'El asistente ofrece horarios' },
+  { icon: CalendarCheck, texto: 'Turno agendado y confirmado' },
 ];
 
 interface TecnologiaSectionProps {
@@ -39,9 +66,10 @@ interface TecnologiaSectionProps {
 }
 
 /**
- * Servicios concretos del área de Tecnología: web a medida en 3 días,
- * análisis de una web existente (pedido por formulario, el informe se manda
- * por mail) y automatización de tareas repetitivas.
+ * Servicios concretos del área de Tecnología: web a medida en 3 días hábiles,
+ * análisis de una web existente (pedido por formulario; el informe se arma
+ * con la skill "cazador de webs" y se manda por mail cuando está listo, sin
+ * prometer plazo) y automatización de tareas (n8n siempre que se pueda).
  */
 export default function TecnologiaSection({ onConsultar }: TecnologiaSectionProps) {
   return (
@@ -78,7 +106,7 @@ export default function TecnologiaSection({ onConsultar }: TecnologiaSectionProp
               <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/70 via-primary-dark/10 to-transparent" />
               <span className="absolute bottom-5 left-6 flex items-baseline gap-1.5 rounded-2xl bg-gold px-4 py-2 font-heading text-primary-dark shadow-soft">
                 <span className="text-3xl font-extrabold leading-none">3</span>
-                <span className="text-sm font-bold">días</span>
+                <span className="text-sm font-bold">días hábiles</span>
               </span>
             </div>
             <div className="flex flex-col p-7 sm:p-9">
@@ -86,8 +114,9 @@ export default function TecnologiaSection({ onConsultar }: TecnologiaSectionProp
                 ¿No tenés página web? Te la hacemos en 3 días.
               </h3>
               <p className="mt-3 leading-relaxed text-ink-soft">
-                Desde la primera reunión, en tres días tu negocio tiene su web publicada: lista para
-                que te encuentren, te conozcan y te escriban.
+                Después de la primera conversación, nos pasás lo que tengas (logo, fotos, textos) y en
+                3 días hábiles recibís la primera versión de tu web. Desde ahí la seguimos ajustando
+                con vos todas las veces que haga falta.
               </p>
               <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
                 {INCLUYE_WEB.map((item) => (
@@ -97,6 +126,19 @@ export default function TecnologiaSection({ onConsultar }: TecnologiaSectionProp
                   </li>
                 ))}
               </ul>
+              <p className="mt-6 text-xs font-semibold uppercase tracking-wide text-primary">
+                Tu dirección en internet
+              </p>
+              <div className="mt-3 grid gap-2">
+                {DOMINIOS.map(({ ejemplo, detalle }) => (
+                  <div key={ejemplo} className="rounded-xl border border-border bg-sand/60 px-4 py-3">
+                    <p className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+                      <span className="break-all font-heading text-sm font-semibold text-ink">{ejemplo}</span>
+                      <span className="text-xs text-ink-soft">{detalle}</span>
+                    </p>
+                  </div>
+                ))}
+              </div>
               <button
                 onClick={() => onConsultar('Quiero una página web para mi negocio: ')}
                 className="mt-8 inline-flex items-center gap-2 self-start rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5"
@@ -130,9 +172,18 @@ export default function TecnologiaSection({ onConsultar }: TecnologiaSectionProp
                 ¿Ya tenés web, pero no te convence?
               </h3>
               <p className="mt-3 leading-relaxed text-white/80">
-                Pegá el link y te mandamos por mail un informe con lo que conviene mejorar y cómo lo
-                resolvemos. Sin costo.
+                Pegá el link y analizamos tu web como la ve un cliente que llega por primera vez, en el
+                celular y en la computadora. Cuando el informe está listo, te llega por mail.
+                Sin costo.
               </p>
+              <ul className="mt-5 grid gap-2">
+                {INFORME.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm leading-relaxed text-white/90">
+                    <Check size={15} strokeWidth={2.5} className="mt-0.5 shrink-0 text-gold" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
               <FormularioAnalisis />
             </div>
           </motion.article>
@@ -156,24 +207,43 @@ export default function TecnologiaSection({ onConsultar }: TecnologiaSectionProp
               automatizamos nosotros.
             </p>
 
-            <div className="mt-6 flex flex-wrap items-center gap-2 rounded-2xl bg-sand/70 p-3">
-              {EJEMPLO_FLUJO.map(({ icon: Icon, texto }, i) => (
-                <span key={texto} className="flex items-center gap-2">
-                  <span className="flex items-center gap-1.5 rounded-full border border-border bg-white px-3 py-1.5 text-xs font-medium text-ink">
-                    <Icon size={14} className="text-primary" strokeWidth={1.75} />
-                    {texto}
-                  </span>
-                  {i < EJEMPLO_FLUJO.length - 1 && <ArrowRight size={14} className="text-gold" />}
-                </span>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {AUTOMATIZACIONES.map(({ icon: Icon, titulo, texto }) => (
+                <div key={titulo}>
+                  <p className="flex items-start gap-2 font-heading text-sm font-semibold text-ink">
+                    <Icon size={16} className="mt-0.5 shrink-0 text-primary" strokeWidth={1.75} />
+                    <span>{titulo}</span>
+                  </p>
+                  <p className="mt-1 text-sm leading-relaxed text-ink-soft">{texto}</p>
+                </div>
               ))}
             </div>
-            <p className="mt-2 text-xs text-ink-soft">Un ejemplo: todo eso, sin que nadie lo haga a mano.</p>
+
+            <div className="mt-6 rounded-2xl bg-sand/70 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                Caso real · Peluquería
+              </p>
+              <p className="mt-1 text-sm text-ink-soft">
+                Le hicimos la web y automatizamos los turnos, desde la web y desde Instagram.
+              </p>
+              <ol className="mt-3 grid gap-2">
+                {CASO_PELUQUERIA.map(({ icon: Icon, texto }, i) => (
+                  <li key={texto} className="flex items-center gap-3 text-sm text-ink">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold/25 font-heading text-xs font-bold text-primary-dark">
+                      {i + 1}
+                    </span>
+                    <Icon size={15} className="shrink-0 text-primary" strokeWidth={1.75} />
+                    {texto}
+                  </li>
+                ))}
+              </ol>
+            </div>
 
             <button
-              onClick={() => onConsultar('Quiero automatizar esta tarea: ')}
+              onClick={() => onConsultar('Quiero automatizar esto en mi negocio: ')}
               className="mt-7 inline-flex items-center gap-2 rounded-full border border-primary px-6 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary hover:text-white"
             >
-              Contanos qué tarea <ArrowRight size={16} />
+              Contanos qué querés automatizar <ArrowRight size={16} />
             </button>
           </motion.article>
         </div>
@@ -218,7 +288,8 @@ function FormularioAnalisis() {
       <div className="mt-6 flex items-start gap-3 rounded-2xl border border-white/15 bg-white/10 p-4">
         <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-gold" />
         <p className="text-sm leading-relaxed text-white/90">
-          ¡Listo! Recibimos tu web. Te mandamos el informe a <strong>{email.trim()}</strong>.
+          ¡Listo! Recibimos tu web. Cuando el informe esté terminado, te llega a{' '}
+          <strong>{email.trim()}</strong>.
         </p>
       </div>
     );
