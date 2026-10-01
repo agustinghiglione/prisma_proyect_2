@@ -8,7 +8,7 @@ const FOTO_EQUIPO =
 
 const IDEAS = [
   { icon: DoorOpen, titulo: 'Una sola puerta', texto: 'No tenés que saber a quién llamar: nos escribís a nosotros.' },
-  { icon: UserCheck, titulo: 'Un especialista por tema', texto: 'Cada consulta la ve el profesional que sabe de eso.' },
+  { icon: UserCheck, titulo: 'Un especialista por tema', texto: 'Cada consulta la atiende el profesional experto en el área.' },
   { icon: Layers, titulo: 'Una mirada de conjunto', texto: 'Las áreas hablan entre sí, como pasa en tu negocio.' },
 ];
 

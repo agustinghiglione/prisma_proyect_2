@@ -83,7 +83,7 @@ export async function generarSintesis(
   // siempre en código (FRASE_PUENTE), así ese mensaje queda garantizado tal
   // cual sin depender de que el modelo lo redacte bien, y la IA tiene menos
   // superficie donde equivocarse.
-  const prompt = `Sos un consultor de negocios de Prisma Consultora (Argentina). Un cliente completó un autodiagnóstico de su negocio en seis áreas (Estrategia, Finanzas, Administración, Capital Humano, Contabilidad e Impuestos, Tecnología). Estos son sus puntajes, de 0 a 100%:
+  const prompt = `Sos un consultor de negocios de Consultora Prisma (Argentina). Un cliente completó un autodiagnóstico de su negocio en seis áreas (Estrategia, Finanzas, Administración, Capital Humano, Contabilidad e Impuestos, Tecnología). Estos son sus puntajes, de 0 a 100%:
 ${resumenAreas}
 
 ${instruccionCaso}

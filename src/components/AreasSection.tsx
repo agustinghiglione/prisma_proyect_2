@@ -30,8 +30,8 @@ export default function AreasSection({ onConsultar }: AreasSectionProps) {
             Una sola puerta para todo tu negocio.
           </h2>
           <p className="mt-4 leading-relaxed text-ink-soft">
-            No tenés que saber a quién llamar. Elegí el tema o contanos tu situación: sumamos al
-            profesional de cada área que tu caso necesite.
+            No tenés que saber a quién llamar. Elegí el tema o contanos tu situación: cada área
+            tiene su especialista dentro del equipo.
           </p>
         </div>
 

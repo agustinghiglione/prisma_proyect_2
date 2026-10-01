@@ -8,6 +8,9 @@ import { adminRouter } from './admin';
 import './db'; // se asegura de que la base y sus tablas existan al arrancar
 
 const app = express();
+// Detrás de Nginx: así req.ip es la IP real del visitante (X-Forwarded-For)
+// y no la del proxy. Lo usa el límite de pedidos de /api/auditoria-web.
+app.set('trust proxy', 1);
 app.use(cors());
 // Límite subido de 100kb (default) a 20mb: el panel de admin manda el
 // adjunto del mail como base64 dentro del JSON, y un PDF/imagen normal ya
@@ -33,5 +36,5 @@ if (fs.existsSync(distPath)) {
 
 const PORT = Number(process.env.PORT ?? 3001);
 app.listen(PORT, () => {
-  console.log(`[api] Prisma Consultora — backend escuchando en http://localhost:${PORT}`);
+  console.log(`[api] Consultora Prisma — backend escuchando en http://localhost:${PORT}`);
 });

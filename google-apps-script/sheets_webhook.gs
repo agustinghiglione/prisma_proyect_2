@@ -69,6 +69,7 @@ var COLUMNAS = {
     'p2_estrategia', 'p2_finanzas', 'p2_administracion', 'p2_personas', 'p2_contabilidad_impuestos', 'p2_tecnologia',
   ],
   agendamiento: ['fecha', 'id', 'nombre', 'email', 'telefono', 'hizoDiagnostico', 'horario', 'contexto'],
+  auditoria_web: ['fecha', 'id', 'url', 'email', 'nombre'],
 };
 
 // Encabezados legibles para cada columna — si una clave no está acá, se usa
@@ -87,6 +88,7 @@ var ENCABEZADOS = {
   hizoDiagnostico: 'Hizo el diagnóstico',
   horario: 'Horario preferido',
   contexto: 'Contexto',
+  url: 'Web',
   p1_administracion: 'Administración (parte 1, gratis)',
   p1_finanzas: 'Finanzas (parte 1, gratis)',
   p1_contabilidad_impuestos: 'Contabilidad e Impuestos (parte 1, gratis)',
@@ -104,6 +106,7 @@ var NOMBRES_HOJA = {
   diagnostico_parte1: 'Diagnósticos (parte 1)',
   diagnostico_completo: 'Diagnósticos completos',
   agendamiento: 'Agendamientos',
+  auditoria_web: 'Análisis de webs',
 };
 
 function obtenerOCrearHoja_(tipo) {

@@ -37,7 +37,6 @@ export const AREAS: Area[] = [
       'Cobro en dólares por plataformas, ¿cómo facturo?',
       '¿Me conviene seguir en el monotributo?',
     ],
-    nota: 'Los temas contables e impositivos los lleva un contador público matriculado.',
   },
   {
     slug: 'estrategia',

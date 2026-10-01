@@ -221,3 +221,26 @@ export function crearAgendamiento(data: AgendamientoData) {
     contexto: data.contexto ?? null,
   });
 }
+
+/**
+ * Pedidos de análisis de una web existente (sección Tecnología). El análisis
+ * se hace por fuera, con nuestras herramientas, y el informe se manda por
+ * mail; acá solo queda registrado el pedido y en qué estado está.
+ */
+db.exec(`
+  CREATE TABLE IF NOT EXISTS auditorias_web (
+    id TEXT PRIMARY KEY,
+    url TEXT NOT NULL,
+    email TEXT NOT NULL,
+    nombre TEXT,
+    estado TEXT NOT NULL DEFAULT 'pendiente',  -- pendiente | enviado
+    creado_en TEXT NOT NULL DEFAULT (datetime('now')),
+    enviado_en TEXT
+  );
+`);
+
+export function crearAuditoriaWeb(data: { id: string; url: string; email: string; nombre?: string }) {
+  db.prepare(
+    `INSERT INTO auditorias_web (id, url, email, nombre) VALUES (@id, @url, @email, @nombre)`,
+  ).run({ id: data.id, url: data.url, email: data.email, nombre: data.nombre ?? null });
+}

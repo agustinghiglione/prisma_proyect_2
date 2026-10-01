@@ -38,7 +38,7 @@ export default function Hero({ onStartDiagnostic, onConsultar }: HeroProps) {
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-white/85">
             Reunimos profesionales de estrategia, finanzas, administración, capital humano,
-            contabilidad e impuestos y tecnología. Contanos qué necesitás y sumamos al especialista indicado para tu
+            contabilidad e impuestos y tecnología. Contanos qué necesitás y te atiende el especialista indicado para tu
             caso.
           </p>
 

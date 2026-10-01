@@ -75,8 +75,8 @@ export default function ContactoSection({ onStartDiagnostic }: ContactoSectionPr
           </div>
 
           <p className="mt-6 text-sm text-ink-soft">
-            Si después vemos algo concreto para hacer, te pasamos una propuesta con alcance y precio.
-            Más abajo tenés una idea de los planes.
+            Después de la primera conversación recibís una propuesta con alcance y precio, pensada
+            para tu negocio.
           </p>
         </div>
 

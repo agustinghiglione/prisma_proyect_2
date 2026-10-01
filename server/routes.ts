@@ -21,9 +21,15 @@ import {
   marcarEmailCompletoEnviado,
   buscarDiagnosticoPorEmail,
   actualizarEstadoCliente,
+  crearAuditoriaWeb,
 } from './db';
 import { crearPreferenciaDePago, consultarPago } from './mercadopago';
-import { enviarInformeCompleto, enviarInformeParte1, enviarNotificacionAgendamiento } from './email';
+import {
+  enviarInformeCompleto,
+  enviarInformeParte1,
+  enviarNotificacionAgendamiento,
+  enviarNotificacionAuditoriaWeb,
+} from './email';
 import { generarSintesis } from './ia';
 import { enviarASheet } from './sheets';
 
@@ -296,6 +302,72 @@ router.post('/agendar', async (req, res) => {
   } catch (err) {
     // El pedido ya quedó guardado en la base aunque el mail de aviso falle.
     console.error('[agendar] no se pudo enviar la notificación al equipo:', err);
+  }
+
+  res.json({ ok: true });
+});
+
+/**
+ * "Analizamos tu web": el visitante deja el link de su página y su mail. Se
+ * guarda el pedido y se avisa al equipo; el informe se arma por fuera y se
+ * manda por mail. Límite simple por IP para que no se use como spam.
+ */
+const pedidosPorIp = new Map<string, number[]>();
+const MAX_PEDIDOS_POR_HORA = 5;
+
+function normalizarUrl(valor: unknown): string | null {
+  if (typeof valor !== 'string') return null;
+  let texto = valor.trim();
+  if (!texto || texto.length > 300) return null;
+  if (!/^https?:\/\//i.test(texto)) texto = `https://${texto}`;
+  try {
+    const url = new URL(texto);
+    if (!['http:', 'https:'].includes(url.protocol) || !url.hostname.includes('.')) return null;
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
+router.post('/auditoria-web', async (req, res) => {
+  const { url, email, nombre, sitio } = req.body ?? {};
+
+  // Campo trampa: invisible para personas, los bots lo completan.
+  if (sitio) return res.json({ ok: true });
+
+  const urlNormalizada = normalizarUrl(url);
+  if (!urlNormalizada) {
+    return res.status(400).json({ error: 'Revisá el link de tu página (por ejemplo: tunegocio.com.ar).' });
+  }
+  if (!email || typeof email !== 'string' || !EMAIL_RE.test(email.trim())) {
+    return res.status(400).json({ error: 'Ingresá un email válido para mandarte el informe.' });
+  }
+
+  const ip = req.ip ?? 'desconocida';
+  const haceUnaHora = Date.now() - 60 * 60 * 1000;
+  const recientes = (pedidosPorIp.get(ip) ?? []).filter((t) => t > haceUnaHora);
+  // Si el proxy no pasa la IP real, todos llegan como localhost: límite más amplio.
+  const limite = /^(::1|127\.|::ffff:127\.)/.test(ip) ? MAX_PEDIDOS_POR_HORA * 10 : MAX_PEDIDOS_POR_HORA;
+  if (recientes.length >= limite) {
+    return res.status(429).json({ error: 'Recibimos varios pedidos seguidos. Probá de nuevo en un rato.' });
+  }
+  pedidosPorIp.set(ip, [...recientes, Date.now()]);
+
+  const datos = {
+    id: randomUUID(),
+    url: urlNormalizada,
+    email: email.trim(),
+    nombre: typeof nombre === 'string' && nombre.trim() ? nombre.trim().slice(0, 120) : undefined,
+  };
+  crearAuditoriaWeb(datos);
+
+  void enviarASheet({ tipo: 'auditoria_web', ...datos, nombre: datos.nombre ?? '' });
+
+  try {
+    await enviarNotificacionAuditoriaWeb(datos);
+  } catch (err) {
+    // El pedido ya quedó guardado aunque el aviso por mail falle.
+    console.error('[auditoria-web] no se pudo enviar la notificación al equipo:', err);
   }
 
   res.json({ ok: true });

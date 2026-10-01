@@ -1,4 +1,4 @@
-import { BadgeCheck, FileSignature, Gauge, Lock, MessagesSquare, Wallet } from 'lucide-react';
+import { FileSignature, Gauge, Lock, MessagesSquare, Users, Wallet } from 'lucide-react';
 import CvTransicion from './CvTransicion';
 
 /**
@@ -19,9 +19,9 @@ const ITEMS = [
     texto: 'El Diagnóstico Prisma® es gratuito y te da una primera lectura en menos de un minuto.',
   },
   {
-    icon: BadgeCheck,
-    titulo: 'Profesionales habilitados',
-    texto: 'Los temas contables e impositivos los lleva un contador público matriculado.',
+    icon: Users,
+    titulo: 'Un solo equipo',
+    texto: 'Aunque tu consulta toque varias áreas, hablás siempre con el mismo equipo.',
   },
   {
     icon: FileSignature,

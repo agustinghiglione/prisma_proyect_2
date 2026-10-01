@@ -10,15 +10,15 @@ const PASOS = [
   },
   {
     icon: UserCheck,
-    titulo: 'Lo mira quien sabe',
+    titulo: 'Lo analiza el especialista',
     texto:
-      'Sumamos al profesional del área que tu consulta necesita. Si toca varias, las miramos juntas.',
+      'Cada área del equipo tiene su especialista. Tu consulta va directo a quien domina el tema y, si toca varias áreas, la trabajamos en conjunto.',
   },
   {
     icon: Handshake,
     titulo: 'Propuesta y acompañamiento',
     texto:
-      'Primera conversación sin costo. Si hay algo concreto para hacer, te pasamos una propuesta clara y te acompañamos a llevarla adelante.',
+      'Primera conversación sin costo. Te pasamos una propuesta clara y te acompañamos a llevarla adelante.',
   },
 ];
 
