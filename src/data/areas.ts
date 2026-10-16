@@ -39,6 +39,25 @@ export const AREAS: Area[] = [
     ],
   },
   {
+    slug: 'tecnologia',
+    icon: Cpu,
+    nombre: 'Tecnología',
+    promesa: 'Tecnología que trabaja para tu negocio.',
+    temas: [
+      'Página web en 3 días hábiles',
+      'Asistentes de chat para tu web, WhatsApp e Instagram',
+      'Automatizaciones: turnos, reseñas, avisos y mensajes',
+      'Facturación conectada con ARCA',
+      'Tableros para ver tus números al día',
+      'Sistemas de gestión a medida',
+    ],
+    preguntas: [
+      'Hago todo en planillas y a mano.',
+      'Necesito una web, pero no sé de qué tipo.',
+      '¿Cómo puedo usar IA en mi negocio?',
+    ],
+  },
+  {
     slug: 'estrategia',
     icon: Compass,
     nombre: 'Estrategia',
@@ -114,25 +133,6 @@ export const AREAS: Area[] = [
       '¿Cómo armo un esquema de comisiones justo?',
     ],
   },
-  {
-    slug: 'tecnologia',
-    icon: Cpu,
-    nombre: 'Tecnología',
-    promesa: 'Herramientas que simplifican la gestión.',
-    temas: [
-      'Página web, catálogo o tienda online',
-      'Sistema de gestión y facturación a tu medida',
-      'Automatizar tareas repetitivas y planillas',
-      'Tableros para ver tus números al día',
-      'Uso práctico de inteligencia artificial en el negocio',
-      'Presencia en Google y redes para que te encuentren',
-    ],
-    preguntas: [
-      'Hago todo en planillas y a mano.',
-      'Necesito una web, pero no sé de qué tipo.',
-      '¿Cómo puedo usar IA en mi negocio?',
-    ],
-  },
 ];
 
 /** Evento para abrir un área desde otra sección (p. ej. los chips del Hero). */
@@ -140,5 +140,6 @@ export const EVENTO_AREA = 'prisma:area';
 
 export function irAArea(slug: string) {
   window.dispatchEvent(new CustomEvent(EVENTO_AREA, { detail: slug }));
-  document.querySelector('#areas')?.scrollIntoView({ behavior: 'smooth' });
+  const destino = document.querySelector(`#area-${slug}`) ?? document.querySelector('#servicios');
+  destino?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }

@@ -5,8 +5,8 @@ export interface FaqItem {
 
 export const FAQ: FaqItem[] = [
   {
-    question: '¿Tengo que contratar las seis áreas?',
-    answer: 'No. Podés consultar por un solo tema. Sumamos otras áreas solo si tu caso lo necesita.',
+    question: '¿Tengo que contratar todos los módulos?',
+    answer: 'No. Armás tu Prisma con los módulos que necesites. Si tu caso toca otras áreas, lo vemos juntos en la primera conversación.',
   },
   {
     question: '¿La primera conversación tiene costo?',
@@ -22,6 +22,6 @@ export const FAQ: FaqItem[] = [
   },
   {
     question: '¿Qué pasa después de la primera conversación?',
-    answer: 'Si detectamos una oportunidad concreta, elaboramos una propuesta personalizada para tu negocio. Sin presiones ni letra chica.',
+    answer: 'Te pasamos una propuesta personalizada, con alcance y precio, para tu negocio. Sin presiones ni letra chica.',
   },
 ];

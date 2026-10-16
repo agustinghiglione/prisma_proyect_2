@@ -1,5 +1,4 @@
 import { FileSignature, Gauge, Lock, MessagesSquare, Users, Wallet } from 'lucide-react';
-import CvTransicion from './CvTransicion';
 
 /**
  * Confianza sin caras (mientras el equipo decide si se muestra): solo
@@ -61,8 +60,6 @@ export default function ConfianzaSection() {
           ))}
         </div>
 
-
-        <CvTransicion />
       </div>
     </section>
   );

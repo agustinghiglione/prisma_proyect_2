@@ -9,6 +9,8 @@ import {
   Instagram,
   Loader2,
   ScanSearch,
+  Star,
+  UserRound,
   Workflow,
 } from 'lucide-react';
 
@@ -54,11 +56,12 @@ const AUTOMATIZACIONES = [
   },
 ];
 
-/** Caso real: web + turnos automáticos para una peluquería. */
-const CASO_PELUQUERIA = [
-  { icon: Instagram, texto: 'Pide turno por Instagram o la web' },
-  { icon: Bot, texto: 'El asistente ofrece horarios' },
-  { icon: CalendarCheck, texto: 'Turno agendado y confirmado' },
+/** Ejemplo: lo que automatizamos en un negocio de turnos (caso real de una peluquería). */
+const EJEMPLO_TURNOS = [
+  { icon: CalendarCheck, texto: 'Turnos desde la web y desde Instagram' },
+  { icon: Star, texto: 'Pedido de reseña después de cada turno' },
+  { icon: Instagram, texto: 'Respuestas a las consultas de siempre' },
+  { icon: UserRound, texto: 'Lo que necesita una persona, directo al dueño' },
 ];
 
 interface TecnologiaSectionProps {
@@ -77,13 +80,13 @@ export default function TecnologiaSection({ onConsultar }: TecnologiaSectionProp
       <div className="mx-auto max-w-6xl">
         <div className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-            Tecnología para tu negocio
+            Destacados de Tecnología
           </p>
           <h2 className="mt-3 font-heading text-3xl font-bold text-primary sm:text-4xl">
             Tu negocio, también en digital.
           </h2>
           <p className="mt-4 leading-relaxed text-ink-soft">
-            Tres maneras concretas de que la tecnología trabaje para vos, no al revés.
+            Tres servicios para empezar ya: concretos, rápidos y pensados para negocios como el tuyo.
           </p>
         </div>
 
@@ -221,22 +224,19 @@ export default function TecnologiaSection({ onConsultar }: TecnologiaSectionProp
 
             <div className="mt-6 rounded-2xl bg-sand/70 p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-primary">
-                Caso real · Peluquería
+                Un negocio de turnos, en automático
               </p>
               <p className="mt-1 text-sm text-ink-soft">
-                Le hicimos la web y automatizamos los turnos, desde la web y desde Instagram.
+                Así lo hicimos para una peluquería: el dueño se dedica a su oficio y el resto funciona solo.
               </p>
-              <ol className="mt-3 grid gap-2">
-                {CASO_PELUQUERIA.map(({ icon: Icon, texto }, i) => (
-                  <li key={texto} className="flex items-center gap-3 text-sm text-ink">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold/25 font-heading text-xs font-bold text-primary-dark">
-                      {i + 1}
-                    </span>
-                    <Icon size={15} className="shrink-0 text-primary" strokeWidth={1.75} />
+              <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+                {EJEMPLO_TURNOS.map(({ icon: Icon, texto }) => (
+                  <li key={texto} className="flex items-start gap-2 text-sm text-ink">
+                    <Icon size={15} className="mt-0.5 shrink-0 text-primary" strokeWidth={1.75} />
                     {texto}
                   </li>
                 ))}
-              </ol>
+              </ul>
             </div>
 
             <button

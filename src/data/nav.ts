@@ -1,3 +1,5 @@
+import { hayClientes } from './clientes';
+
 export interface NavItem {
   label: string;
   href: string;
@@ -5,10 +7,11 @@ export interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Quiénes somos', href: '#quienes-somos' },
-  { label: 'Áreas', href: '#areas' },
-  { label: 'Web y automatización', href: '#tecnologia' },
+  { label: 'Servicios', href: '#servicios' },
+  { label: 'Armá tu Prisma', href: '#arma-tu-prisma' },
+  // "Clientes" aparece solo cuando hay al menos un testimonio aprobado.
+  ...(hayClientes() ? [{ label: 'Clientes', href: '#clientes' }] : []),
   { label: 'Cómo empezar', href: '#contacto' },
-  { label: 'Planes', href: '#planes' },
 ];
 
 export const NAV_CTA: NavItem = { label: 'Contanos tu consulta', href: '#contacto' };

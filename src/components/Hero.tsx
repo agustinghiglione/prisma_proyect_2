@@ -37,9 +37,9 @@ export default function Hero({ onStartDiagnostic, onConsultar }: HeroProps) {
             Un solo equipo para todo lo que tu negocio necesita.
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-white/85">
-            Reunimos profesionales de estrategia, finanzas, administración, capital humano,
-            contabilidad e impuestos y tecnología. Contanos qué necesitás y te atiende el especialista indicado para tu
-            caso.
+            Contabilidad e impuestos y tecnología como base, y especialistas en administración,
+            finanzas, estrategia y capital humano en el mismo equipo. Contanos qué necesitás: lo
+            resolvemos juntos.
           </p>
 
           <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
