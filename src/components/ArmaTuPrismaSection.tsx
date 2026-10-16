@@ -47,7 +47,9 @@ export default function ArmaTuPrismaSection({ onConsultar }: ArmaTuPrismaSection
   };
 
   return (
-    <section id="arma-tu-prisma" className="bg-sand px-6 pt-4 pb-20 lg:px-10">
+    <section id="arma-tu-prisma" className="relative bg-sand px-6 pt-4 pb-20 lg:px-10">
+      {/* Ancla de compatibilidad: enlaces viejos apuntan a #planes */}
+      <span id="planes" aria-hidden className="absolute top-0" />
       <div className="mx-auto max-w-6xl">
         <div className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Armá tu Prisma</p>

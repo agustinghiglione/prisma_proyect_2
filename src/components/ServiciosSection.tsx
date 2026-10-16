@@ -18,7 +18,9 @@ const GESTION = ['administracion', 'finanzas', 'estrategia', 'capital-humano'];
  */
 export default function ServiciosSection({ onConsultar }: ServiciosSectionProps) {
   return (
-    <section id="servicios" className="bg-sand px-6 pt-8 pb-20 lg:px-10">
+    <section id="servicios" className="relative bg-sand px-6 pt-8 pb-20 lg:px-10">
+      {/* Ancla de compatibilidad: historias y enlaces viejos apuntan a #areas */}
+      <span id="areas" aria-hidden className="absolute top-0" />
       <div className="mx-auto max-w-6xl">
         <div className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Servicios</p>

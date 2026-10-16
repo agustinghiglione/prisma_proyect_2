@@ -8,6 +8,10 @@ import {
   CheckCircle2,
   Instagram,
   Loader2,
+  FileStack,
+  LayoutDashboard,
+  MessagesSquare,
+  Receipt,
   ScanSearch,
   Star,
   UserRound,
@@ -42,26 +46,33 @@ const INFORME = [
   'Una vista previa de tu web renovada, con tu logo y tus colores',
 ];
 
-/** Automatizaciones concretas (con n8n o desarrollos a medida). */
+/**
+ * Automatizaciones agrupadas por necesidad del negocio (no por rubro).
+ * Referentes: Cuenta Norte (carga de comprobantes, conciliaciones, reportes)
+ * y Las Contas (bots que ahorran horas). Se hacen con n8n siempre que se
+ * pueda, o con desarrollos a medida.
+ */
 const AUTOMATIZACIONES = [
   {
-    icon: Bot,
-    titulo: 'Asistente de chat para tu negocio',
-    texto: 'Responde las consultas de siempre en tu web, WhatsApp o Instagram, a cualquier hora, y te pasa las que necesitan una persona.',
+    icon: MessagesSquare,
+    titulo: 'Vender y atender',
+    texto: 'Un asistente responde en tu web, WhatsApp o Instagram, toma turnos y pedidos, y te pasa lo que necesita una persona.',
   },
   {
-    icon: CalendarCheck,
-    titulo: 'Turnos y reservas solos',
-    texto: 'Tus clientes piden turno desde la web o por Instagram y queda agendado y confirmado, sin que tengas que contestar uno por uno.',
+    icon: Receipt,
+    titulo: 'Cobrar y facturar',
+    texto: 'Cuando te pagan, la factura sale sola y le llega al cliente. Y un recordatorio amable para quien te debe.',
   },
-];
-
-/** Ejemplo: lo que automatizamos en un negocio de turnos (caso real de una peluquería). */
-const EJEMPLO_TURNOS = [
-  { icon: CalendarCheck, texto: 'Turnos desde la web y desde Instagram' },
-  { icon: Star, texto: 'Pedido de reseña después de cada turno' },
-  { icon: Instagram, texto: 'Respuestas a las consultas de siempre' },
-  { icon: UserRound, texto: 'Lo que necesita una persona, directo al dueño' },
+  {
+    icon: FileStack,
+    titulo: 'Administración sin carga manual',
+    texto: 'Las facturas de tus proveedores se leen y se cargan solas, y te avisamos antes de cada vencimiento.',
+  },
+  {
+    icon: LayoutDashboard,
+    titulo: 'Tus números al día',
+    texto: 'Ventas, caja y gastos en un tablero que se actualiza solo, con un resumen por mail cada semana.',
+  },
 ];
 
 interface TecnologiaSectionProps {
@@ -207,7 +218,7 @@ export default function TecnologiaSection({ onConsultar }: TecnologiaSectionProp
             </h3>
             <p className="mt-3 leading-relaxed text-ink-soft">
               Concentrate en lo que de verdad te importa. Lo que se repite todos los días lo
-              automatizamos nosotros.
+              automatizamos nosotros, en cuatro frentes:
             </p>
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -222,22 +233,9 @@ export default function TecnologiaSection({ onConsultar }: TecnologiaSectionProp
               ))}
             </div>
 
-            <div className="mt-6 rounded-2xl bg-sand/70 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-primary">
-                Un negocio de turnos, en automático
-              </p>
-              <p className="mt-1 text-sm text-ink-soft">
-                Así lo hicimos para una peluquería: el dueño se dedica a su oficio y el resto funciona solo.
-              </p>
-              <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-                {EJEMPLO_TURNOS.map(({ icon: Icon, texto }) => (
-                  <li key={texto} className="flex items-start gap-2 text-sm text-ink">
-                    <Icon size={15} className="mt-0.5 shrink-0 text-primary" strokeWidth={1.75} />
-                    {texto}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <p className="mt-6 rounded-2xl bg-sand/70 px-4 py-3 text-sm text-ink-soft">
+              Empezamos por la tarea que más tiempo te quita. Si funciona, seguimos con la próxima.
+            </p>
 
             <button
               onClick={() => onConsultar('Quiero automatizar esto en mi negocio: ')}

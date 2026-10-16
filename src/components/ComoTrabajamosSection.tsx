@@ -16,8 +16,8 @@ const PASOS = [
   },
   {
     icon: UserCheck,
-    titulo: 'Lo toma el especialista',
-    texto: 'Cada parte la trabaja el especialista del área, dentro del mismo equipo.',
+    titulo: 'Cada área, su especialista',
+    texto: 'Cada parte la resuelve el especialista del área que corresponde, dentro del equipo Prisma.',
   },
   {
     icon: FileText,

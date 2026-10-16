@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import QuienesSomosSection from './components/QuienesSomosSection';
@@ -31,6 +31,18 @@ function App() {
   const [consulta, setConsulta] = useState<string | null>(null);
   const openDiagnostic = () => setDiagnosticoAbierto(true);
   const openConsulta = (contexto = '') => setConsulta(contexto);
+
+  // Enlaces con ancla (p. ej. desde las historias de Instagram: /#servicios):
+  // la página se arma después de cargar, así que el navegador no llega a bajar
+  // solo. Esperamos a que exista la sección y la mostramos.
+  useEffect(() => {
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (!id) return;
+    const t = window.setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 400);
+    return () => window.clearTimeout(t);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background font-sans text-ink antialiased">
