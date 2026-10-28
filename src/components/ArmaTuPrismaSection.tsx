@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, Check, Plus, Sparkles } from 'lucide-react';
 import { MODULOS, PAQUETES, moduloPorSlug } from '../data/modulos';
+import CrucesSection from './CrucesSection';
 
 interface ArmaTuPrismaSectionProps {
   onConsultar: (contexto: string) => void;
@@ -46,8 +47,11 @@ export default function ArmaTuPrismaSection({ onConsultar }: ArmaTuPrismaSection
     onConsultar(`${base}Mi negocio es: `);
   };
 
+  // Orden (v6): armá tu Prisma → la firma Prisma (cruces) → paquetes.
+  // Las tres comparten estado: elegir un paquete actualiza "Tu Prisma".
   return (
-    <section id="arma-tu-prisma" className="relative bg-sand px-6 pt-4 pb-20 lg:px-10">
+    <>
+    <section id="arma-tu-prisma" className="relative bg-sand px-6 pt-4 pb-16 lg:px-10">
       {/* Ancla de compatibilidad: enlaces viejos apuntan a #planes */}
       <span id="planes" aria-hidden className="absolute top-0" />
       <div className="mx-auto max-w-6xl">
@@ -198,12 +202,20 @@ export default function ArmaTuPrismaSection({ onConsultar }: ArmaTuPrismaSection
           )}
         </AnimatePresence>
 
-        {/* Paquetes */}
-        <div className="mt-14">
-          <h3 className="font-heading text-2xl font-bold text-primary">Paquetes Prisma</h3>
+      </div>
+    </section>
+
+    <CrucesSection />
+
+    <section id="paquetes" className="bg-sand px-6 pb-20 lg:px-10">
+      <div className="mx-auto max-w-6xl">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Paquetes Prisma</p>
+          <h3 className="mt-3 font-heading text-3xl font-bold text-primary sm:text-4xl">
+            Combinaciones listas para empezar.
+          </h3>
           <p className="mt-2 max-w-2xl text-ink-soft">
-            Combinaciones pensadas para situaciones que vemos seguido. Elegí una y la ajustamos a tu
-            negocio.
+            Pensadas para situaciones que vemos seguido. Elegí una y la ajustamos a tu negocio.
           </p>
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {PAQUETES.map((p) => {
@@ -248,5 +260,6 @@ export default function ArmaTuPrismaSection({ onConsultar }: ArmaTuPrismaSection
         </div>
       </div>
     </section>
+    </>
   );
 }

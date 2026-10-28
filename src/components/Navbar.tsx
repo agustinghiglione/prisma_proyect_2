@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { NAV_ITEMS, NAV_CTA } from '../data/nav';
 
-const HERO_CLARO = false;
+const HERO_CLARO = true; // hero claro con el prisma (v6)
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -60,11 +60,18 @@ export default function Navbar() {
             e.preventDefault();
             handleNavClick('#inicio');
           }}
+          aria-label="Consultora Prisma — inicio"
           className={`font-heading text-lg font-medium tracking-tight transition-colors ${
             textoOscuro ? 'text-primary' : 'text-white [text-shadow:0_1px_3px_rgb(0_0_0_/_45%)]'
           }`}
         >
-          CONSULTORA <span className={`font-extrabold ${textoOscuro ? 'text-primary' : 'text-white/90'}`}>PRISMA</span>
+          <span className="flex items-center gap-2">
+            <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden>
+              <path d="M12 3 21.5 20h-19Z" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+              <path d="M13.5 12.5 23 14.2" stroke="#e4b15e" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+            <span className="font-extrabold tracking-[0.12em]">PRISMA</span>
+          </span>
         </a>
 
         <div className="hidden items-center gap-8 lg:flex">

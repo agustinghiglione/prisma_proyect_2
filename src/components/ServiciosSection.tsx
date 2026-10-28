@@ -122,7 +122,7 @@ export default function ServiciosSection({ onConsultar }: ServiciosSectionProps)
             onClick={() => onConsultar('')}
             className="shrink-0 rounded-full bg-gold px-6 py-3 text-sm font-semibold text-primary-dark transition-transform hover:-translate-y-0.5"
           >
-            Contanos qué pasa
+            Contanos tu caso
           </button>
         </div>
       </div>

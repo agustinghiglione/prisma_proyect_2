@@ -3,7 +3,6 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import QuienesSomosSection from './components/QuienesSomosSection';
 import ServiciosSection from './components/ServiciosSection';
-import CrucesSection from './components/CrucesSection';
 import TecnologiaSection from './components/TecnologiaSection';
 import TransicionColor from './components/TransicionColor';
 import ComoTrabajamosSection from './components/ComoTrabajamosSection';
@@ -17,11 +16,11 @@ import WhatsAppFlotante from './components/WhatsAppFlotante';
 import DiagnosticoFlow from './components/DiagnosticoFlow';
 import AgendarModal from './components/AgendarModal';
 
-// v5 — Ruta del cliente: qué es Prisma (hero + quiénes somos) → servicios en
-// tres bloques (Contabilidad e Impuestos y Tecnología al frente) → cuando las
-// áreas se cruzan (la firma Prisma) → destacados de tecnología → empezar gratis
-// → cómo trabajamos (5 pasos) → armá tu Prisma (módulos + paquetes) →
-// clientes (solo testimonios aprobados) → confianza → preguntas.
+// v6 — Ruta del cliente: hero (la consulta entra al prisma y sale en los seis
+// módulos) → quiénes somos → servicios en tres bloques → cómo trabajamos
+// (5 pasos) → destacados de tecnología → armá tu Prisma → la firma Prisma
+// (cruces) → paquetes → cómo empezar (gratis) → clientes (solo aprobados) →
+// confianza → preguntas.
 // Secciones que ya no se usan (quedan por si se quieren recuperar):
 // AreasSection, PlanesSection, CvTransicion, ProblemsSection, DiagnosticIntro,
 // SolucionesSection, TransitionQuote, MetodoSection, PorQueSection,
@@ -51,13 +50,13 @@ function App() {
         <Hero onStartDiagnostic={openDiagnostic} onConsultar={() => openConsulta()} />
         <QuienesSomosSection />
         <ServiciosSection onConsultar={openConsulta} />
-        <CrucesSection />
-        <TecnologiaSection onConsultar={openConsulta} />
-        <ContactoSection onStartDiagnostic={openDiagnostic} />
         <TransicionColor variante="arena-a-azul" />
         <ComoTrabajamosSection />
         <TransicionColor variante="azul-a-arena" />
+        <TecnologiaSection onConsultar={openConsulta} />
+        {/* Armá tu Prisma incluye, en este orden, la firma Prisma (cruces) y los paquetes */}
         <ArmaTuPrismaSection onConsultar={openConsulta} />
+        <ContactoSection onStartDiagnostic={openDiagnostic} />
         <ClientesSection />
         <ConfianzaSection />
         <FaqSection />

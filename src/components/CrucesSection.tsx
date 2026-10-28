@@ -9,7 +9,7 @@ import { CRUCES, moduloPorSlug } from '../data/modulos';
  */
 export default function CrucesSection() {
   return (
-    <section id="cruces" className="bg-sand px-6 pb-20 lg:px-10">
+    <section id="cruces" className="bg-sand px-6 pb-16 lg:px-10">
       <div className="relative mx-auto max-w-6xl overflow-hidden rounded-3xl bg-gradient-to-br from-primary-dark to-primary px-7 py-12 sm:px-12">
         <div className="pointer-events-none absolute -top-24 -right-16 h-72 w-72 rounded-full bg-gold/15 blur-3xl" />
         <div className="relative max-w-2xl">
