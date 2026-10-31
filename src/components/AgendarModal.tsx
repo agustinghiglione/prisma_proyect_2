@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { evento } from '../lib/analytics';
 import { X, ArrowRight, CheckCircle2, Loader2 } from 'lucide-react';
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 import { SCROLL_PANEL, SCROLL_PANEL_STYLE } from '../lib/ui';
@@ -64,6 +65,7 @@ export default function AgendarModal({
         throw new Error(data.error ?? 'No se pudo enviar.');
       }
       setEnviado(true);
+      evento('consulta_enviada', { hizoDiagnostico: hizoDiagnostico || 'no_indicado' });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Algo falló. Probá de nuevo en un momento.');
     } finally {

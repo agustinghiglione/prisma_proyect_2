@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { evento } from '../lib/analytics';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
@@ -274,6 +275,7 @@ function FormularioAnalisis() {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error ?? 'No pudimos enviar el pedido. Probá de nuevo.');
       setEnviado(true);
+      evento('analisis_web_pedido');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No pudimos enviar el pedido. Probá de nuevo.');
     } finally {

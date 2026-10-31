@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { evento } from '../lib/analytics';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ArrowRight, ArrowLeft, Lock, CheckCircle2, Loader2, Mail, ShieldCheck, Sparkles } from 'lucide-react';
 import {
@@ -44,6 +45,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MP_AZUL = '#009EE3';
 
 export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
+  useEffect(() => { evento('diagnostico_abierto'); }, []);
   useBodyScrollLock();
   const [paso, setPaso] = useState<Paso>('preguntas');
   const [preguntaActual, setPreguntaActual] = useState(0);
@@ -115,6 +117,7 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
       setDiagnosticoId(data.id);
       setResultado(data.resultado);
       setPaso('resultado');
+      evento('diagnostico_completado');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Algo falló al guardar tu diagnóstico. Probá de nuevo en un momento.');
     } finally {
@@ -123,6 +126,7 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
   };
 
   const pedirDiagnosticoCompleto = () => {
+    evento('diagnostico_completo_interes');
     setPaso('contacto-pago');
   };
 
@@ -145,6 +149,7 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
         throw new Error(data.error ?? 'No se pudo iniciar el pago.');
       }
       const data = await res.json();
+      evento('diagnostico_completo_pago_iniciado');
       if (data.omitido) {
         // Modo de prueba (SKIP_PAYMENT=true): sin Mercado Pago, directo a la Parte 2.
         setPagado(true);

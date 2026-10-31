@@ -80,10 +80,10 @@ export default function Hero({ onStartDiagnostic, onConsultar }: HeroProps) {
             Consultora Prisma · Consultoría integral para negocios
           </p>
 
-          <h1 className="mt-6 pb-1 font-heading text-4xl font-extrabold leading-[1.08] tracking-tight text-primary-dark sm:text-5xl lg:text-[3.6rem]">
+          <h1 className="mt-6 pb-1 font-heading text-4xl font-extrabold leading-[1.15] tracking-tight text-primary-dark sm:text-5xl lg:text-[3.6rem]">
             <span className="relative inline-block text-primary">
               Un solo equipo
-              <span aria-hidden className="absolute bottom-[-0.2em] left-0 flex h-[0.08em] min-h-1 w-full overflow-hidden rounded-full">
+              <span aria-hidden className="absolute bottom-[-0.12em] left-0 flex h-[0.08em] min-h-1 w-full overflow-hidden rounded-full">
                 {HACES.map((h) => (
                   <span key={h.slug} className="flex-1" style={{ backgroundColor: h.color }} />
                 ))}
@@ -125,6 +125,7 @@ export default function Hero({ onStartDiagnostic, onConsultar }: HeroProps) {
 
           <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
             <button
+              data-umami-event="hero_contanos_consulta"
               onClick={onConsultar}
               className="group inline-flex items-center justify-center gap-2 rounded-full bg-primary-dark px-7 py-3.5 text-sm font-semibold text-white shadow-[0_10px_30px_-10px_rgb(34_60_84_/_70%)] transition-all hover:-translate-y-0.5 hover:bg-primary"
             >
@@ -132,6 +133,7 @@ export default function Hero({ onStartDiagnostic, onConsultar }: HeroProps) {
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
             </button>
             <button
+              data-umami-event="hero_diagnostico"
               onClick={onStartDiagnostic}
               className="inline-flex items-center justify-center gap-2 rounded-full border border-primary/25 bg-white/70 px-7 py-3.5 text-sm font-semibold text-primary backdrop-blur-sm transition-colors hover:border-primary hover:bg-white"
             >
