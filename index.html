@@ -11,6 +11,19 @@
     />
     <!-- Analítica de visitas (Umami, sin cookies). Solo cuenta en el dominio real. -->
     <script defer src="https://cloud.umami.is/script.js" data-website-id="0e0f6180-8f3e-43c5-84c7-6fd7f58696da" data-domains="consultoraprisma.digital"></script>
+    <!-- Píxel de Meta (conjunto de datos "Píxel Consultora Prisma", portfolio Consultora Prisma).
+         Igual que Umami: solo se carga en el dominio real, nunca en localhost ni en copias de prueba. -->
+    <script>
+      if (/(^|\.)consultoraprisma\.digital$/.test(location.hostname)) {
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+        document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1135305455661336');
+        fbq('track', 'PageView');
+      }
+    </script>
     <link rel="canonical" href="https://consultoraprisma.digital/" />
     <meta name="theme-color" content="#223c54" />
 
