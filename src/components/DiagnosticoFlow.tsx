@@ -6,6 +6,8 @@ import {
   DIMENSIONES,
   DIMENSIONES_PARTE2,
   RECOMENDACIONES,
+  COLOR_AREA,
+  COMO_AYUDAMOS,
   QUE_INCLUYE_COMPLETO,
   nivelDe,
   nivelDePercent,
@@ -17,6 +19,7 @@ import {
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 import { SCROLL_PANEL, SCROLL_PANEL_STYLE } from '../lib/ui';
 import AgendarModal from './AgendarModal';
+import PrismaResultado from './PrismaResultado';
 import LegalModal from './LegalModal';
 
 type Paso =
@@ -252,12 +255,14 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
                 {DIMENSIONES.map((_, i) => (
                   <div
                     key={i}
-                    className={`h-1.5 flex-1 rounded-full ${i <= preguntaActual ? 'bg-gold' : 'bg-surface'}`}
+                    className={`h-1.5 flex-1 rounded-full ${i <= preguntaActual ? '' : 'bg-surface'}`}
+                    style={i <= preguntaActual ? { backgroundColor: COLOR_AREA[DIMENSIONES[i].nombre] } : undefined}
                   />
                 ))}
               </div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-primary">
-                Pregunta {preguntaActual + 1} de {DIMENSIONES.length}
+              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
+                <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: COLOR_AREA[DIMENSIONES[preguntaActual].nombre] }} />
+                {DIMENSIONES[preguntaActual].nombre} · {preguntaActual + 1} de {DIMENSIONES.length}
               </p>
               <h3 className="mt-3 font-heading text-2xl font-bold text-ink">
                 {DIMENSIONES[preguntaActual].pregunta}
@@ -342,8 +347,13 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
               <h3 className="mt-2 font-heading text-2xl font-bold text-ink">
                 Nivel general de claridad: {ETIQUETA_NIVEL[nivelDePercent(resultado.overallPercent)]}
               </h3>
+              <p className="mt-1 text-sm text-ink-soft">Así sale la luz de tu negocio, área por área.</p>
 
-              <div className="mt-6 flex flex-col gap-3">
+              <div className="mt-5">
+                <PrismaResultado scores={resultado.scores} bloqueadas={['Capital Humano']} />
+              </div>
+
+              <div className="mt-5 flex flex-col gap-3">
                 {resultado.fortalezas.length > 0 ? (
                   <div className="flex items-start gap-3 rounded-2xl border border-border bg-white p-4">
                     <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-green" />
@@ -503,8 +513,9 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
                   />
                 ))}
               </div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-primary">
-                Pregunta {preguntaActual2 + 1} de {DIMENSIONES_PARTE2.length}
+              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
+                <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: COLOR_AREA[DIMENSIONES_PARTE2[preguntaActual2].nombre] }} />
+                {DIMENSIONES_PARTE2[preguntaActual2].nombre} · {preguntaActual2 + 1} de {DIMENSIONES_PARTE2.length}
               </p>
               <h3 className="mt-3 font-heading text-2xl font-bold text-ink">
                 {DIMENSIONES_PARTE2[preguntaActual2].pregunta}
@@ -539,18 +550,25 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
                 Nivel general de claridad: {ETIQUETA_NIVEL[nivelDePercent(resultadoCompleto.overallPercent)]}
               </h3>
 
-              <div className="mt-6 flex flex-col gap-3">
-                {resultadoCompleto.todos.map((s) => {
-                  const pct = Math.round((s.valor / 4) * 100);
+              <div className="mt-5">
+                <PrismaResultado scores={resultadoCompleto.todos} />
+              </div>
+
+              <div className="mt-5 flex flex-col gap-3">
+                {[...resultadoCompleto.todos].sort((x, y) => x.valor - y.valor).map((s) => {
+                  const nivel = nivelDe(s.valor);
                   return (
-                    <div key={s.dimension} className="rounded-xl border border-border bg-white p-3.5">
+                    <div key={s.dimension} className="rounded-xl border border-border bg-white p-4" style={{ borderLeft: `5px solid ${COLOR_AREA[s.dimension]}` }}>
                       <div className="flex items-center justify-between gap-3 text-sm">
-                        <span className="font-medium text-ink">{s.dimension}</span>
-                        <span className="text-ink-soft">{ETIQUETA_NIVEL[nivelDe(s.valor)]}</span>
+                        <span className="font-heading font-semibold text-ink">{s.dimension}</span>
+                        <span className="rounded-full bg-surface px-2.5 py-0.5 text-xs font-semibold text-primary">{ETIQUETA_NIVEL[nivel]}</span>
                       </div>
-                      <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface">
-                        <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
-                      </div>
+                      <p className="mt-2 text-sm text-ink-soft">{RECOMENDACIONES[s.dimension]?.[nivel]}</p>
+                      {nivel !== 'alto' && (
+                        <p className="mt-2 text-sm text-ink">
+                          <strong>Cómo te ayudamos:</strong> {COMO_AYUDAMOS[s.dimension]}
+                        </p>
+                      )}
                     </div>
                   );
                 })}

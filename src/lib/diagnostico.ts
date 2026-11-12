@@ -4,8 +4,11 @@
  * backend (el mail con el informe).
  *
  * Las áreas que se preguntan son, a propósito, las mismas seis que Prisma
- * ofrece como servicio (Estrategia, Finanzas, Administración, Personas,
- * Contabilidad e Impuestos, Tecnología) — antes la Parte 1 usaba nombres
+ * ofrece como servicio (Estrategia, Finanzas, Administración, Capital Humano,
+ * Contabilidad e Impuestos, Tecnología). Cada pregunta describe una situación
+ * concreta del servicio (nov 2026), para ubicar en qué punto está el cliente:
+ * las opciones van de "todavía no lo tengo resuelto" a "ya funciona solo".
+ * El orden y los ids no cambian (las respuestas se guardan por posición). Antes la Parte 1 usaba nombres
  * distintos ("Organización", "Cumplimiento"...) que en los hechos eran las
  * mismas áreas con otro nombre, y esa doble nomenclatura confundía más de lo
  * que ayudaba. La Parte 1 gratuita toca cinco de las seis (todas menos
@@ -32,86 +35,111 @@ export const DIMENSIONES: Dimension[] = [
   {
     id: 'administracion',
     nombre: 'Administración',
-    pregunta: '¿Cómo describirías la organización interna de tu negocio hoy?',
+    pregunta: '¿Cómo llevás el día a día de tu negocio: cobros, pagos a proveedores y stock?',
     opciones: [
-      { texto: 'Cada uno resuelve como puede, sobre la marcha', valor: 1 },
-      { texto: 'Hay algunas rutinas, pero dependen de que alguien se acuerde', valor: 2 },
-      { texto: 'Los procesos principales están definidos y se siguen casi siempre', valor: 3 },
-      { texto: 'Todo el equipo sabe qué hacer sin que nadie tenga que repetirlo', valor: 4 },
+      { texto: 'De memoria y sobre la marcha: se me pasan cobros o pagos', valor: 1 },
+      { texto: 'Lo anoto en un cuaderno o un Excel, cuando tengo tiempo', valor: 2 },
+      { texto: 'Tengo un sistema o una rutina, pero depende de que yo esté encima', valor: 3 },
+      { texto: 'Está ordenado y funciona aunque yo no esté', valor: 4 },
     ],
   },
   {
     id: 'finanzas',
     nombre: 'Finanzas',
-    pregunta: 'Cuando tenés que tomar una decisión importante, ¿de dónde obtenés la información que necesitás?',
+    pregunta: 'A fin de mes, ¿sabés cuánto ganaste de verdad?',
     opciones: [
-      { texto: 'La tengo en la cabeza o hay que juntarla a mano', valor: 1 },
-      { texto: 'Está repartida en varios lugares (Excel, WhatsApp, papeles)', valor: 2 },
-      { texto: 'Tengo reportes, pero los reviso solo cuando hace falta', valor: 3 },
-      { texto: 'Miro números actualizados con frecuencia, antes de que haga falta', valor: 4 },
+      { texto: 'No: miro cuánta plata quedó en la cuenta', valor: 1 },
+      { texto: 'Tengo una idea, pero sin separar costos, impuestos y ganancia', valor: 2 },
+      { texto: 'Lo calculo cada tanto, cuando algo no me cierra', valor: 3 },
+      { texto: 'Sí: todos los meses veo ventas, costos y lo que me queda', valor: 4 },
     ],
   },
   {
     id: 'contabilidad',
     nombre: 'Contabilidad e Impuestos',
-    pregunta: '¿Cómo llevás tus obligaciones contables e impositivas?',
+    pregunta: '¿Cómo estás hoy con tus impuestos (monotributo, IVA, Ingresos Brutos y vencimientos)?',
     opciones: [
-      { texto: 'Voy resolviendo sobre la hora, cuando se vence algo', valor: 1 },
-      { texto: 'Está en orden, pero me genera estrés cada vez', valor: 2 },
-      { texto: 'Tengo quien lo maneja y confío en que está al día', valor: 3 },
-      { texto: 'Está todo en orden y además lo uso para decidir mejor', valor: 4 },
+      { texto: 'Me entero de los vencimientos cuando ya pasaron', valor: 1 },
+      { texto: 'Pago, pero no sé bien qué pago ni si mi categoría es la correcta', valor: 2 },
+      { texto: 'Tengo contador y estoy al día, aunque nadie me explica mucho', valor: 3 },
+      { texto: 'Estoy al día, entiendo lo que pago y lo planifico con tiempo', valor: 4 },
     ],
   },
   {
     id: 'estrategia',
     nombre: 'Estrategia',
-    pregunta: '¿Tenés una estrategia clara para crecer en los próximos meses?',
+    pregunta: '¿Sabés qué querés lograr con tu negocio en los próximos 12 meses?',
     opciones: [
-      { texto: 'No, voy resolviendo lo que aparece', valor: 1 },
-      { texto: 'Tengo una idea general, pero no un plan concreto', valor: 2 },
-      { texto: 'Tengo objetivos definidos, aunque no siempre les hago seguimiento', valor: 3 },
-      { texto: 'Tengo un plan concreto y lo reviso con regularidad', valor: 4 },
+      { texto: 'No: voy resolviendo lo que aparece cada semana', valor: 1 },
+      { texto: 'Tengo una idea en la cabeza, pero nada escrito', valor: 2 },
+      { texto: 'Tengo objetivos, aunque casi nunca los reviso', valor: 3 },
+      { texto: 'Tengo un plan con metas y lo sigo mes a mes', valor: 4 },
     ],
   },
   {
     id: 'tecnologia',
     nombre: 'Tecnología',
-    pregunta: '¿Qué lugar ocupan hoy la tecnología y lo digital en tu negocio?',
+    pregunta: '¿Cómo te encuentran y te escriben tus clientes por internet?',
     opciones: [
-      { texto: 'Casi ninguno, todavía es un tema pendiente', valor: 1 },
-      { texto: 'Uso algunas herramientas sueltas, sin mucha conexión entre ellas', valor: 2 },
-      { texto: 'Tengo presencia digital, pero podría aprovecharla mejor', valor: 3 },
-      { texto: 'Está integrada y me ayuda activamente a vender y a organizarme', valor: 4 },
+      { texto: 'Casi solo por recomendación: no tengo web y uso poco las redes', valor: 1 },
+      { texto: 'Por redes o WhatsApp, y respondo todo a mano', valor: 2 },
+      { texto: 'Tengo web o tienda online, pero me trae pocas consultas', valor: 3 },
+      { texto: 'La web y los mensajes automáticos me traen consultas todas las semanas', valor: 4 },
     ],
   },
 ];
 
 export const RECOMENDACIONES: Record<string, { bajo: string; medio: string; alto: string }> = {
   Administración: {
-    bajo: 'Gran parte de la operación pasa por vos o por la memoria del equipo.',
-    medio: 'Tenés rutinas que funcionan, pero todavía dependen de que alguien se acuerde.',
-    alto: 'Tu organización ya es una fortaleza real: los procesos sostienen la operación.',
+    bajo: 'Los cobros, los pagos y el stock dependen de tu memoria, y ahí es donde se pierde plata sin darse cuenta.',
+    medio: 'Tenés una rutina que funciona, pero todavía depende de que vos estés encima.',
+    alto: 'Tu día a día está ordenado y funciona aunque no estés: es una fortaleza real.',
   },
   Finanzas: {
-    bajo: 'Tomás decisiones importantes sin tener los números a mano.',
-    medio: 'Tenés reportes, pero los mirás recién cuando algo urge.',
-    alto: 'Tomás decisiones con información real y actualizada.',
+    bajo: 'Hoy medís el negocio por la plata que queda en la cuenta, y eso no muestra si estás ganando.',
+    medio: 'Mirás tus números cuando algo no cierra, no antes de decidir.',
+    alto: 'Sabés cuánto ganás cada mes y decidís con esos números.',
   },
   'Contabilidad e Impuestos': {
-    bajo: 'Vas resolviendo lo impositivo y contable sobre la hora.',
-    medio: 'Estás en regla, pero cada vencimiento te genera tensión.',
-    alto: 'Tu cumplimiento está sólido — no es poco, es donde más negocios fallan.',
+    bajo: 'Los vencimientos te agarran de sorpresa o pagás sin saber si tu categoría es la correcta.',
+    medio: 'Estás al día, pero sin entender del todo qué pagás ni por qué.',
+    alto: 'Tus impuestos están al día y los planificás con tiempo: es donde más negocios fallan.',
   },
   Estrategia: {
-    bajo: 'No tenés una dirección definida todavía: vas resolviendo lo que aparece.',
-    medio: 'Tenés una idea de hacia dónde ir, pero sin un plan que la sostenga.',
-    alto: 'Tenés una estrategia de crecimiento que funciona.',
+    bajo: 'Vas resolviendo lo que aparece, sin un rumbo definido para el año.',
+    medio: 'Tenés objetivos, pero sin un plan ni un seguimiento que los sostenga.',
+    alto: 'Tenés un plan con metas y lo seguís mes a mes.',
   },
   Tecnología: {
-    bajo: 'Lo digital todavía es una materia pendiente en tu negocio.',
-    medio: 'Tenés herramientas digitales, pero sueltas, sin conectar entre sí.',
-    alto: 'Lo digital ya es parte activa de cómo vendés y te organizás.',
+    bajo: 'Tus clientes casi no te encuentran por internet, o respondés todo a mano.',
+    medio: 'Tenés presencia online, pero todavía no te trae consultas de forma constante.',
+    alto: 'Tu web y tus mensajes automáticos ya trabajan para vos todas las semanas.',
   },
+  'Capital Humano': {
+    bajo: 'Sumar o reemplazar a alguien se resuelve de apuro, y los roles no están claros.',
+    medio: 'Tu equipo funciona, pero falta definir puestos y una forma de sumar gente.',
+    alto: 'Tu equipo tiene roles claros y un proceso para crecer.',
+  },
+};
+
+/** Color de cada área (los mismos de "Armá tu Prisma") para el resultado visual. */
+export const COLOR_AREA: Record<string, string> = {
+  'Contabilidad e Impuestos': '#345b78',
+  Tecnología: '#6b5b95',
+  Administración: '#7e9b78',
+  Finanzas: '#d9a13f',
+  Estrategia: '#c47a57',
+  'Capital Humano': '#4c9393',
+};
+
+/** Qué hace Prisma en cada área: se muestra en el informe completo, junto al nivel. */
+export const COMO_AYUDAMOS: Record<string, string> = {
+  'Contabilidad e Impuestos': 'Monotributo, IVA e Ingresos Brutos al día, con aviso antes de cada vencimiento y recategorización.',
+  Tecnología: 'Tu web en 3 días hábiles, asistentes de chat y automatizaciones para turnos, pedidos y mensajes.',
+  Administración: 'Cobranzas, pagos y stock en orden, con procedimientos simples para tu equipo.',
+  Finanzas: 'Flujo de caja mes a mes y revisión de costos, márgenes y precios.',
+  Estrategia: 'Un plan para los próximos 12 meses, con indicadores para seguirlo.',
+  'Capital Humano': 'Búsqueda y selección, definición de puestos e incentivos.',
 };
 
 export interface RespuestaDimension {
@@ -215,67 +243,67 @@ export const DIMENSIONES_PARTE2: Dimension[] = [
   {
     id: 'estrategia-2',
     nombre: 'Estrategia',
-    pregunta: '¿Tenés un plan de negocio o proyecciones escritas, más allá de lo que tenés en la cabeza?',
+    pregunta: 'Cuando aparece una oportunidad (un local nuevo, un producto, una inversión), ¿cómo decidís?',
     opciones: [
-      { texto: 'No, nunca lo escribí', valor: 1 },
-      { texto: 'Tengo algo, pero está desactualizado', valor: 2 },
-      { texto: 'Tengo un plan, aunque no lo reviso seguido', valor: 3 },
-      { texto: 'Sí, y lo uso activamente para decidir', valor: 4 },
+      { texto: 'Por intuición, en el momento', valor: 1 },
+      { texto: 'Lo consulto con alguien de confianza, sin números', valor: 2 },
+      { texto: 'Hago algunas cuentas, pero sin compararlo con un plan', valor: 3 },
+      { texto: 'Lo comparo con mi plan y mis indicadores antes de decidir', valor: 4 },
     ],
   },
   {
     id: 'finanzas-2',
     nombre: 'Finanzas',
-    pregunta: '¿Con qué frecuencia revisás la rentabilidad real de tu negocio, más allá de los ingresos?',
+    pregunta: '¿Cómo definís los precios de lo que vendés?',
     opciones: [
-      { texto: 'Nunca la calculé en serio', valor: 1 },
-      { texto: 'La reviso una vez al año, si acaso', valor: 2 },
-      { texto: 'La reviso cada tanto, sin un ritmo fijo', valor: 3 },
-      { texto: 'La reviso todos los meses, con números claros', valor: 4 },
+      { texto: 'Miro lo que cobra la competencia y pongo algo parecido', valor: 1 },
+      { texto: 'Le sumo un porcentaje al costo, sin contar impuestos ni comisiones', valor: 2 },
+      { texto: 'Calculo costos e impuestos, pero los actualizo tarde', valor: 3 },
+      { texto: 'Conozco mi margen por producto y lo actualizo cuando cambian los costos', valor: 4 },
     ],
   },
   {
     id: 'administracion-2',
     nombre: 'Administración',
-    pregunta: 'Si te tomaras una semana sin mirar el negocio, ¿la parte administrativa seguiría funcionando sola?',
+    pregunta: 'Si te tomaras una semana sin mirar el negocio, ¿qué pasaría con los cobros, los pagos y los pedidos?',
     opciones: [
-      { texto: 'No, se frena o se acumula todo hasta que vuelva', valor: 1 },
-      { texto: 'Sobrevive, pero con algún problema que después hay que destrabar', valor: 2 },
-      { texto: 'Sigue funcionando, aunque yo tenga que poner algunos parches al volver', valor: 3 },
-      { texto: 'Sigue funcionando igual, no se nota que no estuve', valor: 4 },
+      { texto: 'Se frena todo hasta que vuelva', valor: 1 },
+      { texto: 'Sigue, pero con errores que después tengo que arreglar', valor: 2 },
+      { texto: 'Sigue bien, aunque al volver tengo que ponerme al día', valor: 3 },
+      { texto: 'Sigue igual: cada tarea tiene un responsable y un procedimiento', valor: 4 },
     ],
   },
   {
     id: 'personas',
     nombre: 'Capital Humano',
-    pregunta: '¿Cómo está organizado tu equipo hoy?',
+    pregunta: 'Cuando necesitás sumar o reemplazar a alguien del equipo, ¿cómo lo resolvés?',
     opciones: [
-      { texto: 'No hay roles claros, cada uno hace lo que puede', valor: 1 },
-      { texto: 'Hay roles, pero se superponen seguido', valor: 2 },
-      { texto: 'Cada uno sabe lo suyo, aunque falta algo de proceso', valor: 3 },
-      { texto: 'Roles claros y el equipo funciona sin que yo esté encima', valor: 4 },
+      { texto: 'Trabajo solo o lo resuelvo de apuro, con quien aparezca', valor: 1 },
+      { texto: 'Busco por conocidos, sin definir bien qué necesito', valor: 2 },
+      { texto: 'Defino el puesto, pero la búsqueda y el arranque son desordenados', valor: 3 },
+      { texto: 'Tengo puestos definidos y un proceso para buscar y sumar gente', valor: 4 },
     ],
   },
   {
     id: 'contabilidad-2',
     nombre: 'Contabilidad e Impuestos',
-    pregunta: '¿Qué tan preparado estás si mañana te piden algo tu contador o ARCA?',
+    pregunta: '¿Cuándo fue la última vez que revisaste si tu categoría o tu situación ante ARCA coincide con lo que facturás hoy?',
     opciones: [
-      { texto: 'Tendría que salir a buscar todo de cero', valor: 1 },
-      { texto: 'Lo tengo, pero desordenado', valor: 2 },
-      { texto: 'Lo tengo bastante al día', valor: 3 },
-      { texto: 'Todo en orden, sin sobresaltos', valor: 4 },
+      { texto: 'Nunca lo revisé', valor: 1 },
+      { texto: 'Hace más de un año', valor: 2 },
+      { texto: 'Lo revisa mi contador, pero no sé qué resultado dio', valor: 3 },
+      { texto: 'Lo reviso en cada recategorización, con mis números reales', valor: 4 },
     ],
   },
   {
     id: 'tecnologia-2',
     nombre: 'Tecnología',
-    pregunta: 'Si necesitaras ahora mismo un dato clave de tu negocio (ventas del mes, stock, margen), ¿en cuánto tiempo lo tendrías?',
+    pregunta: '¿Cuánto de tu día se va en tareas repetidas: responder los mismos mensajes, dar turnos o pasar datos a mano?',
     opciones: [
-      { texto: 'Tendría que armarlo de cero, juntando de varios lados', valor: 1 },
-      { texto: 'Lo tengo, pero tardo bastante en encontrarlo o calcularlo', valor: 2 },
-      { texto: 'Lo tengo a mano, aunque no siempre 100% actualizado', valor: 3 },
-      { texto: 'Lo tengo al instante, actualizado y confiable', valor: 4 },
+      { texto: 'Gran parte del día', valor: 1 },
+      { texto: 'Varias horas por semana', valor: 2 },
+      { texto: 'Poco: ya automaticé algunas cosas', valor: 3 },
+      { texto: 'Casi nada: los mensajes, los turnos y los datos se manejan solos', valor: 4 },
     ],
   },
 ];
@@ -362,7 +390,8 @@ export function sintesisRespaldo(resultado: ResultadoCompleto, nombre: string): 
 
 /** Lo que explícitamente se le dice al cliente que va a recibir, antes de pagar. */
 export const QUE_INCLUYE_COMPLETO = [
-  'Una mirada más profunda a las mismas seis áreas en las que te podemos ayudar: Estrategia, Finanzas, Administración, Capital Humano, Contabilidad e Impuestos y Tecnología.',
+  'Seis preguntas más, una por cada servicio: Estrategia, Finanzas, Administración, Capital Humano, Contabilidad e Impuestos y Tecnología.',
+  'Tu Prisma completo: el nivel de cada área, qué significa y cómo te podemos ayudar en cada una.',
   'Un análisis armado especialmente para tu negocio, no una respuesta genérica.',
   'Si nos dejás el link de tu web, la revisamos antes de la conversación.',
   'El informe completo por mail, y la posibilidad de mandarte el resultado cuando quieras.',
