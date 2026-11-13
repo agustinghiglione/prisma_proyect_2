@@ -29,6 +29,7 @@ import {
   enviarInformeParte1,
   enviarNotificacionAgendamiento,
   enviarNotificacionAuditoriaWeb,
+  enviarConfirmacionAuditoriaWeb,
 } from './email';
 import { generarSintesis } from './ia';
 import { enviarASheet } from './sheets';
@@ -368,6 +369,11 @@ router.post('/auditoria-web', async (req, res) => {
   } catch (err) {
     // El pedido ya quedó guardado aunque el aviso por mail falle.
     console.error('[auditoria-web] no se pudo enviar la notificación al equipo:', err);
+  }
+  try {
+    await enviarConfirmacionAuditoriaWeb(datos);
+  } catch (err) {
+    console.error('[auditoria-web] no se pudo enviar la confirmación al cliente:', err);
   }
 
   res.json({ ok: true });

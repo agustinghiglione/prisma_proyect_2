@@ -460,6 +460,12 @@ export default function DiagnosticoFlow({ onClose }: DiagnosticoFlowProps) {
                   placeholder="El link de tu web (opcional)"
                   className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-ink outline-none focus:border-primary"
                 />
+                {webUrl.trim() && (
+                  <p className="-mt-2 text-xs leading-relaxed text-ink-soft">
+                    El análisis de tu web te llega aparte, en un PDF con imágenes de tu nueva web y el
+                    presupuesto, en hasta 3 días hábiles.
+                  </p>
+                )}
                 {error && <p className="text-sm text-red-600">{error}</p>}
                 <button
                   onClick={confirmarYPagar}

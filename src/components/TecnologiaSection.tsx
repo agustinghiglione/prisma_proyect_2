@@ -44,7 +44,8 @@ const DOMINIOS = [
 const INFORME = [
   'Los 5 puntos de tu web que hoy te hacen perder clientes, explicados sin tecnicismos',
   'Cómo resolvemos cada uno',
-  'Una vista previa de tu web renovada, con tu logo y tus colores',
+  'Imágenes de tu web renovada en la compu y en el celular, con tu logo y tus colores',
+  'El presupuesto de la nueva versión',
 ];
 
 /**
@@ -188,8 +189,8 @@ export default function TecnologiaSection({ onConsultar }: TecnologiaSectionProp
               </h3>
               <p className="mt-3 leading-relaxed text-white/80">
                 Pegá el link y analizamos tu web como la ve un cliente que llega por primera vez, en el
-                celular y en la computadora. Cuando el informe está listo, te llega por mail.
-                Sin costo.
+                celular y en la computadora. En hasta 3 días hábiles te llega por mail el informe en
+                PDF. Sin costo.
               </p>
               <ul className="mt-5 grid gap-2">
                 {INFORME.map((item) => (
@@ -288,8 +289,9 @@ function FormularioAnalisis() {
       <div className="mt-6 flex items-start gap-3 rounded-2xl border border-white/15 bg-white/10 p-4">
         <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-gold" />
         <p className="text-sm leading-relaxed text-white/90">
-          ¡Listo! Recibimos tu web. Cuando el informe esté terminado, te llega a{' '}
-          <strong>{email.trim()}</strong>.
+          ¡Listo! Recibimos tu web. En hasta 3 días hábiles te llega a{' '}
+          <strong>{email.trim()}</strong> el informe en PDF, con las imágenes de tu nueva web y el
+          presupuesto.
         </p>
       </div>
     );

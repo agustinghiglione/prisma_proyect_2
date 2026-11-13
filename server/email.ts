@@ -286,8 +286,9 @@ export async function enviarNotificacionAgendamiento(datos: {
 }
 
 /**
- * Aviso interno al equipo cuando alguien pide el análisis de su web. El
- * cliente no recibe nada automático: el informe se lo mandamos nosotros.
+ * Aviso interno al equipo cuando alguien pide el análisis de su web. Al
+ * cliente le llega aparte una confirmación (enviarConfirmacionAuditoriaWeb);
+ * el informe en PDF se lo mandamos nosotros en hasta 3 días hábiles.
  */
 export async function enviarNotificacionAuditoriaWeb(datos: { url: string; email: string; nombre?: string }) {
   const destino = process.env.TEAM_EMAIL ?? 'contacto@consultoraprisma.digital';
@@ -317,6 +318,38 @@ export async function enviarNotificacionAuditoriaWeb(datos: { url: string; email
               Alguien pidió el análisis de su página web
             </p>
             <table role="presentation" cellpadding="0" cellspacing="0">${filas}</table>
+          </td></tr>
+        </table>
+      </div>`,
+  });
+}
+
+/** Confirmación al cliente: recibimos su web y el informe le llega en hasta 3 días hábiles. */
+export async function enviarConfirmacionAuditoriaWeb(datos: { url: string; email: string; nombre?: string }) {
+  const escapar = (t: string) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+  const saludo = datos.nombre ? `Hola, ${escapar(datos.nombre.split(' ')[0])}:` : 'Hola:';
+  const parrafo = (t: string) =>
+    `<p style="margin:0 0 14px;font-family:Arial,sans-serif;font-size:15px;line-height:1.55;color:${TEXTO};">${t}</p>`;
+
+  await transportador().sendMail({
+    from: process.env.MAIL_FROM ?? '"Consultora Prisma" <contacto@consultoraprisma.digital>',
+    to: datos.email,
+    subject: 'Recibimos tu web: el análisis te llega en hasta 3 días hábiles',
+    html: `
+      <div style="background:${MARFIL};padding:24px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;margin:0 auto;background:#ffffff;border-radius:12px;padding:24px;border:1px solid #E7DDC9;">
+          <tr><td>
+            <p style="margin:0 0 18px;font-family:Arial,sans-serif;font-size:12px;letter-spacing:2px;color:${AZUL_HORIZONTE};">CONSULTORA PRISMA</p>
+            ${parrafo(saludo)}
+            ${parrafo(`Recibimos el link de tu web: <a href="${escapar(datos.url)}" style="color:${AZUL_HORIZONTE};">${escapar(datos.url)}</a>.`)}
+            ${parrafo('Vamos a analizarla como la ve un cliente que llega por primera vez, en el celular y en la computadora. En <b>hasta 3 días hábiles</b> te mandamos a este mail un PDF con:')}
+            <ul style="margin:0 0 14px;padding-left:20px;font-family:Arial,sans-serif;font-size:15px;line-height:1.55;color:${TEXTO};">
+              <li>los puntos de tu web que hoy te hacen perder clientes y cómo resolverlos,</li>
+              <li>imágenes de cómo podría verse tu nueva web, con tu logo y tus colores,</li>
+              <li>el presupuesto de la nueva versión.</li>
+            </ul>
+            ${parrafo('Si hay algo de tu web que ya sabés que querés cambiar, respondé este mail y lo tenemos en cuenta.')}
+            <p style="margin:18px 0 0;font-family:Arial,sans-serif;font-size:14px;color:${TEXTO_SUAVE};">El equipo de Consultora Prisma<br>www.consultoraprisma.digital</p>
           </td></tr>
         </table>
       </div>`,
